@@ -4,7 +4,7 @@ A lightweight, fluent API that reduces the verbosity of the Sitecore.ContentSear
 
 Features fluent API for:
 - Sorting
-    - Multile Sorting based on expressions
+    - Multiple Sorting based on expressions
 - Querying
     - Supports nested 'And' and 'Or' operations
 - Filtering
