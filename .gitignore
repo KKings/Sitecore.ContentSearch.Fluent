@@ -188,3 +188,5 @@ FakesAssemblies/
 
 # NuGet Directory
 /nuget
+*.nupkg
+*.nuspec

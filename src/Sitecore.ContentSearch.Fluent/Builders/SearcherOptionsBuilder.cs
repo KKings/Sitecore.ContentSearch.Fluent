@@ -65,32 +65,6 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         }
 
         /// <summary>
-        /// Adds a field name to the facets
-        /// </summary>
-        /// <param name="facet">Field name within the index</param>
-        /// <returns>Instance of the SearcherOptionsBuilder</returns>
-        public SearcherOptionsBuilder<T> AddFacet(string facet)
-        {
-            Assert.ArgumentNotNullOrEmpty(facet, "facet");
-
-            this.SearcherOptions.Facets.Add(facet);
-            return this;
-        }
-
-        /// <summary>
-        /// Sets the Search Manager to be used for Searching
-        /// </summary>
-        /// <param name="manager">Search Manager</param>
-        /// <returns>Instance of the SearcherOptionsBuilder</returns>
-        public SearcherOptionsBuilder<T> SetSearchManager(SearchManager manager)
-        {
-            Assert.ArgumentNotNull(manager, "manager");
-
-            this.SearcherOptions.SearchManager = manager;
-            return this;
-        }
-
-        /// <summary>
         /// Set the returned results page
         /// </summary>
         /// <param name="pageMode">pageMode of the results</param>
@@ -141,30 +115,6 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         public SearcherOptionsBuilder<T> SetDisplaySize(int display)
         {
             this.SearcherOptions.Display = display;
-            return this;
-        }
-
-
-        /// <summary>
-        /// Sets the Display Size of the Returned Results
-        /// </summary>
-        /// <param name="display"></param>
-        /// <returns>Instance of the SearcherOptionsBuilder</returns>
-        public SearcherOptionsBuilder<T> Set(int display)
-        {
-            this.SearcherOptions.Display = display;
-            return this;
-        }
-
-        /// <summary>
-        /// Sorts the Search Results
-        /// </summary>
-        /// <param name="sortOrder">Search Sort Order</param>
-        /// <returns>Instance of the SearcherOptionsBuilder</returns>
-        public SearcherOptionsBuilder<T> SortOrder(SortOrder sortOrder)
-        {
-            this.SearcherOptions.SortOrder = sortOrder;
-
             return this;
         }
     }
