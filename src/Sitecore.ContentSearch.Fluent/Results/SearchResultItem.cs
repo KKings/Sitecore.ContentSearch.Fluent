@@ -49,6 +49,10 @@ namespace Sitecore.ContentSearch.Fluent.Results
         [IndexField("_name")]
         public string Name { get; set; }
 
+        [IndexField("_group")]
+        [TypeConverter(typeof(IndexFieldIDValueConverter))]
+        public ID Id { get; set; }
+
         /// <summary>
         /// Custom Indexer to get the fields
         /// </summary>
