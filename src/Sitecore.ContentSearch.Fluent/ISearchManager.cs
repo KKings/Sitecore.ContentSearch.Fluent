@@ -29,8 +29,21 @@ namespace Sitecore.ContentSearch.Fluent
         /// <returns></returns>
         Results.SearchResults<T> ResultsFor<T>(Action<Searcher<T>> searcherBuilder) where T : SearchResultItem;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="searcherBuilder"></param>
+        /// <param name="fieldFacets"></param>
+        /// <returns></returns>
         SearchFacets FacetsFor<T>(Action<Searcher<T>> searcherBuilder, string[] fieldFacets) where T : SearchResultItem;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TModel"></typeparam>
+        /// <param name="results"></param>
+        /// <returns></returns>
         IList<TModel> Map<TModel>(IEnumerable<SearchHit<TModel>> results);
     }
 }

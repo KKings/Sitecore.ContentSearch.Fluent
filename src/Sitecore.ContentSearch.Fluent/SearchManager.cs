@@ -34,6 +34,7 @@ namespace Sitecore.ContentSearch.Fluent
         {
             get { return Context.Database ?? Configuration.Factory.GetDatabase("web"); }
         } 
+
         /// <summary>
         /// The Search Index for the Search Manager
         /// </summary>
@@ -46,11 +47,7 @@ namespace Sitecore.ContentSearch.Fluent
         {
             get
             {
-                return _searchIndex ??
-                       (_searchIndex =
-                           ContentSearchManager.GetIndex(this.Database.Name.Equals("master", StringComparison.InvariantCultureIgnoreCase)
-                               ? this._masterIndexName
-                               : this._webIndexName));
+                return _searchIndex ?? (_searchIndex = ContentSearchManager.GetIndex(this._indexLookup[this.Database.Name]));
             }
         }
 
@@ -66,16 +63,11 @@ namespace Sitecore.ContentSearch.Fluent
         {
             get { return this._searchContext ?? (this._searchContext = this.SearchIndex.CreateSearchContext()); }
         }
-
+        
         /// <summary>
-        /// Index name when using the Web database
+        /// 
         /// </summary>
-        private readonly string _webIndexName;
-
-        /// <summary>
-        /// Index name when using the Master database
-        /// </summary>
-        private readonly string _masterIndexName;
+        private readonly IDictionary<string, string> _indexLookup; 
 
         /// <summary>
         /// Configures the Search Manager
@@ -84,16 +76,28 @@ namespace Sitecore.ContentSearch.Fluent
         /// <param name="masterIndexName">Index name when using the Master database</param>
         public SearchManager(string webIndexName, string masterIndexName)
         {
-            this._webIndexName = webIndexName;
-            this._masterIndexName = masterIndexName;
+            this._indexLookup = new Dictionary<String, String>
+            {
+                { "web",    webIndexName },
+                { "master", masterIndexName }
+            };
         }
 
         /// <summary>
-        /// 
+        /// Configures the search manager
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="searcherBuilder"></param>
-        /// <returns></returns>
+        /// <param name="indexLookup">Dictionary list of index lookups, where key is the database name</param>
+        public SearchManager(IDictionary<string, string> indexLookup)
+        {
+            this._indexLookup = indexLookup;
+        }
+
+        /// <summary>
+        /// Executes a query against the search index
+        /// </summary>
+        /// <typeparam name="T">Type of ResultItem</typeparam>
+        /// <param name="searcherBuilder">Lambda to generate the Search Results Expression</param>
+        /// <returns>Result of <see cref="T"/></returns>
         public Results.SearchResults<T> ResultsFor<T>(Action<Searcher<T>> searcherBuilder)
             where T : Results.SearchResultItem
         {
