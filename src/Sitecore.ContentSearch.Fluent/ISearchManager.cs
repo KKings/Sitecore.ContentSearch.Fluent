@@ -36,7 +36,7 @@ namespace Sitecore.ContentSearch.Fluent
         /// <param name="searcherBuilder"></param>
         /// <param name="fieldFacets"></param>
         /// <returns></returns>
-        SearchFacets FacetsFor<T>(Action<Searcher<T>> searcherBuilder, string[] fieldFacets) where T : SearchResultItem;
+        SearchFacets FacetsFor<T>(Action<Searcher<T>> searcherBuilder, IList<string> fieldFacets) where T : SearchResultItem;
 
         /// <summary>
         /// 

@@ -14,11 +14,13 @@
 // </copyright>
 namespace Sitecore.ContentSearch.Fluent
 {
+    using System.Collections;
+    using System.Collections.Generic;
     using Results;
 
     public interface ISearcher<T> where T : SearchResultItem
     {
         SearchResults<T> Results();
-        SearchFacets Facets(string[] facets);
+        SearchFacets Facets(IList<string> facets);
     }
 }

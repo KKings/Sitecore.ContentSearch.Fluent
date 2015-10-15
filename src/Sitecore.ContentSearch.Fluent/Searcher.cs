@@ -15,6 +15,8 @@
 namespace Sitecore.ContentSearch.Fluent
 {
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Linq;
     using Builders;
     using Linq;
@@ -163,8 +165,10 @@ namespace Sitecore.ContentSearch.Fluent
         /// </summary>
         /// <param name="facets">Array of strings to facet on</param>
         /// <returns>Facets for Query</returns>
-        public SearchFacets Facets(string[] facets)
+        public SearchFacets Facets(IList<string> facets)
         {
+            this.QueryOptions.Queryable = this.QueryOptions.Queryable.Where(this.QueryOptions.Filter);
+
             // Setup a predicate builder as an easy way to build up predicate
             var filter = PredicateBuilder.True<T>();
 

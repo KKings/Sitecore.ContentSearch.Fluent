@@ -114,7 +114,7 @@ namespace Sitecore.ContentSearch.Fluent
         /// <param name="searcherBuilder"></param>
         /// <param name="fieldFacets"></param>
         /// <returns></returns>
-        public Results.SearchFacets FacetsFor<T>(Action<Searcher<T>> searcherBuilder, string[] fieldFacets)
+        public Results.SearchFacets FacetsFor<T>(Action<Searcher<T>> searcherBuilder, IList<string> fieldFacets)
             where T : Results.SearchResultItem
         {
             var searcher = new Searcher<T>(this);
