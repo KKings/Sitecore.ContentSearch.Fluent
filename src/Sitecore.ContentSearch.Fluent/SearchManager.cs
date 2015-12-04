@@ -43,7 +43,7 @@ namespace Sitecore.ContentSearch.Fluent
         /// <summary>
         /// The Search Index for the Search Manager
         /// </summary>
-        public ISearchIndex SearchIndex
+        public virtual ISearchIndex SearchIndex
         {
             get
             {
@@ -59,13 +59,13 @@ namespace Sitecore.ContentSearch.Fluent
         /// <summary>
         /// The Search Context on the Search Index for Searching the Index
         /// </summary>
-        public IProviderSearchContext SearchContext
+        public virtual IProviderSearchContext SearchContext
         {
             get { return this._searchContext ?? (this._searchContext = this.SearchIndex.CreateSearchContext()); }
         }
         
         /// <summary>
-        /// 
+        /// Lookup to match Database Names to Index Names
         /// </summary>
         private readonly IDictionary<string, string> _indexLookup; 
 
