@@ -16,6 +16,7 @@ namespace Sitecore.ContentSearch.Fluent
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Linq;
     using Results;
 
@@ -27,7 +28,7 @@ namespace Sitecore.ContentSearch.Fluent
         /// <typeparam name="T"></typeparam>
         /// <param name="searcherBuilder"></param>
         /// <returns></returns>
-        Results.SearchResults<T> ResultsFor<T>(Action<Searcher<T>> searcherBuilder) where T : SearchResultItem;
+        Results.SearchResults<T> ResultsFor<T>(Action<ISearcher<T>> searcherBuilder) where T : SearchResultItem;
 
         /// <summary>
         /// 
@@ -45,5 +46,19 @@ namespace Sitecore.ContentSearch.Fluent
         /// <param name="results"></param>
         /// <returns></returns>
         IList<TModel> Map<TModel>(IEnumerable<SearchHit<TModel>> results);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        IQueryable<T> GetQueryable<T>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        ISearcher<T> GetSearcher<T>() where T: SearchResultItem;
     }
 }

@@ -16,10 +16,13 @@ namespace Sitecore.ContentSearch.Fluent
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Linq.Expressions;
     using Sitecore;
     using ContentSearch;
     using Linq;
     using Data;
+    using Results;
 
     /// <summary>
     /// SearchManager manages the lifecycle of the Search Context for the Search Index.
@@ -98,10 +101,10 @@ namespace Sitecore.ContentSearch.Fluent
         /// <typeparam name="T">Type of ResultItem</typeparam>
         /// <param name="searcherBuilder">Lambda to generate the Search Results Expression</param>
         /// <returns>Result of <see cref="T"/></returns>
-        public Results.SearchResults<T> ResultsFor<T>(Action<Searcher<T>> searcherBuilder)
+        public Results.SearchResults<T> ResultsFor<T>(Action<ISearcher<T>> searcherBuilder)
             where T : Results.SearchResultItem
         {
-            var searcher = new Searcher<T>(this);
+            var searcher = this.GetSearcher<T>();
             searcherBuilder(searcher);
 
             return searcher.Results();
@@ -132,6 +135,26 @@ namespace Sitecore.ContentSearch.Fluent
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public IQueryable<T> GetQueryable<T>()
+        {
+            return this.SearchContext.GetQueryable<T>();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public ISearcher<T> GetSearcher<T>() where T : SearchResultItem
+        {
+            return new Searcher<T>(this);
+        } 
 
         #region IDisposable
 

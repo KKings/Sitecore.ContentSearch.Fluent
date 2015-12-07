@@ -18,6 +18,7 @@ namespace Sitecore.ContentSearch.Fluent
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Linq.Expressions;
     using Builders;
     using Linq;
     using Linq.Utilities;
@@ -50,10 +51,10 @@ namespace Sitecore.ContentSearch.Fluent
         /// </summary>
         protected readonly SortingOptions<T> SortingOptions;
 
-        public Searcher(SearchManager searchManager)
+        public Searcher(ISearchManager searchManager)
         {
             this.SearcherOptions = new SearcherOptions<T>(searchManager);
-            this.QueryOptions = new QueryOptions<T>(this.SearcherOptions.SearchManager.SearchContext.GetQueryable<T>());
+            this.QueryOptions = new QueryOptions<T>(this.SearcherOptions.SearchManager.GetQueryable<T>());
             this.FilterOptions = new FilterOptions<T>();
             this.SortingOptions = new SortingOptions<T>();
         }
@@ -132,7 +133,7 @@ namespace Sitecore.ContentSearch.Fluent
 
             filter = filter.And(this.FilterOptions.Filter);
 
-            this.QueryOptions.Queryable = this.QueryOptions.Queryable.Filter(filter);
+            this.Filter(filter);
 
             this.QueryOptions.Queryable = this.QueryOptions.Queryable.Skip(this.SearcherOptions.StartingPosition);
 
@@ -180,7 +181,7 @@ namespace Sitecore.ContentSearch.Fluent
 
             filter = filter.And(this.FilterOptions.Filter);
 
-            this.QueryOptions.Queryable = this.QueryOptions.Queryable.Filter(filter);
+            this.Filter(filter);
 
             if (facets.Any())
             {
@@ -201,6 +202,17 @@ namespace Sitecore.ContentSearch.Fluent
                                   .ToArray()
                 }).ToArray()
             };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public void Filter(Expression<Func<T, bool>> predicate)
+        {
+             this.QueryOptions.Queryable = this.QueryOptions.Queryable.Filter(predicate);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Sitecore.ContentSearch.Fluent.Options
         /// <summary>
         ///  Gets or sets the Search Manager
         /// </summary>
-        public SearchManager SearchManager { get; set; }
+        public ISearchManager SearchManager { get; set; }
 
         /// <summary>
         /// Gets or sets the Template Restrictions
@@ -90,7 +90,7 @@ namespace Sitecore.ContentSearch.Fluent.Options
         /// </summary>
         public Expression<Func<T, object>> SortBy { get; set; }
 
-        public SearcherOptions(SearchManager searchManager)
+        public SearcherOptions(ISearchManager searchManager)
         {
             this.Restrictions = new List<ID>();
             this.Facets = new List<String>();
