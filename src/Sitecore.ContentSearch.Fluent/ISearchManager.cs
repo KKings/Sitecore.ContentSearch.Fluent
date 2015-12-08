@@ -23,7 +23,7 @@ namespace Sitecore.ContentSearch.Fluent
     public interface ISearchManager : IDisposable
     {
         /// <summary>
-        /// 
+        /// Results for a Search Builder
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="searcherBuilder"></param>
@@ -31,16 +31,16 @@ namespace Sitecore.ContentSearch.Fluent
         Results.SearchResults<T> ResultsFor<T>(Action<ISearcher<T>> searcherBuilder) where T : SearchResultItem;
 
         /// <summary>
-        /// 
+        /// Facet Results for a SearchBuilder
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="searcherBuilder"></param>
         /// <param name="fieldFacets"></param>
         /// <returns></returns>
-        SearchFacets FacetsFor<T>(Action<Searcher<T>> searcherBuilder, IList<string> fieldFacets) where T : SearchResultItem;
+        SearchFacets FacetsFor<T>(Action<ISearcher<T>> searcherBuilder, IList<string> fieldFacets) where T : SearchResultItem;
 
         /// <summary>
-        /// 
+        /// Map Search Results to a different model
         /// </summary>
         /// <typeparam name="TModel"></typeparam>
         /// <param name="results"></param>
@@ -48,17 +48,15 @@ namespace Sitecore.ContentSearch.Fluent
         IList<TModel> Map<TModel>(IEnumerable<SearchHit<TModel>> results);
 
         /// <summary>
-        /// 
+        /// Get the Queryable
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         IQueryable<T> GetQueryable<T>();
 
         /// <summary>
-        /// 
+        /// Get the Searcher
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
         ISearcher<T> GetSearcher<T>() where T: SearchResultItem;
     }
 }

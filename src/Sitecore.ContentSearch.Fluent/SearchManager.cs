@@ -117,10 +117,10 @@ namespace Sitecore.ContentSearch.Fluent
         /// <param name="searcherBuilder"></param>
         /// <param name="fieldFacets"></param>
         /// <returns></returns>
-        public Results.SearchFacets FacetsFor<T>(Action<Searcher<T>> searcherBuilder, IList<string> fieldFacets)
+        public Results.SearchFacets FacetsFor<T>(Action<ISearcher<T>> searcherBuilder, IList<string> fieldFacets)
             where T : Results.SearchResultItem
         {
-            var searcher = new Searcher<T>(this);
+            var searcher = this.GetSearcher<T>();
             searcherBuilder(searcher);
 
             return searcher.Facets(fieldFacets);
@@ -141,7 +141,7 @@ namespace Sitecore.ContentSearch.Fluent
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public IQueryable<T> GetQueryable<T>()
+        public virtual IQueryable<T> GetQueryable<T>()
         {
             return this.SearchContext.GetQueryable<T>();
         }
@@ -151,7 +151,7 @@ namespace Sitecore.ContentSearch.Fluent
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public ISearcher<T> GetSearcher<T>() where T : SearchResultItem
+        public virtual ISearcher<T> GetSearcher<T>() where T : SearchResultItem
         {
             return new Searcher<T>(this);
         } 

@@ -147,7 +147,7 @@ namespace Sitecore.ContentSearch.Fluent
                 this.QueryOptions.Queryable = this.SortingOptions.ApplySorting(this.QueryOptions.Queryable);
             }
 
-            var results = this.QueryOptions.Queryable.GetResults();
+            var results = this.GetResults(this.QueryOptions.Queryable);
 
             // Removed the Sitecore Mapping and only used fields stored in the index
             return new Results.SearchResults<T>
@@ -205,14 +205,21 @@ namespace Sitecore.ContentSearch.Fluent
         }
 
         /// <summary>
-        /// 
+        /// Apples a Filter to the Queryable
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
-        public void Filter(Expression<Func<T, bool>> predicate)
+        /// <param name="predicate">Predicate to Apply</param>
+        public virtual void Filter(Expression<Func<T, bool>> predicate)
         {
              this.QueryOptions.Queryable = this.QueryOptions.Queryable.Filter(predicate);
+        }
+
+        /// <summary>
+        /// Gets the SearchResults from a Queryable
+        /// </summary>
+        /// <returns>The Search Results</returns>
+        public virtual Linq.SearchResults<T> GetResults(IQueryable<T> queryable)
+        {
+            return queryable.GetResults();
         }
     }
 }
