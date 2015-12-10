@@ -165,22 +165,28 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// </summary>
         /// <param name="terms">IEnumerable to aggregate on</param>
         /// <param name="filter">Lambda expression to filter on</param>
+        /// <param name="outtPredicateOr"></param>
         /// <param name="innerPredicateOr">Switches the Internal PredicateBuilder Predicate Seed</param>
         /// <returns>Instance of the SearcherOptionsBuilder</returns>
         public FilterOptionsQueryBuilder<T> WhereLoop<TR>(IEnumerable<IEnumerable<TR>> terms,
             Func<Expression<Func<T, bool>>, TR, Expression<Func<T, bool>>> filter,
+            bool outtPredicateOr = false,
             bool innerPredicateOr = false)
         {
             var enumerable = terms as IEnumerable<TR>[] ?? terms.ToArray();
 
             if (enumerable.Any() && filter != null)
             {
+                var seedPredicate = (outtPredicateOr) ? PredicateBuilder.False<T>() : PredicateBuilder.True<T>();
+
                 foreach (var group in enumerable)
                 {
                     var innerPredicate = (innerPredicateOr) ? PredicateBuilder.False<T>() : PredicateBuilder.True<T>();
 
-                    this.FilterOptions.Filter = this.FilterOptions.Filter.And(group.Aggregate(innerPredicate, filter));
+                    seedPredicate = seedPredicate.And(group.Aggregate(innerPredicate, filter));
                 }
+
+                this.FilterOptions.Filter = this.FilterOptions.Filter.And(seedPredicate);
             }
 
             return this;
