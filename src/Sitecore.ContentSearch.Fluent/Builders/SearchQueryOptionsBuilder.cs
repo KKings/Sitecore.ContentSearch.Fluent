@@ -180,22 +180,28 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// <summary>
         /// Filters out the Search Results by aggregating an array.
         /// <para>Passes each array item with a predicate into the expression for the caller</para>
+        /// <para>
+        /// TODO: Think about supporting (n) of layers
+        /// </para>
         /// </summary>
         /// <param name="terms">IEnumerable to aggregate on</param>
         /// <param name="filter">Lambda expression to filter on</param>
-        /// <param name="isPredicateOr">Switches the PredicateBuilder Predicate Seed</param>
+        /// <param name="innerPredicateOr">Switches the Internal PredicateBuilder Predicate Seed</param>
         /// <returns>Instance of the SearcherOptionsBuilder</returns>
-        public SearchQueryOptionsBuilder<T> Where<TR>(IEnumerable<IEnumerable<TR>> terms,
-            Func<Expression<Func<T, bool>>, IEnumerable<TR>, Expression<Func<T, bool>>> filter,
-            bool isPredicateOr = false)
+        public SearchQueryOptionsBuilder<T> WhereLoop<TR>(IEnumerable<IEnumerable<TR>> terms,
+            Func<Expression<Func<T, bool>>, TR, Expression<Func<T, bool>>> filter,
+            bool innerPredicateOr = false)
         {
             var enumerable = terms as IEnumerable<TR>[] ?? terms.ToArray();
 
             if (enumerable.Any() && filter != null)
             {
-                var termPredicate = (isPredicateOr) ? PredicateBuilder.False<T>() : PredicateBuilder.True<T>();
+                foreach (var group in enumerable)
+                {
+                    var innerPredicate = (innerPredicateOr) ? PredicateBuilder.False<T>() : PredicateBuilder.True<T>();
 
-                this.QueryOptions.Filter = this.QueryOptions.Filter.And(enumerable.Aggregate(termPredicate, filter));
+                    this.QueryOptions.Filter = this.QueryOptions.Filter.And(group.Aggregate(innerPredicate, filter));
+                }
             }
 
             return this;
