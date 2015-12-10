@@ -133,7 +133,7 @@ namespace Sitecore.ContentSearch.Fluent
 
             filter = filter.And(this.FilterOptions.Filter);
 
-            this.Filter(filter);
+            this.QueryOptions.Queryable = this.Filter(this.QueryOptions.Queryable, filter);
 
             this.QueryOptions.Queryable = this.QueryOptions.Queryable.Skip(this.SearcherOptions.StartingPosition);
 
@@ -181,14 +181,14 @@ namespace Sitecore.ContentSearch.Fluent
 
             filter = filter.And(this.FilterOptions.Filter);
 
-            this.Filter(filter);
+            this.QueryOptions.Queryable = this.Filter(this.QueryOptions.Queryable, filter);
 
             if (facets.Any())
             {
                 this.QueryOptions.Queryable = facets.Aggregate(this.QueryOptions.Queryable, (current, facetName) => current.FacetOn(c => c[facetName]));
             }
 
-            var results = this.QueryOptions.Queryable.GetFacets();
+            var results = this.GetFacets(this.QueryOptions.Queryable);
 
             return new SearchFacets
             {
@@ -207,12 +207,13 @@ namespace Sitecore.ContentSearch.Fluent
         /// <summary>
         /// Apples a Filter to the Queryable
         /// </summary>
+        /// <param name="queryable"></param>
         /// <param name="predicate">Predicate to Apply</param>
-        public virtual void Filter(Expression<Func<T, bool>> predicate)
+        public virtual IQueryable<T> Filter(IQueryable<T> queryable, Expression<Func<T, bool>> predicate)
         {
-             this.QueryOptions.Queryable = this.QueryOptions.Queryable.Filter(predicate);
+            return queryable.Filter(predicate);
         }
-
+        
         /// <summary>
         /// Gets the SearchResults from a Queryable
         /// </summary>
@@ -220,6 +221,16 @@ namespace Sitecore.ContentSearch.Fluent
         public virtual Linq.SearchResults<T> GetResults(IQueryable<T> queryable)
         {
             return queryable.GetResults();
+        }
+
+        /// <summary>
+        /// Gets the FacetResults fromt he Queryable
+        /// </summary>
+        /// <param name="queryable">The Search Facets</param>
+        /// <returns>The Facet Results</returns>
+        public virtual FacetResults GetFacets(IQueryable<T> queryable)
+        {
+            return queryable.GetFacets();
         }
     }
 }

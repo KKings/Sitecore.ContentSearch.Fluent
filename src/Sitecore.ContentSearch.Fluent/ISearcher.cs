@@ -19,18 +19,20 @@ namespace Sitecore.ContentSearch.Fluent
     using System.Linq;
     using System.Linq.Expressions;
     using Builders;
+    using Linq;
     using Results;
 
     public interface ISearcher<T> where T : SearchResultItem
     {
-        SearchResults<T> Results();
+        Results.SearchResults<T> Results();
         SearchFacets Facets(IList<string> facets);
         Searcher<T> Options(Action<SearcherOptionsBuilder<T>> searchBuildOptions);
         Searcher<T> Query(Action<QueryOptionsBuilder<T>> searchQueryBuildOptions);
         Searcher<T> Filter(Action<FilterOptionsBuilder<T>> filterQueryBuildOptions);
         Searcher<T> Sort(Action<SortingOptionsBuilder<T>> sortingBuildOptions);
 
-        void Filter(Expression<Func<T, bool>> predicate);
+        IQueryable<T> Filter(IQueryable<T> queryable, Expression<Func<T, bool>> predicate);
         Linq.SearchResults<T> GetResults(IQueryable<T> queryable);
+        FacetResults GetFacets(IQueryable<T> queryable);
     }
 }
