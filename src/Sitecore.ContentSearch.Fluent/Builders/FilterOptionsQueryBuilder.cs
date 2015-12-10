@@ -110,9 +110,11 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// </summary>
         /// <param name="terms">Terms to split and aggregate on</param>
         /// <param name="filter">Lambda expression to filter on</param>
+        /// <param name="isPredicateOr">Switches the PredicateBuilder Predicate Seed</param>
         /// <returns>Instance of the SearcherOptionsBuilder</returns>
         public FilterOptionsQueryBuilder<T> Where(string terms,
-            Func<Expression<Func<T, bool>>, string, Expression<Func<T, bool>>> filter)
+            Func<Expression<Func<T, bool>>, string, Expression<Func<T, bool>>> filter,
+            bool isPredicateOr = false)
         {
             if (!String.IsNullOrEmpty(terms) && filter != null)
             {
@@ -120,7 +122,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
 
                 if (termsSplit.Any())
                 {
-                    var termPredicate = PredicateBuilder.True<T>();
+                    var termPredicate = (isPredicateOr) ? PredicateBuilder.False<T>() : PredicateBuilder.True<T>();
 
                     this.FilterOptions.Filter =
                         this.FilterOptions.Filter.And(termsSplit.Aggregate(termPredicate, filter));
@@ -136,15 +138,41 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// </summary>
         /// <param name="terms">IEnumerable to aggregate on</param>
         /// <param name="filter">Lambda expression to filter on</param>
+        /// <param name="isPredicateOr">Switches the PredicateBuilder Predicate Seed</param>
         /// <returns>Instance of the SearcherOptionsBuilder</returns>
-        public FilterOptionsQueryBuilder<T> Where(IEnumerable<string> terms,
-            Func<Expression<Func<T, bool>>, string, Expression<Func<T, bool>>> filter)
+        public FilterOptionsQueryBuilder<T> Where<TR>(IEnumerable<TR> terms,
+            Func<Expression<Func<T, bool>>, TR, Expression<Func<T, bool>>> filter,
+            bool isPredicateOr = false)
         {
-            var enumerable = terms as string[] ?? terms.ToArray();
+            var enumerable = terms as TR[] ?? terms.ToArray();
 
             if (enumerable.Any() && filter != null)
             {
-                var termPredicate = PredicateBuilder.True<T>();
+                var termPredicate = (isPredicateOr) ? PredicateBuilder.False<T>() : PredicateBuilder.True<T>();
+
+                this.FilterOptions.Filter = this.FilterOptions.Filter.And(enumerable.Aggregate(termPredicate, filter));
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Filters out the Search Results by aggregating an array.
+        /// <para>Passes each array item with a predicate into the expression for the caller</para>
+        /// </summary>
+        /// <param name="terms">IEnumerable to aggregate on</param>
+        /// <param name="filter">Lambda expression to filter on</param>
+        /// <param name="isPredicateOr">Switches the PredicateBuilder Predicate Seed</param>
+        /// <returns>Instance of the SearcherOptionsBuilder</returns>
+        public FilterOptionsQueryBuilder<T> Where<TR>(IEnumerable<IEnumerable<TR>> terms,
+            Func<Expression<Func<T, bool>>, IEnumerable<TR>, Expression<Func<T, bool>>> filter,
+            bool isPredicateOr = false)
+        {
+            var enumerable = terms as IEnumerable<TR>[] ?? terms.ToArray();
+
+            if (enumerable.Any() && filter != null)
+            {
+                var termPredicate = (isPredicateOr) ? PredicateBuilder.False<T>() : PredicateBuilder.True<T>();
 
                 this.FilterOptions.Filter = this.FilterOptions.Filter.And(enumerable.Aggregate(termPredicate, filter));
             }
