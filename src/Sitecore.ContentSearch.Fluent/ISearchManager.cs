@@ -17,6 +17,7 @@ namespace Sitecore.ContentSearch.Fluent
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Facets;
     using Linq;
     using Results;
 
@@ -35,9 +36,9 @@ namespace Sitecore.ContentSearch.Fluent
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="searcherBuilder"></param>
-        /// <param name="fieldFacets"></param>
+        /// <param name="facets"></param>
         /// <returns></returns>
-        SearchFacets FacetsFor<T>(Action<ISearcher<T>> searcherBuilder, IList<string> fieldFacets) where T : SearchResultItem;
+        SearchFacets FacetsFor<T>(Action<ISearcher<T>> searcherBuilder, IList<IFacetOn> facets) where T : SearchResultItem;
 
         /// <summary>
         /// Map Search Results to a different model

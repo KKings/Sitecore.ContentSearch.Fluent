@@ -22,6 +22,7 @@ namespace Sitecore.ContentSearch.Fluent
     using ContentSearch;
     using Linq;
     using Data;
+    using Facets;
     using Results;
 
     /// <summary>
@@ -50,7 +51,7 @@ namespace Sitecore.ContentSearch.Fluent
         {
             get
             {
-                return _searchIndex ?? (_searchIndex = ContentSearchManager.GetIndex(this._indexLookup[this.Database.Name]));
+                return this._searchIndex ?? (this._searchIndex = ContentSearchManager.GetIndex(this._indexLookup[this.Database.Name]));
             }
         }
 
@@ -111,19 +112,19 @@ namespace Sitecore.ContentSearch.Fluent
         }
 
         /// <summary>
-        /// 
+        /// Gets 
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="searcherBuilder"></param>
-        /// <param name="fieldFacets"></param>
+        /// <param name="facets"></param>
         /// <returns></returns>
-        public Results.SearchFacets FacetsFor<T>(Action<ISearcher<T>> searcherBuilder, IList<string> fieldFacets)
-            where T : Results.SearchResultItem
+        public Results.SearchFacets FacetsFor<T>(Action<ISearcher<T>> searcherBuilder, IList<IFacetOn> facets)
+            where T : SearchResultItem
         {
             var searcher = this.GetSearcher<T>();
             searcherBuilder(searcher);
 
-            return searcher.Facets(fieldFacets);
+            return searcher.Facets(facets);
         }
 
         /// <summary>

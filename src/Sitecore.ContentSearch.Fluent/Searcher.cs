@@ -20,6 +20,7 @@ namespace Sitecore.ContentSearch.Fluent
     using System.Linq;
     using System.Linq.Expressions;
     using Builders;
+    using Facets;
     using Linq;
     using Linq.Utilities;
     using Options;
@@ -66,7 +67,7 @@ namespace Sitecore.ContentSearch.Fluent
         /// <para>Passes the Query Options as a parameter</para>
         /// </param>
         /// <returns></returns>
-        public Searcher<T> Options(Action<SearcherOptionsBuilder<T>> searchBuildOptions)
+        public virtual Searcher<T> Options(Action<SearcherOptionsBuilder<T>> searchBuildOptions)
         {
             searchBuildOptions(new SearcherOptionsBuilder<T>(this.SearcherOptions));
             return this;
@@ -79,7 +80,7 @@ namespace Sitecore.ContentSearch.Fluent
         /// <para>Passes the Searcher Options as a parameter</para>
         /// </param>
         /// <returns>Instance of the Searcher</returns>
-        public Searcher<T> Query(Action<QueryOptionsBuilder<T>> searchQueryBuildOptions)
+        public virtual Searcher<T> Query(Action<QueryOptionsBuilder<T>> searchQueryBuildOptions)
         {
             searchQueryBuildOptions(new QueryOptionsBuilder<T>(this.QueryOptions));
             return this;
@@ -92,7 +93,7 @@ namespace Sitecore.ContentSearch.Fluent
         /// <para>Passes the Searcher Options as a parameter</para>
         /// </param>
         /// <returns>Instance of the Searcher</returns>
-        public Searcher<T> Filter(Action<FilterOptionsBuilder<T>> filterQueryBuildOptions)
+        public virtual Searcher<T> Filter(Action<FilterOptionsBuilder<T>> filterQueryBuildOptions)
         {
             filterQueryBuildOptions(new FilterOptionsBuilder<T>(this.FilterOptions));
             return this;
@@ -104,7 +105,7 @@ namespace Sitecore.ContentSearch.Fluent
         /// <param name="sortingBuildOptions">Creates a new Instance of the sortingBuildOptions to build the query
         /// <para>Passes the QueryOptions as a parameter</para></param>      
         /// <returns>Instance of the Searcher</returns>
-        public Searcher<T> Sort(Action<SortingOptionsBuilder<T>> sortingBuildOptions)
+        public virtual Searcher<T> Sort(Action<SortingOptionsBuilder<T>> sortingBuildOptions)
         {
             sortingBuildOptions(new SortingOptionsBuilder<T>(this.SortingOptions));
             return this;
@@ -118,7 +119,7 @@ namespace Sitecore.ContentSearch.Fluent
         /// <para>For all query options, see <see cref="QueryOptions"/>QueryOptions</para>
         /// </summary>
         /// <returns>Search Results of T</returns>
-        public Results.SearchResults<T> Results()
+        public virtual Results.SearchResults<T> Results()
         {
             this.QueryOptions.Queryable = this.QueryOptions.Queryable.Where(this.QueryOptions.Filter);
 
@@ -166,7 +167,7 @@ namespace Sitecore.ContentSearch.Fluent
         /// </summary>
         /// <param name="facets">Array of strings to facet on</param>
         /// <returns>Facets for Query</returns>
-        public SearchFacets Facets(IList<string> facets)
+        public virtual SearchFacets Facets(IList<IFacetOn> facets)
         {
             this.QueryOptions.Queryable = this.QueryOptions.Queryable.Where(this.QueryOptions.Filter);
 
@@ -183,12 +184,7 @@ namespace Sitecore.ContentSearch.Fluent
 
             this.QueryOptions.Queryable = this.Filter(this.QueryOptions.Queryable, filter);
 
-            if (facets.Any())
-            {
-                this.QueryOptions.Queryable = facets.Aggregate(this.QueryOptions.Queryable, (current, facetName) => current.FacetOn(c => c[facetName]));
-            }
-
-            var results = this.GetFacets(this.QueryOptions.Queryable);
+            var results = this.GetFacets(this.QueryOptions.Queryable, facets);
 
             return new SearchFacets
             {
@@ -227,9 +223,15 @@ namespace Sitecore.ContentSearch.Fluent
         /// Gets the FacetResults fromt he Queryable
         /// </summary>
         /// <param name="queryable">The Search Facets</param>
+        /// <param name="facets">Facets</param>
         /// <returns>The Facet Results</returns>
-        public virtual FacetResults GetFacets(IQueryable<T> queryable)
+        public virtual FacetResults GetFacets(IQueryable<T> queryable, IList<IFacetOn> facets)
         {
+            if (facets.Any())
+            {
+                queryable = facets.Aggregate(queryable, (current, facet) => facet.AddFacet(current));
+            }
+
             return queryable.GetFacets();
         }
     }
