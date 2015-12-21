@@ -33,7 +33,8 @@
     <Reference Include="Sitecore.ContentSearch">
       <HintPath>..\References\Sitecore.ContentSearch.dll</HintPath>
     </Reference>
-    <Reference Include="Sitecore.ContentSearch.Linq">
+    <Reference Include="Sitecore.ContentSearch.Linq, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\References\Sitecore.ContentSearch.Linq.dll</HintPath>
     </Reference>
     <Reference Include="Sitecore.Kernel">
@@ -55,8 +56,12 @@
     <Compile Include="Builders\SearcherOptionsBuilder.cs" />
     <Compile Include="Builders\SearchQueryOptionsBuilder.cs" />
     <Compile Include="Builders\SortingOptionsBuilder.cs" />
+    <Compile Include="Facets\FacetBase.cs" />
     <Compile Include="Facets\FacetCategory.cs" />
+    <Compile Include="Facets\FacetOn.cs" />
+    <Compile Include="Facets\FacetOnFilter.cs" />
     <Compile Include="Facets\FacetValue.cs" />
+    <Compile Include="Facets\IFacetOn.cs" />
     <Compile Include="ISearcher.cs" />
     <Compile Include="ISearchManager.cs" />
     <Compile Include="Options\FilterOptions.cs" />
