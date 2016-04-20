@@ -53,6 +53,21 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         }
 
         /// <summary>
+        /// Filters out the Search Results
+        /// </summary>
+        /// <returns>Instance of the SearchQueryOptionsBuilder</returns>
+        public QueryOptionsBuilder<T> AndOr(Action<SearchQueryOptionsBuilder<T>> filterAction)
+        {
+            var searchOptions = new QueryOptions<T>(true, false);
+
+            filterAction(new SearchQueryOptionsBuilder<T>(searchOptions));
+
+            this.QueryOptions.Filter = this.QueryOptions.Filter.And(searchOptions.Filter);
+
+            return this;
+        }
+
+        /// <summary>
         /// Filters out the Search Results if available
         /// </summary>
         /// <returns>Instance of the SearchQueryOptionsBuilder</returns>

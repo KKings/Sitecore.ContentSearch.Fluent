@@ -52,7 +52,9 @@ namespace Sitecore.ContentSearch.Fluent.Builders
 
             filterAction(new SearchQueryOptionsBuilder<T>(searchOptions));
 
-            this.QueryOptions.Filter = this.QueryOptions.Filter.And(searchOptions.Filter);
+            this.QueryOptions.Filter = this.QueryOptions.UseAndPredicate 
+                ? this.QueryOptions.Filter.And(searchOptions.Filter) 
+                : this.QueryOptions.Filter.Or(searchOptions.Filter);
 
             return this;
         }
@@ -67,7 +69,9 @@ namespace Sitecore.ContentSearch.Fluent.Builders
 
             filterAction(new SearchQueryOptionsBuilder<T>(searchOptions));
 
-            this.QueryOptions.Filter = this.QueryOptions.Filter.And(searchOptions.Filter);
+            this.QueryOptions.Filter = this.QueryOptions.UseAndPredicate
+                ? this.QueryOptions.Filter.And(searchOptions.Filter)
+                : this.QueryOptions.Filter.Or(searchOptions.Filter);
 
             return this;
         }
@@ -76,13 +80,30 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// Groups filters by AND
         /// </summary>
         /// <returns>Instance of the SearchQueryOptionsBuilder</returns>
-        public SearchQueryOptionsBuilder<T> OrElse(Action<SearchQueryOptionsBuilder<T>> filterAction)
+        public SearchQueryOptionsBuilder<T> Not(Action<SearchQueryOptionsBuilder<T>> filterAction)
         {
-            var searchOptions = new QueryOptions<T>(false, true);
+            var searchOptions = new QueryOptions<T>();
 
             filterAction(new SearchQueryOptionsBuilder<T>(searchOptions));
 
-            this.QueryOptions.Filter = this.QueryOptions.Filter.And(searchOptions.Filter);
+            this.QueryOptions.Filter = this.QueryOptions.Filter.And(searchOptions.Filter.Not());
+
+            return this;
+        }
+
+        /// <summary>
+        /// Groups filters by AND
+        /// </summary>
+        /// <returns>Instance of the SearchQueryOptionsBuilder</returns>
+        public SearchQueryOptionsBuilder<T> AndOr(Action<SearchQueryOptionsBuilder<T>> filterAction)
+        {
+            var searchOptions = new QueryOptions<T>(true, false);
+
+            filterAction(new SearchQueryOptionsBuilder<T>(searchOptions));
+
+            this.QueryOptions.Filter = this.QueryOptions.UseAndPredicate
+                ? this.QueryOptions.Filter.And(searchOptions.Filter)
+                : this.QueryOptions.Filter.Or(searchOptions.Filter);
 
             return this;
         }
