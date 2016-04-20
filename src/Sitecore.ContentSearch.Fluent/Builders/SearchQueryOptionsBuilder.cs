@@ -67,7 +67,22 @@ namespace Sitecore.ContentSearch.Fluent.Builders
 
             filterAction(new SearchQueryOptionsBuilder<T>(searchOptions));
 
-            this.QueryOptions.Filter = this.QueryOptions.Filter.Or(searchOptions.Filter);
+            this.QueryOptions.Filter = this.QueryOptions.Filter.And(searchOptions.Filter);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Groups filters by AND
+        /// </summary>
+        /// <returns>Instance of the SearchQueryOptionsBuilder</returns>
+        public SearchQueryOptionsBuilder<T> OrElse(Action<SearchQueryOptionsBuilder<T>> filterAction)
+        {
+            var searchOptions = new QueryOptions<T>(false, true);
+
+            filterAction(new SearchQueryOptionsBuilder<T>(searchOptions));
+
+            this.QueryOptions.Filter = this.QueryOptions.Filter.And(searchOptions.Filter);
 
             return this;
         }
@@ -81,7 +96,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         {
             if (filter != null)
             {
-                this.QueryOptions.Filter = this.QueryOptions.Filter.And(filter);
+                this.QueryOptions.Filter = this.QueryOptions.UseAndPredicate ? this.QueryOptions.Filter.And(filter) : this.QueryOptions.Filter.Or(filter);
             }
 
             return this;
@@ -97,7 +112,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         {
             if (condition && filter != null)
             {
-                this.QueryOptions.Filter = this.QueryOptions.Filter.And(filter);
+                this.QueryOptions.Filter = this.QueryOptions.UseAndPredicate ? this.QueryOptions.Filter.And(filter) : this.QueryOptions.Filter.Or(filter);
             }
 
             return this;

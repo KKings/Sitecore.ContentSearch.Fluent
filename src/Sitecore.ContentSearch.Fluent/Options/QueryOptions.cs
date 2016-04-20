@@ -36,6 +36,11 @@ namespace Sitecore.ContentSearch.Fluent.Options
         /// </summary>
         public IQueryable<T> Queryable { get; internal set; }
 
+        /// <summary>
+        /// Gets or sets if its an Or Predicate
+        /// </summary>
+        public bool UseAndPredicate { get; internal set; }
+
         public QueryOptions() : this(true)
         {
         }
@@ -44,8 +49,14 @@ namespace Sitecore.ContentSearch.Fluent.Options
         {
         }
 
-        public QueryOptions(IQueryable<T> queryable, bool isAnd = true)
+        public QueryOptions(bool isAnd, bool useAnd) : this(null, isAnd, useAnd)
         {
+        }
+
+        public QueryOptions(IQueryable<T> queryable, bool isAnd = true, bool useAndPredicate = true)
+        {
+            this.UseAndPredicate = useAndPredicate;
+
             this.Queryable = queryable;
             this.Filter = (isAnd) 
                 ? PredicateBuilder.True<T>()

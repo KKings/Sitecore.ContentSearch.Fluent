@@ -62,7 +62,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
 
             filterAction(new SearchQueryOptionsBuilder<T>(searchOptions));
 
-            this.QueryOptions.Filter = this.QueryOptions.Filter.Or(searchOptions.Filter);
+            this.QueryOptions.Filter = this.QueryOptions.Filter.And(searchOptions.Filter);
 
             return this;
         }
