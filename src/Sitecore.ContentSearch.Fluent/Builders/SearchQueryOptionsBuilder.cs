@@ -213,6 +213,33 @@ namespace Sitecore.ContentSearch.Fluent.Builders
             return this;
         }
 
+
+        /// <summary>
+        /// Filters out the Search Results by aggregating an array.
+        /// <para>Passes each array item with a predicate into the expression for the caller</para>
+        /// </summary>
+        /// <param name="terms">IEnumerable to aggregate on</param>
+        /// <param name="single"></param>
+        /// <param name="filter">Lambda expression to filter on</param>
+        /// <param name="isPredicateOr">Switches the PredicateBuilder Predicate Seed</param>
+        /// <returns>Instance of the SearcherOptionsBuilder</returns>
+        public SearchQueryOptionsBuilder<T> Or<TR>(IEnumerable<TR> terms,
+            Expression<Func<T, bool>> single,
+            Func<Expression<Func<T, bool>>, TR, Expression<Func<T, bool>>> filter,
+            bool isPredicateOr = false)
+        {
+            var array = terms as TR[] ?? terms.ToArray();
+
+            if (array.Any() && filter != null)
+            {
+                var termPredicate = (isPredicateOr) ? PredicateBuilder.False<T>() : PredicateBuilder.True<T>();
+
+                this.QueryOptions.Filter = this.QueryOptions.Filter.And(single.Or(array.Aggregate(termPredicate, filter)));
+            }
+
+            return this;
+        }
+
         /// <summary>
         /// Filters out the Search Results by aggregating an array.
         /// <para>Passes each array item with a predicate into the expression for the caller</para>
