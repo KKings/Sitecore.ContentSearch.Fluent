@@ -67,6 +67,7 @@
 
         }
 
+        [TestCategory("Query")]
         [TestMethod]
         public void Query_And_Where_ReturnsResultsWithTest()
         {
@@ -81,6 +82,7 @@
             }
         }
 
+        [TestCategory("Query")]
         [TestMethod]
         public void Query_Or_Where_ReturnsOnlyArticlesWithTest()
         {
@@ -96,7 +98,7 @@
             }
         }
 
-
+        [TestCategory("Query")]
         [TestMethod]
         public void Combined_Query_MultipleOrWhere_Filter_Where_ReturnsResults()
         {
@@ -115,6 +117,7 @@
             }
         }
 
+        [TestCategory("Query")]
         [TestMethod]
         public void Query_Complex_Multiple_Conditions_ReturnsResults()
         {
@@ -136,7 +139,7 @@
             }
         }
 
-
+        [TestCategory("Query")]
         [TestMethod]
         public void Query_Any_ReturnsResults()
         {
@@ -151,6 +154,7 @@
             }
         }
 
+        [TestCategory("Query")]
         [TestMethod]
         public void Query_All_ReturnsResults()
         {
@@ -166,6 +170,7 @@
             }
         }
 
+        [TestCategory("Query")]
         [TestMethod]
         public void Query_Complex_Any_OrWhere_ReturnsResults()
         {
@@ -181,7 +186,7 @@
             }
         }
 
-
+        [TestCategory("Filter")]
         [TestMethod]
         public void Filter_Any_ReturnsResults()
         {
@@ -196,6 +201,7 @@
             }
         }
 
+        [TestCategory("Filter")]
         [TestMethod]
         public void Filter_All_ReturnsResults()
         {
@@ -210,6 +216,7 @@
             }
         }
 
+        [TestCategory("Query")]
         [TestMethod]
         public void Query_IfWhere_ReturnsAllResults()
         {
@@ -224,6 +231,7 @@
             }
         }
 
+        [TestCategory("Filter")]
         [TestMethod]
         public void Filter_IfWhere_ReturnsAllResults()
         {
@@ -238,6 +246,7 @@
             }
         }
 
+        [TestCategory("Manager")]
         [TestMethod]
         public void SearchManager_Empty_ReturnsAllResults()
         {
@@ -249,6 +258,7 @@
             }
         }
 
+        [TestCategory("Paging")]
         [TestMethod]
         public void Take_4_NoQuery_ReturnsExactResults()
         {
@@ -262,6 +272,7 @@
             }
         }
 
+        [TestCategory("Paging")]
         [TestMethod]
         public void Take_0_NoQuery_ReturnsAllResults()
         {
@@ -270,6 +281,167 @@
                 var results = manager.ResultsFor<TestSearchResultItem>(search => search
                     .Paging(o => o
                         .Take(0)));
+
+                Assert.AreEqual(6, results.Total);
+            }
+        }
+
+        [TestCategory("Paging")]
+        [TestMethod]
+        public void Take_Negative_NoQuery_ReturnsAllResults()
+        {
+            using (var manager = this.searchManager.Object)
+            {
+                var results = manager.ResultsFor<TestSearchResultItem>(search => search
+                    .Paging(o => o
+                        .Take(-10)));
+
+                Assert.AreEqual(6, results.Total);
+            }
+        }
+
+        [TestCategory("Paging")]
+        [TestMethod]
+        public void Skip_Negative_NoQuery_ReturnsAllResults()
+        {
+            using (var manager = this.searchManager.Object)
+            {
+                var results = manager.ResultsFor<TestSearchResultItem>(search => search
+                    .Paging(o => o
+                        .Skip(-10)));
+
+                Assert.AreEqual(6, results.Total);
+            }
+        }
+
+        [TestCategory("Paging")]
+        [TestMethod]
+        public void Skip_0_NoQuery_ReturnsAllResults()
+        {
+            using (var manager = this.searchManager.Object)
+            {
+                var results = manager.ResultsFor<TestSearchResultItem>(search => search
+                    .Paging(o => o
+                        .Skip(-10)));
+
+                Assert.AreEqual(6, results.Total);
+            }
+        }
+
+        [TestCategory("Paging")]
+        [TestMethod]
+        public void Skip_MoreThanWithinIndex_NoQuery_ReturnsEmpty()
+        {
+            using (var manager = this.searchManager.Object)
+            {
+                var results = manager.ResultsFor<TestSearchResultItem>(search => search
+                    .Paging(o => o
+                        .Skip(10)));
+
+                Assert.AreEqual(0, results.Total);
+            }
+        }
+
+        [TestCategory("Paging")]
+        [TestMethod]
+        public void PageMode_Start_NoQuery_ReturnsPageSize()
+        {
+            using (var manager = this.searchManager.Object)
+            {
+                var results = manager.ResultsFor<TestSearchResultItem>(search => search
+                    .Paging(o => o
+                        .SetPageMode(PageMode.Start)
+                        .SetStartingPosition(4)
+                        .SetDisplaySize(2)));
+
+                Assert.AreEqual(2, results.Total);
+            }
+        }
+
+        [TestCategory("Query")]
+        [TestMethod]
+        public void Query_ManyAny_ReturnsAllResults()
+        {
+            var groups = new[]
+            {
+                new[] { Constants.SemanticId3, Constants.SemanticId4 },
+                new[] { Constants.SemanticId1, Constants.SemanticId5 }
+            };
+
+            using (var manager = this.searchManager.Object)
+            {
+                var results = manager.ResultsFor<TestSearchResultItem>(search => search
+                    .Query(query => query
+                        .And(and => and
+                            .ManyAny(groups, (result, id) => result.Semantics.Contains(id)))));
+
+                Assert.AreEqual(2, results.Total);
+            }
+        }
+
+        [TestCategory("Query")]
+        [TestMethod]
+        public void Query_IfManyAny_ReturnsAllResults()
+        {
+            var groups = new[]
+            {
+                new[] { Constants.SemanticId3, Constants.SemanticId4 },
+                new[] { Constants.SemanticId1, Constants.SemanticId5 }
+            };
+
+            using (var manager = this.searchManager.Object)
+            {
+                var results = manager.ResultsFor<TestSearchResultItem>(search => search
+                    .Query(query => query
+                        .And(and => and
+                            .Where(result => result.Name.Contains("Test"))
+                            // This should not be added based on the condition
+                            .IfManyAny(false, groups, (result, id) => result.Semantics.Contains(id)))));
+
+                Assert.AreEqual(6, results.Total);
+            }
+        }
+
+        [TestCategory("Query")]
+        [TestMethod]
+        public void Query_OrManyAny_ReturnsAllResults()
+        {
+            var groups = new[]
+            {
+                new[] { Constants.SemanticId3, Constants.SemanticId4 },
+                new[] { Constants.SemanticId1, Constants.SemanticId5 }
+            };
+
+            using (var manager = this.searchManager.Object)
+            {
+                var results = manager.ResultsFor<TestSearchResultItem>(search => search
+                    .Query(query => query
+                        .And(and => and
+                            .Where(result => result.Name == "Unknown")
+                            .OrManyAny(groups, (result, id) => result.Semantics.Contains(id)))));
+
+                Assert.AreEqual(2, results.Total);
+            }
+        }
+
+        [TestCategory("Query")]
+        [TestMethod]
+        public void Query_IfOrManyAny_ReturnsAllResults()
+        {
+            var groups = new[]
+            {
+                new[] { Constants.SemanticId3, Constants.SemanticId4 },
+                new[] { Constants.SemanticId1, Constants.SemanticId5 }
+            };
+
+            using (var manager = this.searchManager.Object)
+            {
+                var results = manager.ResultsFor<TestSearchResultItem>(search => search
+                    .Query(query => query
+                        .And(and => and
+                            .Where(result => result.Name.Contains("Test"))
+                            // This should not be added based on the condition
+                            .IfOrManyAny(false, groups, (result, id) => result.Semantics.Contains(id)))));
 
                 Assert.AreEqual(6, results.Total);
             }

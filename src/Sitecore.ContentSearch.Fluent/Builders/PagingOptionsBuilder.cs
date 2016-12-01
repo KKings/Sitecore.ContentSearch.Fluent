@@ -32,9 +32,9 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// <summary>
         /// Builds the SearcherOptions
         /// </summary>
-        protected readonly PagingOptions<T> PagingOptions;
+        protected readonly PagingOptions PagingOptions;
 
-        public PagingOptionsBuilder(PagingOptions<T> searchOptions)
+        public PagingOptionsBuilder(PagingOptions searchOptions)
         {
             this.PagingOptions = searchOptions;
         }
@@ -59,6 +59,27 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         {
             this.PagingOptions.Start = page <= 0 ? 1 : page;
             return this;
+        }
+
+        /// <summary>
+        /// Convenience method, calls <see cref="Take"/> internally
+        /// </summary>
+        /// <param name="size">Display Size</param>
+        /// <returns>Instance of the SearcherOptionsBuilder</returns>
+        public PagingOptionsBuilder<T> SetDisplaySize(int size)
+        {
+            return this.Take(size);
+        }
+
+        /// <summary>
+        /// Convenience method, calls <see cref="Skip"/> internally
+        /// <para>PASSES <c>True</c> to <see cref="Skip"/></para>
+        /// </summary>
+        /// <param name="start">Display Size</param>
+        /// <returns>Instance of the SearcherOptionsBuilder</returns>
+        public PagingOptionsBuilder<T> SetStartingPosition(int start)
+        {
+            return this.Skip(start, true);
         }
 
         /// <summary>

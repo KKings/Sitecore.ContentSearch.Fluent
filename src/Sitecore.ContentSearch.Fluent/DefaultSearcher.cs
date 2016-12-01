@@ -45,7 +45,7 @@ namespace Sitecore.ContentSearch.Fluent
         /// <summary>
         /// The Paging Options for skipping/taking
         /// </summary>
-        protected readonly PagingOptions<T> PagingOptions = new PagingOptions<T>();
+        protected readonly PagingOptions PagingOptions = new PagingOptions();
 
         /// <summary>
         /// The Query Filters

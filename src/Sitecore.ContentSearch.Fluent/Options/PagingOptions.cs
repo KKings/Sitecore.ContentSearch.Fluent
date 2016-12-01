@@ -21,12 +21,10 @@
 // SOFTWARE.
 namespace Sitecore.ContentSearch.Fluent.Options
 {
-    using Results;
-
     /// <summary>
     /// SearcherOptions Summary
     /// </summary>
-    public class PagingOptions<T> where T : SearchResultItem
+    public class PagingOptions
     {
         /// <summary>
         /// Gets or sets the PageMode
@@ -41,7 +39,7 @@ namespace Sitecore.ContentSearch.Fluent.Options
         /// <summary>
         /// Gets or sets the returned results
         /// </summary>
-        public int Display { get; set; } = 10;
+        public virtual int Display { get; set; } = 10;
 
         /// <summary>
         /// Gets the calculating StartingPosition
