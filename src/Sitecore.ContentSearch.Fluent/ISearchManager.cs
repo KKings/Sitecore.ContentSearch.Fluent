@@ -48,6 +48,15 @@ namespace Sitecore.ContentSearch.Fluent
         SearchFacets FacetsFor<T>(Action<ISearcher<T>> searcherBuilder, IList<IFacetOn> facets) where T : SearchResultItem;
 
         /// <summary>
+        /// Facet Results for a SearchBuilder
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="searcherBuilder"></param>
+        /// <param name="facets"></param>
+        /// <returns></returns>
+        SearchResultsWithFacets<T> ResultsWithFacetsFor<T>(Action<ISearcher<T>> searcherBuilder, IList<IFacetOn> facets) where T : SearchResultItem;
+
+        /// <summary>
         /// Get the Queryable
         /// </summary>
         /// <typeparam name="T" />

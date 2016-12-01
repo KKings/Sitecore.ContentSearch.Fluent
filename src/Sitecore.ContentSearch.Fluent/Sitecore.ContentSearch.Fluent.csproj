@@ -79,7 +79,7 @@
     <Compile Include="Options\FilterOptions.cs" />
     <Compile Include="Options\QueryableOptions.cs" />
     <Compile Include="Options\QueryOptions.cs" />
-    <Compile Include="Options\SearcherOptions.cs" />
+    <Compile Include="Options\PagingOptions.cs" />
     <Compile Include="Options\SearchQueryOptions.cs" />
     <Compile Include="Options\SortingOptions.cs" />
     <Compile Include="PageMode.cs" />
@@ -87,7 +87,8 @@
     <Compile Include="Results\SearchFacets.cs" />
     <Compile Include="Results\SearchResultItem.cs" />
     <Compile Include="Results\SearchResults.cs" />
-    <Compile Include="Searcher.cs" />
+    <Compile Include="DefaultSearcher.cs" />
+    <Compile Include="Results\SearchResultsWithFacets.cs" />
     <Compile Include="SearchManager.cs" />
     <Compile Include="SortOrder.cs" />
   </ItemGroup>

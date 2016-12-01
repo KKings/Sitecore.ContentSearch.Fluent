@@ -35,34 +35,36 @@ namespace Sitecore.ContentSearch.Fluent
     /// <summary>
     /// Searcher Summary
     /// </summary>
-    public class Searcher<T> : ISearcher<T> where T : SearchResultItem
+    public class DefaultSearcher<T> : ISearcher<T> where T : SearchResultItem
     {
         /// <summary>
-        /// The SearcherOptions 
+        /// Global Search Queryable which all actions will add to 
         /// </summary>
-        protected readonly SearcherOptions<T> SearcherOptions;
+        private IQueryable<T> searchQueryable;
 
         /// <summary>
-        /// The QueryOptions
+        /// The Paging Options for skipping/taking
         /// </summary>
-        protected readonly QueryOptions<T> QueryOptions;
+        protected readonly PagingOptions<T> PagingOptions = new PagingOptions<T>();
 
         /// <summary>
-        /// The FilterOptions. This is separated out as FilterOptions must be applied to a different method
+        /// The Query Filters
         /// </summary>
-        protected readonly FilterOptions<T> FilterOptions;
+        protected readonly QueryOptions<T> QueryOptions = new QueryOptions<T>();
+
+        /// <summary>
+        /// The Filter Filters =). This is separated out as FilterOptions must be applied to a different method
+        /// </summary>
+        protected readonly FilterOptions<T> FilterOptions = new FilterOptions<T>();
 
         /// <summary>
         /// The SortingOptions
         /// </summary>
-        protected readonly SortingOptions<T> SortingOptions;
+        protected readonly SortingOptions<T> SortingOptions = new SortingOptions<T>();
 
-        public Searcher(ISearchManager searchManager)
+        public DefaultSearcher(IQueryable<T> searchQueryable)
         {
-            this.SearcherOptions = new SearcherOptions<T>(searchManager);
-            this.QueryOptions = new QueryOptions<T>(this.SearcherOptions.SearchManager.GetQueryable<T>());
-            this.FilterOptions = new FilterOptions<T>();
-            this.SortingOptions = new SortingOptions<T>();
+            this.searchQueryable = searchQueryable;
         }
 
         /// <summary>
@@ -72,9 +74,9 @@ namespace Sitecore.ContentSearch.Fluent
         /// <para>Passes the Query Options as a parameter</para>
         /// </param>
         /// <returns></returns>
-        public virtual Searcher<T> Paging(Action<PagingOptionsBuilder<T>> searchBuildOptions)
+        public virtual DefaultSearcher<T> Paging(Action<PagingOptionsBuilder<T>> searchBuildOptions)
         {
-            searchBuildOptions(new PagingOptionsBuilder<T>(this.SearcherOptions));
+            searchBuildOptions(new PagingOptionsBuilder<T>(this.PagingOptions));
             return this;
         }
 
@@ -85,7 +87,7 @@ namespace Sitecore.ContentSearch.Fluent
         /// <para>Passes the Searcher Options as a parameter</para>
         /// </param>
         /// <returns>Instance of the Searcher</returns>
-        public virtual Searcher<T> Query(Action<QueryBuilder<T>> searchQueryBuildOptions)
+        public virtual DefaultSearcher<T> Query(Action<QueryBuilder<T>> searchQueryBuildOptions)
         {
             searchQueryBuildOptions(new QueryBuilder<T>(this.QueryOptions));
             return this;
@@ -98,7 +100,7 @@ namespace Sitecore.ContentSearch.Fluent
         /// <para>Passes the Searcher Options as a parameter</para>
         /// </param>
         /// <returns>Instance of the Searcher</returns>
-        public virtual Searcher<T> Filter(Action<FilterBuilder<T>> filterQueryBuildOptions)
+        public virtual DefaultSearcher<T> Filter(Action<FilterBuilder<T>> filterQueryBuildOptions)
         {
             filterQueryBuildOptions(new FilterBuilder<T>(this.FilterOptions));
             return this;
@@ -110,7 +112,7 @@ namespace Sitecore.ContentSearch.Fluent
         /// <param name="sortingBuildOptions">Creates a new Instance of the sortingBuildOptions to build the query
         /// <para>Passes the QueryOptions as a parameter</para></param>      
         /// <returns>Instance of the Searcher</returns>
-        public virtual Searcher<T> Sort(Action<SortingOptionsBuilder<T>> sortingBuildOptions)
+        public virtual DefaultSearcher<T> Sort(Action<SortingOptionsBuilder<T>> sortingBuildOptions)
         {
             sortingBuildOptions(new SortingOptionsBuilder<T>(this.SortingOptions));
             return this;
@@ -120,7 +122,7 @@ namespace Sitecore.ContentSearch.Fluent
         /// Fetches the results from the Index provided in the SearchManager.
         /// <para>Restrictions are filtered out through the options</para>
         /// <para>Sorting is done through the options</para>
-        /// <para>For all options, see <see cref="SearcherOptions"/>SearcherOptions</para>
+        /// <para>For all options, see <see cref="PagingOptions"/>SearcherOptions</para>
         /// <para>For all query options, see <see cref="QueryOptions"/>QueryOptions</para>
         /// </summary>
         /// <returns>Search Results of T</returns>
@@ -128,27 +130,30 @@ namespace Sitecore.ContentSearch.Fluent
         {
             if (this.QueryOptions.Filter != null)
             {
-                this.QueryOptions.Queryable = this.QueryOptions.Queryable.Where(this.QueryOptions.Filter);
+                this.searchQueryable = this.searchQueryable.Where(this.QueryOptions.Filter);
             }
 
             if (this.FilterOptions.Filter != null)
             {
-                this.QueryOptions.Queryable = this.Filter(this.QueryOptions.Queryable, this.FilterOptions.Filter);
+                this.searchQueryable = this.Filter(this.searchQueryable, this.FilterOptions.Filter);
             }
 
-            this.QueryOptions.Queryable = this.QueryOptions.Queryable.Skip(this.SearcherOptions.StartingPosition);
-
-            if (this.SearcherOptions.Display > 0)
+            if (this.PagingOptions.StartingPosition > 0)
             {
-                this.QueryOptions.Queryable = this.QueryOptions.Queryable.Take(this.SearcherOptions.Display);
+                this.searchQueryable = this.searchQueryable.Skip(this.PagingOptions.StartingPosition);
+            }
+
+            if (this.PagingOptions.Display > 0)
+            {
+                this.searchQueryable = this.searchQueryable.Take(this.PagingOptions.Display);
             }
 
             if (this.SortingOptions.Expressions.Any())
             {
-                this.QueryOptions.Queryable = this.SortingOptions.ApplySorting(this.QueryOptions.Queryable);
+                this.searchQueryable = this.SortingOptions.ApplySorting(this.searchQueryable);
             }
 
-            var results = this.GetResults(this.QueryOptions.Queryable);
+            var results = this.GetResults(this.searchQueryable);
 
             // Removed the Sitecore Mapping and only used fields stored in the index
             return new Results.SearchResults<T>(
@@ -157,26 +162,37 @@ namespace Sitecore.ContentSearch.Fluent
         }
 
         /// <summary>
+        /// Convenience method to retrieve results and the facets at the same time
+        /// <para>Although it says same time, this is effectively 2 queries, once for results, once for the facets.</para>
+        /// </summary>
+        /// <returns>Results and Facets for the query</returns>
+        public virtual SearchResultsWithFacets<T> ResultsWithFacets(IList<IFacetOn> facets)
+        {
+            return new SearchResultsWithFacets<T>(this.Results(), this.Facets(facets));
+        }
+
+        /// <summary>
         /// Fetches the facets from the Index provided in the SearchManager.
         /// <para>Restrictions are filtered out through the options</para>
         /// <para>Sorting is done through the options</para>
-        /// <para>For all options, see <see cref="SearcherOptions"/>SearcherOptions</para>
+        /// <para>For all options, see <see cref="PagingOptions"/>SearcherOptions</para>
         /// <para>For all query options, see <see cref="QueryOptions"/>QueryOptions</para>
         /// </summary>
         /// <param name="facets">Array of strings to facet on</param>
         /// <returns>Facets for Query</returns>
         public virtual SearchFacets Facets(IList<IFacetOn> facets)
         {
-            this.QueryOptions.Queryable = this.QueryOptions.Queryable.Where(this.QueryOptions.Filter);
+            if (this.QueryOptions.Filter != null)
+            {
+                this.searchQueryable = this.searchQueryable.Where(this.QueryOptions.Filter);
+            }
 
             if (this.FilterOptions.Filter != null)
             {
-                this.QueryOptions.Queryable = this.Filter(this.QueryOptions.Queryable, this.FilterOptions.Filter);
+                this.searchQueryable = this.Filter(this.searchQueryable, this.FilterOptions.Filter);
             }
 
-            this.QueryOptions.Queryable = this.QueryOptions.Queryable.Skip(this.SearcherOptions.StartingPosition);
-
-            var results = this.GetFacets(this.QueryOptions.Queryable, facets);
+            var results = this.GetFacets(this.searchQueryable, facets);
 
             return new SearchFacets
             {

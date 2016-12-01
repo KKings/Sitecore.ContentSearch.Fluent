@@ -62,7 +62,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
             }
 
             this.QueryOptions.Filter = this.QueryOptions.Filter != null
-                ? this.QueryOptions.Filter.And(searchOptions.Filter) /*this.QueryOptions.Filter.CombineWithAndAlso(searchOptions.Filter)*/
+                ? this.QueryOptions.Filter.And(searchOptions.Filter)
                 : PredicateBuilder.True<T>().And(searchOptions.Filter);
 
             return this;
@@ -89,109 +89,10 @@ namespace Sitecore.ContentSearch.Fluent.Builders
             }
 
             this.QueryOptions.Filter = this.QueryOptions.Filter != null
-                ? this.QueryOptions.Filter.Or(searchOptions.Filter) //this.QueryOptions.Filter.CombineWithOrElse(searchOptions.Filter)
+                ? this.QueryOptions.Filter.Or(searchOptions.Filter)
                 : PredicateBuilder.False<T>().Or(searchOptions.Filter);
 
             return this;
         }
-        /*
-                /// <summary>
-                /// Filters out the Search Results
-                /// </summary>
-                /// <returns>Instance of the SearchQueryOptionsBuilder</returns>
-                public QueryOptionsBuilder<T> AndOr(Action<SearchQueryBuilder<T>> filterAction)
-                {
-                    var searchOptions = new QueryOptions<T>(true, false);
-
-                    filterAction(new SearchQueryBuilder<T>(searchOptions));
-
-                    this.QueryOptions.Filter = this.QueryOptions.Filter.And(searchOptions.Filter);
-
-                    return this;
-                }
-
-                /// <summary>
-                /// Filters out the Search Results if available
-                /// </summary>
-                /// <returns>Instance of the SearchQueryOptionsBuilder</returns>
-                public QueryOptionsBuilder<T> Or(Action<SearchQueryBuilder<T>> filterAction)
-                {
-                    var searchOptions = new QueryOptions<T>(false);
-
-                    filterAction(new SearchQueryBuilder<T>(searchOptions));
-
-                    this.QueryOptions.Filter = this.QueryOptions.Filter.And(searchOptions.Filter);
-
-                    return this;
-                }
-
-                /// <summary>
-                /// Filters out the Search Results. Filters with Relevancy and Scoring.
-                /// </summary>
-                /// <param name="filter">Lambda expression to filter on</param>
-                /// <returns>Instance of the QueryOptionsBuilder</returns>
-                public QueryOptionsBuilder<T> Where(Expression<Func<T, bool>> filter)
-                {
-                    if (filter != null)
-                    {
-                        this.QueryOptions.Queryable = this.QueryOptions.Queryable.Where(filter);
-                    }
-
-                    return this;
-                }
-
-                /// <summary>
-                /// Filters out the Search Results. Filters with Relevancy and Scoring.
-                /// </summary>
-                /// <param name="filter">Lambda expression to filter on</param>
-                /// <param name="condition"></param>
-                /// <returns>Instance of the QueryOptionsBuilder</returns>
-                public QueryOptionsBuilder<T> Where(bool condition, Expression<Func<T, bool>> filter)
-                {
-                    if (condition && filter != null)
-                    {
-                        this.QueryOptions.Queryable = this.QueryOptions.Queryable.Where(filter);
-                    }
-
-                    return this;
-                }
-
-                /// <summary>
-                /// Filters out the Search Results by aggregating an array. Splits the terms 
-                /// into an array to aggregate on.
-                /// <para>Passes each array item with a predicate into the expression for the caller</para>
-                /// </summary>
-                /// <param name="terms">Terms to split and aggregate on</param>
-                /// <param name="filter">Lambda expression to filter on</param>
-                /// <returns>Instance of the QueryOptionsBuilder</returns>
-                public QueryOptionsBuilder<T> Where(string terms, Func<IQueryable<T>, string, IQueryable<T>> filter)
-                {
-                    if (!String.IsNullOrEmpty(terms) && filter != null)
-                    {
-                        var termsSplit = terms.Split(new []{ ' ' }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-
-                        return Any(termsSplit, filter);
-                    }
-
-                    return this;
-                }
-
-                /// <summary>
-                /// Filters out the Search Results by aggregating an array. Splits the terms 
-                /// into an array to aggregate on.
-                /// <para>Passes each array item with a predicate into the expression for the caller</para>
-                /// </summary>
-                /// <param name="terms">Terms to split and aggregate on</param>
-                /// <param name="filter">Lambda expression to filter on</param>
-                /// <returns>Instance of the QueryOptionsBuilder</returns>
-                public QueryOptionsBuilder<T> Any<TR>(IList<TR> terms, Func<IQueryable<T>, TR, IQueryable<T>> filter)
-                {
-                    if (terms.Any())
-                    {
-                        this.QueryOptions.Queryable = terms.Aggregate(this.QueryOptions.Queryable, filter);
-                    }
-
-                    return this;
-                }*/
     }
 }

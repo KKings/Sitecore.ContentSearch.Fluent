@@ -33,11 +33,15 @@ namespace Sitecore.ContentSearch.Fluent
     /// </summary>
     public class SearchManager : ISearchManager
     {
+        /// <summary>
+        /// Implementation of the Index Provider
+        /// </summary>
         public virtual IIndexProvider IndexProvider { get; }
 
         /// <summary>
-        /// Configures the search manager
+        /// Default constructor
         /// </summary>
+        /// <param name="indexProvider"></param>
         public SearchManager(IIndexProvider indexProvider)
         {
             this.IndexProvider = indexProvider;
@@ -49,7 +53,7 @@ namespace Sitecore.ContentSearch.Fluent
         /// <typeparam name="T">Type of ResultItem</typeparam>
         /// <param name="searcherBuilder">Lambda to generate the Search Results Expression</param>
         /// <returns>Result of <see cref="T"/></returns>
-        public virtual Results.SearchResults<T> ResultsFor<T>(Action<ISearcher<T>> searcherBuilder)
+        public virtual SearchResults<T> ResultsFor<T>(Action<ISearcher<T>> searcherBuilder)
             where T : SearchResultItem
         {
             var searcher = this.GetSearcher<T>();
@@ -59,11 +63,10 @@ namespace Sitecore.ContentSearch.Fluent
         }
 
         /// <summary>
-        /// Gets 
+        /// Gets the Search Facets for a given Search
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="searcherBuilder"></param>
-        /// <param name="facets"></param>
+        /// <param name="searcherBuilder">Configurable Search Builder</param>
+        /// <param name="facets">The Facets</param>
         /// <returns></returns>
         public virtual SearchFacets FacetsFor<T>(Action<ISearcher<T>> searcherBuilder, IList<IFacetOn> facets)
             where T : SearchResultItem
@@ -75,23 +78,38 @@ namespace Sitecore.ContentSearch.Fluent
         }
 
         /// <summary>
-        /// 
+        /// Gets the Search Results and Facets for a given Search
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <param name="searcherBuilder">Configurable Search Builder</param>
+        /// <param name="facets">The Facets</param>
         /// <returns></returns>
+        public virtual SearchResultsWithFacets<T> ResultsWithFacetsFor<T>(Action<ISearcher<T>> searcherBuilder, IList<IFacetOn> facets)
+            where T : SearchResultItem
+        {
+            var searcher = this.GetSearcher<T>();
+            searcherBuilder(searcher);
+
+            return searcher.ResultsWithFacets(facets);
+        }
+
+        /// <summary>
+        /// Gets the IQueryable from the <see cref="IProviderSearchContext"/>
+        /// </summary>
+        /// <typeparam name="T">Type of Search Result</typeparam>
+        /// <returns>IQueryable to perform linq actions on</returns>
         public virtual IQueryable<T> GetQueryable<T>()
         {
             return this.IndexProvider.SearchContext.GetQueryable<T>();
         }
 
         /// <summary>
-        /// 
+        /// Gets the Default Searcher (builder)
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
+        /// <typeparam name="T">Type of Search Result</typeparam>
+        /// <returns><see cref="DefaultSearcher{T}"/></returns>
         public virtual ISearcher<T> GetSearcher<T>() where T : SearchResultItem
         {
-            return new Searcher<T>(this);
+            return new DefaultSearcher<T>(this.GetQueryable<T>());
         } 
 
         #region IDisposable

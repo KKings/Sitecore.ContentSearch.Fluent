@@ -19,28 +19,25 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace Sitecore.ContentSearch.Fluent
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using Builders;
-    using Facets;
-    using Linq;
-    using Results;
 
-    public interface ISearcher<T> where T : SearchResultItem
+namespace Sitecore.ContentSearch.Fluent.Results
+{
+    public class SearchResultsWithFacets<T> where T : SearchResultItem
     {
-        Results.SearchResults<T> Results();
-        SearchResultsWithFacets<T> ResultsWithFacets(IList<IFacetOn> facets);
-        SearchFacets Facets(IList<IFacetOn> facets);
-        DefaultSearcher<T> Paging(Action<PagingOptionsBuilder<T>> searchBuildOptions);
-        DefaultSearcher<T> Query(Action<QueryBuilder<T>> searchQueryBuildOptions);
-        DefaultSearcher<T> Filter(Action<FilterBuilder<T>> filterQueryBuildOptions);
-        DefaultSearcher<T> Sort(Action<SortingOptionsBuilder<T>> sortingBuildOptions);
-        IQueryable<T> Filter(IQueryable<T> queryable, Expression<Func<T, bool>> predicate);
-        Linq.SearchResults<T> GetResults(IQueryable<T> queryable);
-        FacetResults GetFacets(IQueryable<T> queryable, IList<IFacetOn> facets);
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual SearchResults<T> SearchResults { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual SearchFacets SearchFacets { get; }
+
+        public SearchResultsWithFacets(SearchResults<T> searchResults, SearchFacets searchFacets)
+        {
+            this.SearchResults = searchResults;
+            this.SearchFacets = searchFacets;
+        }
     }
 }

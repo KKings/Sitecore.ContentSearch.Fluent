@@ -36,7 +36,7 @@
 
             var manager = new Mock<SearchManager>(indexProvider.Object);
 
-            var searcher = new Mock<Searcher<TestSearchResultItem>>(manager.Object);
+            var searcher = new Mock<DefaultSearcher<TestSearchResultItem>>(index);
             searcher.Setup(
                 m =>
                     m.Filter(

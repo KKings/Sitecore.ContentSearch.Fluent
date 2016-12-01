@@ -21,57 +21,32 @@
 // SOFTWARE.
 namespace Sitecore.ContentSearch.Fluent.Options
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq.Expressions;
-    using Linq.Utilities;
-    using Data;
     using Results;
 
     /// <summary>
     /// SearcherOptions Summary
     /// </summary>
-    public sealed class SearcherOptions<T> where T : SearchResultItem
+    public class PagingOptions<T> where T : SearchResultItem
     {
-        /// <summary>
-        ///  Gets or sets the Search Manager
-        /// </summary>
-        public ISearchManager SearchManager { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Template Restrictions
-        /// </summary>
-        public IList<ID> Restrictions { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Facets to aggregate on
-        /// </summary>
-        public IList<string> Facets { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Sorting order
-        /// </summary>
-        public SortOrder SortOrder { get; set; }
-
         /// <summary>
         /// Gets or sets the PageMode
         /// </summary>
-        public PageMode PageMode { get; set; }
+        public virtual PageMode PageMode { get; set; } = PageMode.Pager;
 
         /// <summary>
         /// Gets or sets the Start
         /// </summary>
-        public int Start { get; set; }
+        public virtual int Start { get; set; } = 0;
 
         /// <summary>
         /// Gets or sets the returned results
         /// </summary>
-        public int Display { get; set; }
+        public int Display { get; set; } = 10;
 
         /// <summary>
         /// Gets the calculating StartingPosition
         /// </summary>
-        public int StartingPosition
+        public virtual int StartingPosition
         {
             get
             {
@@ -85,31 +60,6 @@ namespace Sitecore.ContentSearch.Fluent.Options
                     
                 return this.Start;
             }
-        }
-
-        /// <summary>
-        /// Gets or sets the Filter expressions
-        /// </summary>
-        public Expression<Func<T, bool>> Filter { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Property to Sort By
-        /// </summary>
-        public Expression<Func<T, object>> SortBy { get; set; }
-
-        public SearcherOptions(ISearchManager searchManager)
-        {
-            if (searchManager == null)
-            {
-                throw new ArgumentNullException(nameof(searchManager));
-            }
-
-            this.Restrictions = new List<ID>();
-            this.Facets = new List<string>();
-            this.SortOrder = SortOrder.Ascending;
-            this.SearchManager = searchManager;
-            this.Filter = PredicateBuilder.True<T>();
-            this.PageMode = PageMode.Pager;
         }
     }
 }

@@ -21,7 +21,6 @@
 // SOFTWARE.
 namespace Sitecore.ContentSearch.Fluent.Options
 {
-    using System.Linq;
     using Results;
 
     /// <summary>
@@ -29,16 +28,5 @@ namespace Sitecore.ContentSearch.Fluent.Options
     /// </summary>
     public class QueryOptions<T> : QueryableOptions<T> where T : SearchResultItem
     {
-        /// <summary>
-        /// Gets or sets the Queryable
-        /// </summary>
-        public IQueryable<T> Queryable { get; internal set; }
-
-        public QueryOptions(): this(null) { }
-        
-        public QueryOptions(IQueryable<T> queryable)
-        {
-            this.Queryable = queryable;
-        }
     }
 }

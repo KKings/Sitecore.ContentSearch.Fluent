@@ -32,11 +32,11 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// <summary>
         /// Builds the SearcherOptions
         /// </summary>
-        protected readonly SearcherOptions<T> SearcherOptions;
+        protected readonly PagingOptions<T> PagingOptions;
 
-        public PagingOptionsBuilder(SearcherOptions<T> searchOptions)
+        public PagingOptionsBuilder(PagingOptions<T> searchOptions)
         {
-            this.SearcherOptions = searchOptions;
+            this.PagingOptions = searchOptions;
         }
         
         /// <summary>
@@ -46,7 +46,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// <returns>Instance of the SearcherOptionsBuilder</returns>
         public PagingOptionsBuilder<T> SetPageMode(PageMode pageMode)
         {
-            this.SearcherOptions.PageMode = pageMode;
+            this.PagingOptions.PageMode = pageMode;
             return this;
         }
 
@@ -57,7 +57,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// <returns>Instance of the SearcherOptionsBuilder</returns>
         public PagingOptionsBuilder<T> SetPage(int page)
         {
-            this.SearcherOptions.Start = page <= 0 ? 1 : page;
+            this.PagingOptions.Start = page <= 0 ? 1 : page;
             return this;
         }
 
@@ -75,7 +75,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
             // Ensure we are working with a valid number
             if (temp < 0) temp = 0; 
 
-            this.SearcherOptions.Start = (temp > 0) && includeStart
+            this.PagingOptions.Start = (temp > 0) && includeStart
                 ? temp - 1
                 : temp;
 
@@ -89,7 +89,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// <returns>Instance of the SearcherOptionsBuilder</returns>
         public PagingOptionsBuilder<T> Take(int display)
         {
-            this.SearcherOptions.Display = display;
+            this.PagingOptions.Display = display;
             return this;
         }
     }
