@@ -1,4 +1,4 @@
-﻿// <copyright file="QueryOptions.cs" company="Kyle Kingsbury">
+﻿// <copyright file="Searcher.cs" company="Kyle Kingsbury">
 //  Copyright 2015 Kyle Kingsbury
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +12,15 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 // </copyright>
-namespace Sitecore.ContentSearch.Fluent.Query
+namespace Sitecore.ContentSearch.Fluent
 {
-    using Results;
+    using Data;
 
-    public class ExpressionTree<T> where T : SearchResultItem
+    public interface IDatabaseProvider
     {
-
+        /// <summary>
+        /// Context Database
+        /// </summary>
+        Database Context { get; }
     }
 }

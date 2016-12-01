@@ -25,11 +25,11 @@ namespace Sitecore.ContentSearch.Fluent.Results
         /// <summary>
         /// Gets or sets the Total Results
         /// </summary>
-        public int Total { get; set; }
+        public virtual int Total { get; set; }
 
         /// <summary>
         /// Gets or sets the Facets
         /// </summary>
-        public IList<FacetCategory> Facets { get; set; }
+        public virtual IList<FacetCategory> Facets { get; set; }
     }
 }

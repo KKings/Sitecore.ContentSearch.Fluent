@@ -17,11 +17,6 @@ namespace Sitecore.ContentSearch.Fluent
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Linq.Expressions;
-    using Sitecore;
-    using ContentSearch;
-    using Linq;
-    using Data;
     using Facets;
     using Results;
 
@@ -31,69 +26,14 @@ namespace Sitecore.ContentSearch.Fluent
     /// </summary>
     public class SearchManager : ISearchManager
     {
-        /// <summary>
-        /// The Database, default to Web if not in Context.Database is null
-        /// </summary>
-        private Database Database
-        {
-            get { return Context.Database ?? Configuration.Factory.GetDatabase("web"); }
-        } 
-
-        /// <summary>
-        /// The Search Index for the Search Manager
-        /// </summary>
-        private ISearchIndex _searchIndex;
-
-        /// <summary>
-        /// The Search Index for the Search Manager
-        /// </summary>
-        public virtual ISearchIndex SearchIndex
-        {
-            get
-            {
-                return this._searchIndex ?? (this._searchIndex = ContentSearchManager.GetIndex(this._indexLookup[this.Database.Name]));
-            }
-        }
-
-        /// <summary>
-        /// The Search Context on the Search Index for Searching the Index
-        /// </summary>
-        private IProviderSearchContext _searchContext;
-
-        /// <summary>
-        /// The Search Context on the Search Index for Searching the Index
-        /// </summary>
-        public virtual IProviderSearchContext SearchContext
-        {
-            get { return this._searchContext ?? (this._searchContext = this.SearchIndex.CreateSearchContext()); }
-        }
-        
-        /// <summary>
-        /// Lookup to match Database Names to Index Names
-        /// </summary>
-        private readonly IDictionary<string, string> _indexLookup; 
-
-        /// <summary>
-        /// Configures the Search Manager
-        /// </summary>
-        /// <param name="webIndexName">Index name when using the Web database</param>
-        /// <param name="masterIndexName">Index name when using the Master database</param>
-        public SearchManager(string webIndexName, string masterIndexName)
-        {
-            this._indexLookup = new Dictionary<String, String>
-            {
-                { "web",    webIndexName },
-                { "master", masterIndexName }
-            };
-        }
+        public virtual IIndexProvider IndexProvider { get; }
 
         /// <summary>
         /// Configures the search manager
         /// </summary>
-        /// <param name="indexLookup">Dictionary list of index lookups, where key is the database name</param>
-        public SearchManager(IDictionary<string, string> indexLookup)
+        public SearchManager(IIndexProvider indexProvider)
         {
-            this._indexLookup = indexLookup;
+            this.IndexProvider = indexProvider;
         }
 
         /// <summary>
@@ -102,8 +42,8 @@ namespace Sitecore.ContentSearch.Fluent
         /// <typeparam name="T">Type of ResultItem</typeparam>
         /// <param name="searcherBuilder">Lambda to generate the Search Results Expression</param>
         /// <returns>Result of <see cref="T"/></returns>
-        public Results.SearchResults<T> ResultsFor<T>(Action<ISearcher<T>> searcherBuilder)
-            where T : Results.SearchResultItem
+        public virtual Results.SearchResults<T> ResultsFor<T>(Action<ISearcher<T>> searcherBuilder)
+            where T : SearchResultItem
         {
             var searcher = this.GetSearcher<T>();
             searcherBuilder(searcher);
@@ -118,7 +58,7 @@ namespace Sitecore.ContentSearch.Fluent
         /// <param name="searcherBuilder"></param>
         /// <param name="facets"></param>
         /// <returns></returns>
-        public Results.SearchFacets FacetsFor<T>(Action<ISearcher<T>> searcherBuilder, IList<IFacetOn> facets)
+        public virtual SearchFacets FacetsFor<T>(Action<ISearcher<T>> searcherBuilder, IList<IFacetOn> facets)
             where T : SearchResultItem
         {
             var searcher = this.GetSearcher<T>();
@@ -128,23 +68,13 @@ namespace Sitecore.ContentSearch.Fluent
         }
 
         /// <summary>
-        /// Maps additional fields not stored within the Index to Sitecore Items
-        /// </summary>
-        /// <param name="results">Search Results from the Index</param>
-        /// <returns>List of TModels updated with additional Fields</returns>
-        public IList<TModel> Map<TModel>(IEnumerable<SearchHit<TModel>> results)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public virtual IQueryable<T> GetQueryable<T>()
         {
-            return this.SearchContext.GetQueryable<T>();
+            return this.IndexProvider.SearchContext.GetQueryable<T>();
         }
 
         /// <summary>
@@ -169,7 +99,7 @@ namespace Sitecore.ContentSearch.Fluent
         {
             if (disposing)
             {
-                this.SearchContext?.Dispose();
+                this.IndexProvider?.Dispose();
             }
         }
 

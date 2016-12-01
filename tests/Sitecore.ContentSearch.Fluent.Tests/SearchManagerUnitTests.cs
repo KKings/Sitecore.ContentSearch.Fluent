@@ -26,11 +26,15 @@
             var index = TestSearchResultIndexFactory.CreateIndex();
 
             // create the mock context
-            var context = new Mock<IProviderSearchContext>();
-            context.Setup(c => c.GetQueryable<TestSearchResultItem>()).Returns(index);
+            var searchContextMock = new Mock<IProviderSearchContext>();
+            searchContextMock.Setup(c => c.GetQueryable<TestSearchResultItem>())
+                             .Returns(index);
 
-            var manager = new Mock<SearchManager>(It.IsAny<string>(), It.IsAny<string>());
-            manager.SetupGet(m => m.SearchContext).Returns(context.Object);
+            var indexProvider = new Mock<IIndexProvider>();
+            indexProvider.SetupGet(m => m.SearchContext)
+                         .Returns(searchContextMock.Object);
+
+            var manager = new Mock<SearchManager>(indexProvider.Object);
 
             var searcher = new Mock<Searcher<TestSearchResultItem>>(manager.Object);
             searcher.Setup(

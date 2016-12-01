@@ -21,7 +21,6 @@ namespace Sitecore.ContentSearch.Fluent
     using Builders;
     using Facets;
     using Linq;
-    using Linq.Utilities;
     using Options;
     using Results;
     using FacetValue = Facets.FacetValue;
@@ -42,7 +41,7 @@ namespace Sitecore.ContentSearch.Fluent
         protected readonly QueryOptions<T> QueryOptions;
 
         /// <summary>
-        /// The QueryOptions
+        /// The FilterOptions. This is separated out as FilterOptions must be applied to a different method
         /// </summary>
         protected readonly FilterOptions<T> FilterOptions;
 
@@ -146,7 +145,7 @@ namespace Sitecore.ContentSearch.Fluent
 
             // Removed the Sitecore Mapping and only used fields stored in the index
             return new Results.SearchResults<T>(
-                results: results.Hits.Select(x => x.Document).ToList(),
+                results: results.Hits,
                 total: results.TotalSearchResults);
         }
 
@@ -174,12 +173,12 @@ namespace Sitecore.ContentSearch.Fluent
 
             return new SearchFacets
             {
-                Total = results.Categories.Count(),
+                Total = results.Categories.Count,
                 Facets = results.Categories.Select(facet =>
                     new Facets.FacetCategory(facet.Name,
                         facet.Values
                              .Select(x => new FacetValue(x.Name, x.AggregateCount))
-                             .Where(x => x != null || x.Name != null)
+                             .Where(x => x?.Name != null)
                              .ToArray())
                     ).ToArray()
             };
@@ -205,7 +204,7 @@ namespace Sitecore.ContentSearch.Fluent
         }
 
         /// <summary>
-        /// Gets the FacetResults fromt he Queryable
+        /// Gets the FacetResults from the Queryable
         /// </summary>
         /// <param name="queryable">The Search Facets</param>
         /// <param name="facets">Facets</param>

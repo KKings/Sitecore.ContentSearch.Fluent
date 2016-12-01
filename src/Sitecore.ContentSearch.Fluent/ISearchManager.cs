@@ -41,14 +41,6 @@ namespace Sitecore.ContentSearch.Fluent
         SearchFacets FacetsFor<T>(Action<ISearcher<T>> searcherBuilder, IList<IFacetOn> facets) where T : SearchResultItem;
 
         /// <summary>
-        /// Map Search Results to a different model
-        /// </summary>
-        /// <typeparam name="TModel"></typeparam>
-        /// <param name="results"></param>
-        /// <returns></returns>
-        IList<TModel> Map<TModel>(IEnumerable<SearchHit<TModel>> results);
-
-        /// <summary>
         /// Get the Queryable
         /// </summary>
         /// <typeparam name="T" />

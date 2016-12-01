@@ -27,12 +27,12 @@ namespace Sitecore.ContentSearch.Fluent.Facets
         /// <summary>
         /// Gets the Key to Facet On
         /// </summary>
-        public string Key { get; }
+        public virtual string Key { get; }
 
         /// <summary>
         /// Gets the Minimum Count for the Facet
         /// </summary>
-        public int MinimumCount { get; }
+        public virtual int MinimumCount { get; }
 
         protected FacetBase(string key) : this(key, Int32.MinValue) { }
 

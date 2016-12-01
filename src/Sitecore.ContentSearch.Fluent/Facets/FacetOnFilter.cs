@@ -26,7 +26,7 @@ namespace Sitecore.ContentSearch.Fluent.Facets
         /// <summary>
         /// Gets or sets the Filters
         /// </summary>
-        public IList<string> Filters { get; } 
+        public virtual IList<string> Filters { get; } 
 
         public FacetOnFilter(string key) : base(key) { }
 

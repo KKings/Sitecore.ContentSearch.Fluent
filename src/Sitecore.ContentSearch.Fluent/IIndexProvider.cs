@@ -1,4 +1,4 @@
-﻿// <copyright file="QueryOptions.cs" company="Kyle Kingsbury">
+﻿// <copyright file="Searcher.cs" company="Kyle Kingsbury">
 //  Copyright 2015 Kyle Kingsbury
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,13 +12,20 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 // </copyright>
-namespace Sitecore.ContentSearch.Fluent.Query
+namespace Sitecore.ContentSearch.Fluent
 {
-    public enum OptionType
+    using System;
+
+    public interface IIndexProvider : IDisposable
     {
-        PredicateTrue,
-        PredicateFalse,
-        And,
-        Or
+        /// <summary>
+        /// Content Search Context
+        /// </summary>
+        IProviderSearchContext SearchContext { get; }
+
+        /// <summary>
+        /// Configured Content Search Index
+        /// </summary>
+        ISearchIndex SearchIndex { get; }
     }
 }

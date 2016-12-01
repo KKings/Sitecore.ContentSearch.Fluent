@@ -22,12 +22,12 @@ namespace Sitecore.ContentSearch.Fluent.Facets
         /// <summary>
         /// Gets or sets the Facet Name 
         /// </summary>
-        public string Name { get; }
+        public virtual string Name { get; }
 
         /// <summary>
         /// Gets or sets the Count or aggregate value
         /// </summary>
-        public int Count { get; }
+        public virtual int Count { get; }
 
         public FacetValue(string name, int count)
         {

@@ -15,7 +15,9 @@
 namespace Sitecore.ContentSearch.Fluent.Results
 {
     using System.Collections.Generic;
-    using Facets;
+    using System.Linq;
+    using Linq;
+    using FacetValue = Facets.FacetValue;
 
     /// <summary>
     /// SearchResults Summary
@@ -25,21 +27,26 @@ namespace Sitecore.ContentSearch.Fluent.Results
         /// <summary>
         /// Gets or sets the Total Results
         /// </summary>
-        public int Total { get; set; }
+        public virtual int Total { get; private set; }
 
         /// <summary>
         /// Gets or sets the Results
         /// </summary>
-        public IList<T> Results { get; set; }
+        public virtual IEnumerable<SearchHit<T>> Hits { get; }
 
         /// <summary>
         /// Gets or sets the Facets
         /// </summary>
-        public IList<FacetValue> Facets { get; set; }
+        public virtual IList<FacetValue> Facets { get; private set; }
 
-        public SearchResults(IList<T> results, int total, IList<FacetValue> facets = null)
+        /// <summary>
+        /// Gets only the Documents within the Search Results
+        /// </summary>
+        public virtual IList<T> Results { get { return this.Hits.Select(m => m.Document).ToArray(); } }
+
+        public SearchResults(IEnumerable<SearchHit<T>> results, int total, IList<FacetValue> facets = null)
         {
-            this.Results = results;
+            this.Hits = results;
             this.Total = total;
             this.Facets = facets ?? new FacetValue[0];
         }

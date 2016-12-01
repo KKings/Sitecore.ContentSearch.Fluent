@@ -62,6 +62,8 @@
     <Compile Include="Builders\SearchBuilderBase.cs" />
     <Compile Include="Builders\SearchQueryBuilder.cs" />
     <Compile Include="Builders\SortingOptionsBuilder.cs" />
+    <Compile Include="DefaultDatabaseProvider.cs" />
+    <Compile Include="DefaultIndexProvider.cs" />
     <Compile Include="Expressions\ParameterReplaceVisitor.cs" />
     <Compile Include="Extensions\ExpressionExtensions.cs" />
     <Compile Include="Facets\FacetBase.cs" />
@@ -70,6 +72,8 @@
     <Compile Include="Facets\FacetOnFilter.cs" />
     <Compile Include="Facets\FacetValue.cs" />
     <Compile Include="Facets\IFacetOn.cs" />
+    <Compile Include="IDatabaseProvider.cs" />
+    <Compile Include="IIndexProvider.cs" />
     <Compile Include="ISearcher.cs" />
     <Compile Include="ISearchManager.cs" />
     <Compile Include="Options\FilterOptions.cs" />
@@ -80,9 +84,6 @@
     <Compile Include="Options\SortingOptions.cs" />
     <Compile Include="PageMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Query\ExpressionTree.cs" />
-    <Compile Include="Query\OptionType.cs" />
-    <Compile Include="Query\QueryExpression.cs" />
     <Compile Include="Results\SearchFacets.cs" />
     <Compile Include="Results\SearchResultItem.cs" />
     <Compile Include="Results\SearchResults.cs" />

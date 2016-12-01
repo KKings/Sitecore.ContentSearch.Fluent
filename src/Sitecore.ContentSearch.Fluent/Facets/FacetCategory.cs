@@ -25,12 +25,12 @@ namespace Sitecore.ContentSearch.Fluent.Facets
         /// Gets or sets the Name of the Facet
         /// <para>Note, this is the name within the index</para>
         /// </summary>
-        public string Name { get; }
-        
+        public virtual string Name { get; }
+
         /// <summary>
         /// Gets of sets the Facet Values
         /// </summary>
-        public IList<FacetValue> Values { get; }
+        public virtual IList<FacetValue> Values { get; }
 
         public FacetCategory(string name, IList<FacetValue> values)
         {
