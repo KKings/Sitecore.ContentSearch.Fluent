@@ -1,5 +1,16 @@
-﻿// <copyright file="FacetBase.cs" company="NavigationArts, LLC">
-//  Copyright (c) 2015 NavigationArts, LLC All Rights Reserved
+﻿// <copyright file="FacetCategory.cs" company="Kyle Kingsbury">
+//  Copyright 2015 Kyle Kingsbury
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+
+//  You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an 'AS IS' BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
 // </copyright>
 namespace Sitecore.ContentSearch.Fluent.Facets
 {
@@ -9,19 +20,19 @@ namespace Sitecore.ContentSearch.Fluent.Facets
     using SearchResultItem = Results.SearchResultItem;
 
     /// <summary>
-    /// Default 
+    /// Default Implementation of a Facet
     /// </summary>
     public abstract class FacetBase : IFacetOn
     {
         /// <summary>
         /// Gets the Key to Facet On
         /// </summary>
-        public string Key { get; private set; }
+        public string Key { get; }
 
         /// <summary>
         /// Gets the Minimum Count for the Facet
         /// </summary>
-        public int MinimumCount { get; private set; }
+        public int MinimumCount { get; }
 
         protected FacetBase(string key) : this(key, Int32.MinValue) { }
 
@@ -29,7 +40,7 @@ namespace Sitecore.ContentSearch.Fluent.Facets
         {
             if (String.IsNullOrEmpty(key))
             {
-                throw new ArgumentException("Key cannot be null or empty");
+                throw new ArgumentNullException(nameof(key));
             }
 
             this.Key = key;
@@ -43,7 +54,7 @@ namespace Sitecore.ContentSearch.Fluent.Facets
         /// <returns>Queryable with Facet</returns>
         public virtual IQueryable<T> AddFacet<T>(IQueryable<T> source) where T : SearchResultItem
         {
-            return (this.MinimumCount != Int32.MinValue)
+            return this.MinimumCount != Int32.MinValue
                 ? source.FacetOn(f => f[this.Key], this.MinimumCount)
                 : source.FacetOn(f => f[this.Key]);
         }

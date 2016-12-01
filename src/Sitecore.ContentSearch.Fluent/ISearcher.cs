@@ -27,11 +27,10 @@ namespace Sitecore.ContentSearch.Fluent
     {
         Results.SearchResults<T> Results();
         SearchFacets Facets(IList<IFacetOn> facets);
-        Searcher<T> Options(Action<SearcherOptionsBuilder<T>> searchBuildOptions);
-        Searcher<T> Query(Action<QueryOptionsBuilder<T>> searchQueryBuildOptions);
-        Searcher<T> Filter(Action<FilterOptionsBuilder<T>> filterQueryBuildOptions);
+        Searcher<T> Paging(Action<PagingOptionsBuilder<T>> searchBuildOptions);
+        Searcher<T> Query(Action<QueryBuilder<T>> searchQueryBuildOptions);
+        Searcher<T> Filter(Action<FilterBuilder<T>> filterQueryBuildOptions);
         Searcher<T> Sort(Action<SortingOptionsBuilder<T>> sortingBuildOptions);
-
         IQueryable<T> Filter(IQueryable<T> queryable, Expression<Func<T, bool>> predicate);
         Linq.SearchResults<T> GetResults(IQueryable<T> queryable);
         FacetResults GetFacets(IQueryable<T> queryable, IList<IFacetOn> facets);

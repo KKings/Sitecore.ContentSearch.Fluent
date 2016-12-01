@@ -26,9 +26,31 @@ namespace Sitecore.ContentSearch.Fluent.Options
     public class SortingOptions<T> where T : SearchResultItem
     {
         /// <summary>
+        /// Stores Sorting Operations
+        /// </summary>
+        internal class SortingOperation
+        {
+            /// <summary>
+            /// Gets or sets the Sort Order
+            /// </summary>
+            public virtual SortOrder SortOrder { get; }
+
+            /// <summary>
+            /// Get or sets the Expression
+            /// </summary>
+            public virtual Expression<Func<T, object>> Expression { get; }
+
+            public SortingOperation(SortOrder sortOrder, Expression<Func<T, object>> expression)
+            {
+                this.SortOrder = sortOrder;
+                this.Expression = expression;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the Expressions
         /// </summary>
-        public IList<SortingOperation> Expressions { get; set; }
+        internal IList<SortingOperation> Expressions { get; set; }
 
         public SortingOptions()
         {
@@ -42,51 +64,29 @@ namespace Sitecore.ContentSearch.Fluent.Options
         /// <returns>IQueryable with Sortings Applied</returns>
         internal IQueryable<T> ApplySorting(IQueryable<T> queryable)
         {
-            if (this.Expressions.Any())
+            if (!this.Expressions.Any())
             {
-                // Resolve bug with Sitecore not evaluating orders correctly
-                // http://www.daveleigh.co.uk/sitecore-content-search-api-thenby-clause-not-evaluating-correctly/
-                var expressions = Expressions.Reverse();
-
-                var sortingOperations = expressions as SortingOperation[] ?? expressions.ToArray();
-
-                var orderByExpression = sortingOperations.First();
-
-                var orderedQueryable = (orderByExpression.SortOrder == SortOrder.Ascending)
-                    ? queryable.OrderBy(orderByExpression.Expression)
-                    : queryable.OrderByDescending(orderByExpression.Expression);
-
-                return sortingOperations.Skip(1)
-                    .Aggregate(orderedQueryable,
-                        (current, expression) =>
-                            (expression.SortOrder == SortOrder.Ascending)
-                                ? current.ThenBy(expression.Expression)
-                                : current.ThenByDescending(expression.Expression));
+                return queryable;
             }
 
-            return queryable;
-        }
+            // Resolve bug with Sitecore not evaluating orders correctly
+            // http://www.daveleigh.co.uk/sitecore-content-search-api-thenby-clause-not-evaluating-correctly/
+            var expressions = this.Expressions.Reverse();
 
-        /// <summary>
-        /// Stores Sorting Operations
-        /// </summary>
-        public class SortingOperation
-        {
-            /// <summary>
-            /// Gets or sets the Sort Order
-            /// </summary>
-            public SortOrder SortOrder { get; set; }
+            var sortingOperations = expressions as SortingOperation[] ?? expressions.ToArray();
 
-            /// <summary>
-            /// Get or sets the Expression
-            /// </summary>
-            public Expression<Func<T, object>> Expression { get; set; }
+            var orderByExpression = sortingOperations.First();
 
-            public SortingOperation(SortOrder sortOrder, Expression<Func<T, object>> expression)
-            {
-                this.SortOrder = sortOrder;
-                this.Expression = expression;
-            }
+            var orderedQueryable = orderByExpression.SortOrder == SortOrder.Ascending
+                ? queryable.OrderBy(orderByExpression.Expression)
+                : queryable.OrderByDescending(orderByExpression.Expression);
+
+            return sortingOperations.Skip(1)
+                                    .Aggregate(orderedQueryable,
+                                        (current, expression) =>
+                                            expression.SortOrder == SortOrder.Ascending
+                                                ? current.ThenBy(expression.Expression)
+                                                : current.ThenByDescending(expression.Expression));
         }
     }
 }

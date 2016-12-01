@@ -14,62 +14,30 @@
 // </copyright>
 namespace Sitecore.ContentSearch.Fluent.Builders
 {
-    using System;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using Utilities;
-    using Data;
-    using Sitecore.Diagnostics;
     using Options;
     using Results;
 
     /// <summary>
     /// SearcherOptionsBuilder configures the Search Options
     /// </summary>
-    public class SearcherOptionsBuilder<T> where T : SearchResultItem
+    public class PagingOptionsBuilder<T> where T : SearchResultItem
     {
         /// <summary>
-        /// Gets or sets the SearcherOptions
+        /// Builds the SearcherOptions
         /// </summary>
-        protected SearcherOptions<T> SearcherOptions { get; set; }
+        protected readonly SearcherOptions<T> SearcherOptions;
 
-        public SearcherOptionsBuilder(SearcherOptions<T> searchOptions)
+        public PagingOptionsBuilder(SearcherOptions<T> searchOptions)
         {
             this.SearcherOptions = searchOptions;
         }
-
-        /// <summary>
-        /// Adds a Template Restriction to filter the results on
-        /// </summary>
-        /// <param name="id">The Template ID</param>
-        /// <returns>Instance of the SearcherOptionsBuilder</returns>
-        public SearcherOptionsBuilder<T> AddRestriction(ID id)
-        {
-            this.SearcherOptions.Restrictions.Add(id);
-            return this;
-        }
-
-        /// <summary>
-        /// Adds a Template Restriction to filter the results on
-        /// </summary>
-        /// <param name="ids">The Template ID</param>
-        /// <returns>Instance of the SearcherOptionsBuilder</returns>
-        public SearcherOptionsBuilder<T> AddRestriction(params ID[] ids)
-        {
-            if (ids != null && ids.Any())
-            {
-                ids.ForEach(id => this.SearcherOptions.Restrictions.Add(id));
-            }
-
-            return this;
-        }
-
+        
         /// <summary>
         /// Set the returned results page
         /// </summary>
         /// <param name="pageMode">pageMode of the results</param>
         /// <returns>Instance of the SearcherOptionsBuilder</returns>
-        public SearcherOptionsBuilder<T> SetPageMode(PageMode pageMode)
+        public PagingOptionsBuilder<T> SetPageMode(PageMode pageMode)
         {
             this.SearcherOptions.PageMode = pageMode;
             return this;
@@ -80,7 +48,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// </summary>
         /// <param name="page">Page of the results</param>
         /// <returns>Instance of the SearcherOptionsBuilder</returns>
-        public SearcherOptionsBuilder<T> SetPage(int page)
+        public PagingOptionsBuilder<T> SetPage(int page)
         {
             this.SearcherOptions.Start = page <= 0 ? 1 : page;
             return this;
@@ -93,16 +61,16 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// <param name="start">Page of the results</param>
         /// <param name="includeStart">Should the results include the starting number</param>
         /// <returns>Instance of the SearcherOptionsBuilder</returns>
-        public SearcherOptionsBuilder<T> SetStartingPosition(int start, bool includeStart = false)
+        public PagingOptionsBuilder<T> Skip(int start, bool includeStart = false)
         {
-            var i = start;
+            var temp = start;
             
-            // Ensure we are working with a 
-            if (i < 0) i = 0; 
+            // Ensure we are working with a valid number
+            if (temp < 0) temp = 0; 
 
-            this.SearcherOptions.Start = ((i > 0) && includeStart)
-                ? i - 1
-                : i;
+            this.SearcherOptions.Start = (temp > 0) && includeStart
+                ? temp - 1
+                : temp;
 
             return this;
         }
@@ -112,7 +80,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// </summary>
         /// <param name="display"></param>
         /// <returns>Instance of the SearcherOptionsBuilder</returns>
-        public SearcherOptionsBuilder<T> SetDisplaySize(int display)
+        public PagingOptionsBuilder<T> Take(int display)
         {
             this.SearcherOptions.Display = display;
             return this;

@@ -15,19 +15,19 @@
 namespace Sitecore.ContentSearch.Fluent.Facets
 {
     /// <summary>
-    /// FacetValue Summary
+    /// Represents an individual facet
     /// </summary>
     public class FacetValue
     {
         /// <summary>
         /// Gets or sets the Facet Name 
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Gets or sets the Count or aggregate value
         /// </summary>
-        public int Count { get; private set; }
+        public int Count { get; }
 
         public FacetValue(string name, int count)
         {

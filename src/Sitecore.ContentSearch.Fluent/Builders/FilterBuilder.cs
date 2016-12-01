@@ -20,16 +20,16 @@ namespace Sitecore.ContentSearch.Fluent.Builders
     using Results;
 
     /// <summary>
-    /// Todo: FilterOptionsBuilder Summary Description
+    /// Builds the Filter Options
     /// </summary>
-    public class FilterOptionsBuilder<T> where T : SearchResultItem
-    {        
+    public sealed class FilterBuilder<T> where T : SearchResultItem
+    {
         /// <summary>
-        /// Gets or sets the QueryOptions
+        /// Gets or sets the FilterOptions
         /// </summary>
-        protected FilterOptions<T> FilterOptions { get; set; }
+        public FilterOptions<T> FilterOptions { get; }
 
-        public FilterOptionsBuilder(FilterOptions<T> filterOptions)
+        public FilterBuilder(FilterOptions<T> filterOptions)
         {
             this.FilterOptions = filterOptions;
         }
@@ -38,13 +38,20 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// Filters out the Search Results
         /// </summary>
         /// <returns>Instance of the SearchQueryOptionsBuilder</returns>
-        public FilterOptionsBuilder<T> And(Action<FilterOptionsQueryBuilder<T>> filterAction)
+        public FilterBuilder<T> And(Action<FilterQueryBuilder<T>> filterAction)
         {
-            var filterOptions = new FilterOptions<T>();
+            var options = new FilterOptions<T>();
 
-            filterAction(new FilterOptionsQueryBuilder<T>(filterOptions));
+            filterAction(new FilterQueryBuilder<T>(options));
 
-            this.FilterOptions.Filter = this.FilterOptions.Filter.And(filterOptions.Filter);
+            if (options.Filter == null)
+            {
+                return this;
+            }
+
+            this.FilterOptions.Filter = this.FilterOptions.Filter != null
+                ? this.FilterOptions.Filter.And(options.Filter)
+                : PredicateBuilder.True<T>().And(options.Filter);
 
             return this;
         }
@@ -53,13 +60,21 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// Filters out the Search Results if available
         /// </summary>
         /// <returns>Instance of the SearchQueryOptionsBuilder</returns>
-        public FilterOptionsBuilder<T> Or(Action<FilterOptionsQueryBuilder<T>> filterAction)
+        public FilterBuilder<T> Or(Action<FilterQueryBuilder<T>> filterAction)
         {
-            var filterOptions = new FilterOptions<T>(false);
+            var options = new FilterOptions<T>();
 
-            filterAction(new FilterOptionsQueryBuilder<T>(filterOptions));
+            filterAction(new FilterQueryBuilder<T>(options));
 
-            this.FilterOptions.Filter = this.FilterOptions.Filter.Or(filterOptions.Filter);
+
+            if (options.Filter == null)
+            {
+                return this;
+            }
+
+            this.FilterOptions.Filter = this.FilterOptions.Filter != null
+                ? this.FilterOptions.Filter.Or(options.Filter)
+                : PredicateBuilder.False<T>().Or(options.Filter);
 
             return this;
         }

@@ -54,7 +54,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         {
             if (expression == null)
             {
-                throw new ArgumentNullException("expression", "Sort Expression cannot be null");
+                throw new ArgumentNullException(nameof(expression), "Sort Expression cannot be null");
             }
 
             this.SortingOptions.Expressions.Add(new SortingOptions<T>.SortingOperation(sortOrder, expression));

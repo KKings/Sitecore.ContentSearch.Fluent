@@ -1,4 +1,4 @@
-﻿// <copyright file="ISearchResultItem.cs" company="Kyle Kingsbury">
+﻿// <copyright file="QueryOptions.cs" company="Kyle Kingsbury">
 //  Copyright 2015 Kyle Kingsbury
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +12,13 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 // </copyright>
-namespace Sitecore.ContentSearch.Fluent.Results
+namespace Sitecore.ContentSearch.Fluent.Query
 {
-    /// <summary>
-    /// ISearchResultItem Summary
-    /// </summary>
-    public interface ISearchResultItem
+    public enum OptionType
     {
+        PredicateTrue,
+        PredicateFalse,
+        And,
+        Or
     }
 }

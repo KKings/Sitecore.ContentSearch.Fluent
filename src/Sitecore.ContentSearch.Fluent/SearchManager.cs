@@ -161,15 +161,15 @@ namespace Sitecore.ContentSearch.Fluent
 
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
             GC.SuppressFinalize(this);
         }
 
         public virtual void Dispose(bool disposing)
         {
-            if (disposing && this.SearchContext != null)
+            if (disposing)
             {
-                this.SearchContext.Dispose();
+                this.SearchContext?.Dispose();
             }
         }
 

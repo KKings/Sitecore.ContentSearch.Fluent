@@ -51,7 +51,7 @@ namespace Sitecore.ContentSearch.Fluent
         /// <summary>
         /// Get the Queryable
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T" />
         /// <returns></returns>
         IQueryable<T> GetQueryable<T>();
 

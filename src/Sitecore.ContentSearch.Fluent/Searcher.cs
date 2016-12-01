@@ -15,7 +15,6 @@
 namespace Sitecore.ContentSearch.Fluent
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
@@ -61,15 +60,15 @@ namespace Sitecore.ContentSearch.Fluent
         }
 
         /// <summary>
-        /// Sets the SearchOptions
+        /// Sets the Paging Options for the Query
         /// </summary>
-        /// <param name="searchBuildOptions">Creates a new Instance of SearcherOptionsBuilder to build the options
+        /// <param name="searchBuildOptions">Creates a new Instance of PagingOptionsBuilder to build the options
         /// <para>Passes the Query Options as a parameter</para>
         /// </param>
         /// <returns></returns>
-        public virtual Searcher<T> Options(Action<SearcherOptionsBuilder<T>> searchBuildOptions)
+        public virtual Searcher<T> Paging(Action<PagingOptionsBuilder<T>> searchBuildOptions)
         {
-            searchBuildOptions(new SearcherOptionsBuilder<T>(this.SearcherOptions));
+            searchBuildOptions(new PagingOptionsBuilder<T>(this.SearcherOptions));
             return this;
         }
 
@@ -80,9 +79,9 @@ namespace Sitecore.ContentSearch.Fluent
         /// <para>Passes the Searcher Options as a parameter</para>
         /// </param>
         /// <returns>Instance of the Searcher</returns>
-        public virtual Searcher<T> Query(Action<QueryOptionsBuilder<T>> searchQueryBuildOptions)
+        public virtual Searcher<T> Query(Action<QueryBuilder<T>> searchQueryBuildOptions)
         {
-            searchQueryBuildOptions(new QueryOptionsBuilder<T>(this.QueryOptions));
+            searchQueryBuildOptions(new QueryBuilder<T>(this.QueryOptions));
             return this;
         }
 
@@ -93,9 +92,9 @@ namespace Sitecore.ContentSearch.Fluent
         /// <para>Passes the Searcher Options as a parameter</para>
         /// </param>
         /// <returns>Instance of the Searcher</returns>
-        public virtual Searcher<T> Filter(Action<FilterOptionsBuilder<T>> filterQueryBuildOptions)
+        public virtual Searcher<T> Filter(Action<FilterBuilder<T>> filterQueryBuildOptions)
         {
-            filterQueryBuildOptions(new FilterOptionsBuilder<T>(this.FilterOptions));
+            filterQueryBuildOptions(new FilterBuilder<T>(this.FilterOptions));
             return this;
         }
 
@@ -121,20 +120,15 @@ namespace Sitecore.ContentSearch.Fluent
         /// <returns>Search Results of T</returns>
         public virtual Results.SearchResults<T> Results()
         {
-            this.QueryOptions.Queryable = this.QueryOptions.Queryable.Where(this.QueryOptions.Filter);
-
-            // Setup a predicate builder as an easy way to build up predicate
-            var filter = PredicateBuilder.True<T>();
-
-            if (this.SearcherOptions.Restrictions.Any())
+            if (this.QueryOptions.Filter != null)
             {
-                // Restrict search to limited number of templates (only resource items) using an Or on the predicate
-                filter = this.SearcherOptions.Restrictions.Aggregate(filter, (current, t) => current.Or(p => p.TemplateId == t));
+                this.QueryOptions.Queryable = this.QueryOptions.Queryable.Where(this.QueryOptions.Filter);
             }
 
-            filter = filter.And(this.FilterOptions.Filter);
-
-            this.QueryOptions.Queryable = this.Filter(this.QueryOptions.Queryable, filter);
+            if (this.FilterOptions.Filter != null)
+            {
+                this.QueryOptions.Queryable = this.Filter(this.QueryOptions.Queryable, this.FilterOptions.Filter);
+            }
 
             this.QueryOptions.Queryable = this.QueryOptions.Queryable.Skip(this.SearcherOptions.StartingPosition);
 
@@ -151,11 +145,9 @@ namespace Sitecore.ContentSearch.Fluent
             var results = this.GetResults(this.QueryOptions.Queryable);
 
             // Removed the Sitecore Mapping and only used fields stored in the index
-            return new Results.SearchResults<T>
-            {
-                Total = results.TotalSearchResults,
-                Results = results.Hits.Select(x => x.Document).ToList()
-            };
+            return new Results.SearchResults<T>(
+                results: results.Hits.Select(x => x.Document).ToList(),
+                total: results.TotalSearchResults);
         }
 
         /// <summary>
@@ -171,32 +163,25 @@ namespace Sitecore.ContentSearch.Fluent
         {
             this.QueryOptions.Queryable = this.QueryOptions.Queryable.Where(this.QueryOptions.Filter);
 
-            // Setup a predicate builder as an easy way to build up predicate
-            var filter = PredicateBuilder.True<T>();
-
-            if (this.SearcherOptions.Restrictions.Any())
+            if (this.FilterOptions.Filter != null)
             {
-                // Restrict search to limited number of templates (only resource items) using an Or on the predicate
-                filter = this.SearcherOptions.Restrictions.Aggregate(filter, (current, t) => current.Or(p => p.TemplateId == t));
+                this.QueryOptions.Queryable = this.Filter(this.QueryOptions.Queryable, this.FilterOptions.Filter);
             }
 
-            filter = filter.And(this.FilterOptions.Filter);
-
-            this.QueryOptions.Queryable = this.Filter(this.QueryOptions.Queryable, filter);
+            this.QueryOptions.Queryable = this.QueryOptions.Queryable.Skip(this.SearcherOptions.StartingPosition);
 
             var results = this.GetFacets(this.QueryOptions.Queryable, facets);
 
             return new SearchFacets
             {
                 Total = results.Categories.Count(),
-                Facets = results.Categories.Select(facet => new Facets.FacetCategory
-                {
-                    Name = facet.Name,
-                    Values = facet.Values
-                                  .Select(x => new FacetValue(x.Name, x.AggregateCount))
-                                  .Where(x => x != null || x.Name != null)
-                                  .ToArray()
-                }).ToArray()
+                Facets = results.Categories.Select(facet =>
+                    new Facets.FacetCategory(facet.Name,
+                        facet.Values
+                             .Select(x => new FacetValue(x.Name, x.AggregateCount))
+                             .Where(x => x != null || x.Name != null)
+                             .ToArray())
+                    ).ToArray()
             };
         }
 

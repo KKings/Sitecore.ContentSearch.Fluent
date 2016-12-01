@@ -36,5 +36,12 @@ namespace Sitecore.ContentSearch.Fluent.Results
         /// Gets or sets the Facets
         /// </summary>
         public IList<FacetValue> Facets { get; set; }
+
+        public SearchResults(IList<T> results, int total, IList<FacetValue> facets = null)
+        {
+            this.Results = results;
+            this.Total = total;
+            this.Facets = facets ?? new FacetValue[0];
+        }
     }
 }

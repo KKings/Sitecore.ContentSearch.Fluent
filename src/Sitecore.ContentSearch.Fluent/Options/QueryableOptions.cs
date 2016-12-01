@@ -1,4 +1,4 @@
-﻿// <copyright file="SearchResultItem.cs" company="Kyle Kingsbury">
+﻿// <copyright file="FilterOptions.cs" company="Kyle Kingsbury">
 //  Copyright 2015 Kyle Kingsbury
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,19 +12,18 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 // </copyright>
-namespace Sitecore.ContentSearch.Fluent.Results
+namespace Sitecore.ContentSearch.Fluent.Options
 {
-    using System.ComponentModel;
-    using Converters;
-    using Data;
+    using System;
+    using System.Linq.Expressions;
+    using Results;
 
-    /// <summary>
-    /// SearchResultItem Summary
-    /// </summary>
-    public abstract class SearchResultItem : SearchTypes.SearchResultItem
+    public abstract class QueryableOptions<T> where T : SearchResultItem
     {
-        [IndexField("_group")]
-        [TypeConverter(typeof(IndexFieldIDValueConverter))]
-        public virtual ID Id { get; set; }
+        /// <summary>
+        /// Gets or sets the Filter expressions
+        /// <para>Always set the filter expression when added an expression</para>
+        /// </summary>
+        internal virtual Expression<Func<T, bool>> Filter { get; set; }
     }
 }

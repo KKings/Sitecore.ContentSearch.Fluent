@@ -14,31 +14,12 @@
 // </copyright>
 namespace Sitecore.ContentSearch.Fluent.Options
 {
-    using System;
-    using System.Linq.Expressions;
-    using Linq.Utilities;
     using Results;
 
     /// <summary>
-    /// Todo: FilterOptions Summary Description
+    /// Filtering Options
     /// </summary>
-    public class FilterOptions<T> where T : SearchResultItem
+    public class FilterOptions<T> : QueryableOptions<T> where T : SearchResultItem
     {
-        /// <summary>
-        /// Gets or sets the Filter expressions
-        /// <para>Always set the filter expression when added an expression</para>
-        /// </summary>
-        public Expression<Func<T, bool>> Filter { get; set; }
-        
-        public FilterOptions() : this(true)
-        {
-        }
-
-        public FilterOptions(bool isAnd)
-        {
-            this.Filter = (isAnd) 
-                ? PredicateBuilder.True<T>()
-                : PredicateBuilder.False<T>();
-        }
     }
 }

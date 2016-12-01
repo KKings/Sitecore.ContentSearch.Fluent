@@ -24,7 +24,7 @@ namespace Sitecore.ContentSearch.Fluent.Options
     /// <summary>
     /// SearcherOptions Summary
     /// </summary>
-    public class SearcherOptions<T> where T : SearchResultItem
+    public sealed class SearcherOptions<T> where T : SearchResultItem
     {
         /// <summary>
         ///  Gets or sets the Search Manager
@@ -71,9 +71,9 @@ namespace Sitecore.ContentSearch.Fluent.Options
                 // If the PageMode is the Pager, we need to calculate the starting position
                 if (this.PageMode == PageMode.Pager)
                 {
-                    return (this.Start <= 1)
+                    return this.Start <= 1
                             ? 0
-                            : ((this.Start - 1) * this.Display);
+                            : (this.Start - 1) * this.Display;
                 }
                     
                 return this.Start;
@@ -92,8 +92,13 @@ namespace Sitecore.ContentSearch.Fluent.Options
 
         public SearcherOptions(ISearchManager searchManager)
         {
+            if (searchManager == null)
+            {
+                throw new ArgumentNullException(nameof(searchManager));
+            }
+
             this.Restrictions = new List<ID>();
-            this.Facets = new List<String>();
+            this.Facets = new List<string>();
             this.SortOrder = SortOrder.Ascending;
             this.SearchManager = searchManager;
             this.Filter = PredicateBuilder.True<T>();

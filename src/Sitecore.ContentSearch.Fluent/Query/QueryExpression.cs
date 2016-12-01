@@ -1,4 +1,4 @@
-﻿// <copyright file="FacetCategory.cs" company="Kyle Kingsbury">
+﻿// <copyright file="QueryOptions.cs" company="Kyle Kingsbury">
 //  Copyright 2015 Kyle Kingsbury
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,30 +12,28 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 // </copyright>
-namespace Sitecore.ContentSearch.Fluent.Facets
+namespace Sitecore.ContentSearch.Fluent.Query
 {
-    using System.Collections.Generic;
+    using System;
+    using System.Linq.Expressions;
+    using Results;
 
-    /// <summary>
-    /// Represents a Facet by Name
-    /// </summary>
-    public class FacetCategory
+    public class QueryExpression<T> where T : SearchResultItem
     {
         /// <summary>
-        /// Gets or sets the Name of the Facet
-        /// <para>Note, this is the name within the index</para>
+        /// Gets or sets the Query Expression Option
         /// </summary>
-        public string Name { get; }
-        
-        /// <summary>
-        /// Gets of sets the Facet Values
-        /// </summary>
-        public IList<FacetValue> Values { get; }
+        public OptionType Option { get; }
 
-        public FacetCategory(string name, IList<FacetValue> values)
+        /// <summary>
+        /// Gets or sets a single Expression
+        /// </summary>
+        public Expression<Func<T, bool>> Expression { get; }
+
+        public QueryExpression(OptionType option, Expression<Func<T, bool>> expression)
         {
-            this.Name = name;
-            this.Values = values ?? new FacetValue[0];
+            this.Option = option;
+            this.Expression = expression;
         }
     }
 }

@@ -16,11 +16,10 @@ namespace Sitecore.ContentSearch.Fluent.Options
 {
     using System;
     using System.Linq.Expressions;
-    using Linq.Utilities;
     using Results;
 
     /// <summary>
-    /// SearchQueryOptions Summary
+    /// Query Options
     /// </summary>
     public class SearchQueryOptions<T> where T : SearchResultItem
     {
@@ -28,14 +27,5 @@ namespace Sitecore.ContentSearch.Fluent.Options
         /// Gets or sets the Filter expressions
         /// </summary>
         public Expression<Func<T, bool>> Filter { get; set; }
-
-        public SearchQueryOptions() : this(true) { }
-
-        public SearchQueryOptions(bool isAnd = true)
-        {
-            this.Filter = (isAnd) 
-                ? PredicateBuilder.True<T>()
-                : PredicateBuilder.False<T>();
-        }
     }
 }
