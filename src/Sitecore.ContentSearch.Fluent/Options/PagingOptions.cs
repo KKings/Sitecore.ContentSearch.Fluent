@@ -42,7 +42,7 @@ namespace Sitecore.ContentSearch.Fluent.Options
         public virtual int Display { get; set; } = 10;
 
         /// <summary>
-        /// Gets the calculating StartingPosition
+        /// Gets the calculated StartingPosition
         /// </summary>
         public virtual int StartingPosition
         {

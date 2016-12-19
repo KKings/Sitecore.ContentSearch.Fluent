@@ -45,19 +45,9 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// Adds a sorting expression to the Query Options
         /// </summary>
         /// <param name="expression">Expression to apply to the queryable</param>
-        /// <returns>Instance of the SortingOptionsBuilder</returns>
-        public SortingOptionsBuilder<T> By(Expression<Func<T, object>> expression)
-        {
-            return this.By(expression, SortOrder.Ascending);
-        }
-
-        /// <summary>
-        /// Adds a sorting expression to the Query Options
-        /// </summary>
-        /// <param name="expression">Expression to apply to the queryable</param>
         /// <param name="sortOrder">Sorting Order</param>
         /// <returns>Instance of the SortingOptionsBuilder</returns>
-        public SortingOptionsBuilder<T> By(Expression<Func<T, object>> expression, SortOrder sortOrder)
+        public SortingOptionsBuilder<T> By(Expression<Func<T, object>> expression, SortOrder sortOrder = SortOrder.Ascending)
         {
             if (expression == null)
             {
@@ -68,7 +58,5 @@ namespace Sitecore.ContentSearch.Fluent.Builders
 
             return this;
         }
-
-
     }
 }

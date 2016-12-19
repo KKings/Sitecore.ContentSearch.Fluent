@@ -150,7 +150,7 @@ namespace Sitecore.ContentSearch.Fluent
 
             if (this.SortingOptions.Expressions.Any())
             {
-                this.searchQueryable = this.SortingOptions.ApplySorting(this.searchQueryable);
+                this.searchQueryable = this.ApplySorting(this.SortingOptions, this.searchQueryable);
             }
 
             var results = this.GetResults(this.searchQueryable);
@@ -240,6 +240,39 @@ namespace Sitecore.ContentSearch.Fluent
             }
 
             return queryable.GetFacets();
+        }
+
+        /// <summary>
+        /// Apply the sortings to an IQueryable
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="queryable">Current Search IQueryable</param>
+        /// <returns>IQueryable with Sortings Applied</returns>
+        public virtual IQueryable<T> ApplySorting(SortingOptions<T> options, IQueryable<T> queryable)
+        {
+            if (options == null || !options.Expressions.Any())
+            {
+                return queryable;
+            }
+
+            // Resolve bug with Sitecore not evaluating orders correctly
+            // http://www.daveleigh.co.uk/sitecore-content-search-api-thenby-clause-not-evaluating-correctly/
+            var expressions = options.Expressions.Reverse();
+
+            var operations = expressions as SortingOptions<T>.SortingOperation[] ?? expressions.ToArray();
+            
+            var orderByExpression = operations.First();
+
+            var orderedQueryable = orderByExpression.SortOrder == SortOrder.Ascending
+                ? queryable.OrderBy(orderByExpression.Expression)
+                : queryable.OrderByDescending(orderByExpression.Expression);
+
+            return operations.Skip(1)
+                                    .Aggregate(orderedQueryable,
+                                        (current, expression) =>
+                                            expression.SortOrder == SortOrder.Ascending
+                                                ? current.ThenBy(expression.Expression)
+                                                : current.ThenByDescending(expression.Expression));
         }
     }
 }

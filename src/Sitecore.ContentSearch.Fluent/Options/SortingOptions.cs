@@ -23,7 +23,6 @@ namespace Sitecore.ContentSearch.Fluent.Options
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Linq.Expressions;
     using Results;
 
@@ -33,7 +32,7 @@ namespace Sitecore.ContentSearch.Fluent.Options
     public class SortingOptions<T> where T : SearchResultItem
     {
         /// <summary>
-        /// Stores Sorting Operations
+        /// Combines a Sorting Expression with a SortOrder
         /// </summary>
         internal class SortingOperation
         {
@@ -55,45 +54,8 @@ namespace Sitecore.ContentSearch.Fluent.Options
         }
 
         /// <summary>
-        /// Gets or sets the Expressions
+        /// Gets or sets the Operations to Sort On
         /// </summary>
-        internal IList<SortingOperation> Expressions { get; set; }
-
-        public SortingOptions()
-        {
-            this.Expressions = new List<SortingOperation>();
-        }
-
-        /// <summary>
-        /// Apply the sortings to an IQueryable
-        /// </summary>
-        /// <param name="queryable">Current Search IQueryable</param>
-        /// <returns>IQueryable with Sortings Applied</returns>
-        internal IQueryable<T> ApplySorting(IQueryable<T> queryable)
-        {
-            if (!this.Expressions.Any())
-            {
-                return queryable;
-            }
-
-            // Resolve bug with Sitecore not evaluating orders correctly
-            // http://www.daveleigh.co.uk/sitecore-content-search-api-thenby-clause-not-evaluating-correctly/
-            var expressions = this.Expressions.Reverse();
-
-            var sortingOperations = expressions as SortingOperation[] ?? expressions.ToArray();
-
-            var orderByExpression = sortingOperations.First();
-
-            var orderedQueryable = orderByExpression.SortOrder == SortOrder.Ascending
-                ? queryable.OrderBy(orderByExpression.Expression)
-                : queryable.OrderByDescending(orderByExpression.Expression);
-
-            return sortingOperations.Skip(1)
-                                    .Aggregate(orderedQueryable,
-                                        (current, expression) =>
-                                            expression.SortOrder == SortOrder.Ascending
-                                                ? current.ThenBy(expression.Expression)
-                                                : current.ThenByDescending(expression.Expression));
-        }
+        internal virtual IList<SortingOperation> Expressions { get; set; } = new List<SortingOperation>();
     }
 }
