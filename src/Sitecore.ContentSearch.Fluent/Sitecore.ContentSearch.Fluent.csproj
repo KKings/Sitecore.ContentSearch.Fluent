@@ -33,6 +33,10 @@
     <CodeAnalysisRuleSet>Sitecore.ContentSearch.Fluent.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SC.Microsoft.Extensions.DependencyInjection.Abstractions.8.2.0.160729\lib\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Sitecore.ContentSearch, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Sitecore.ContentSearch.NoReferences.8.2.160729\lib\NET452\Sitecore.ContentSearch.dll</HintPath>
       <Private>True</Private>
@@ -60,6 +64,7 @@
     <Compile Include="Builders\GroupQueryBuilder.cs" />
     <Compile Include="Builders\SearcherBuilder.cs" />
     <Compile Include="Builders\SortingOptionsBuilder.cs" />
+    <Compile Include="RegisterDependencies.cs" />
     <Compile Include="Repositories\ContentSearchRepository.cs" />
     <Compile Include="Providers\DefaultDatabaseProvider.cs" />
     <Compile Include="Providers\DefaultIndexProvider.cs" />
