@@ -29,26 +29,26 @@ namespace Sitecore.ContentSearch.Fluent
         /// <summary>
         /// The Paging Options for skipping/taking
         /// </summary>
-        public PagingOptions PagingOptions { get; private set; } = new PagingOptions();
+        public virtual PagingOptions PagingOptions { get; private set; } = new PagingOptions();
 
         /// <summary>
         /// The Query Filters
         /// </summary>
-        public QueryOptions<T> QueryOptions { get; private set; } = new QueryOptions<T>();
+        public virtual QueryOptions<T> QueryOptions { get; private set; } = new QueryOptions<T>();
 
         /// <summary>
         /// The Filter Filters =). This is separated out as FilterOptions must be applied to a different method
         /// </summary>
-        public FilterOptions<T> FilterOptions { get; private set; } = new FilterOptions<T>();
+        public virtual FilterOptions<T> FilterOptions { get; private set; } = new FilterOptions<T>();
 
         /// <summary>
         /// The SortingOptions
         /// </summary>
-        public SortingOptions<T> SortingOptions { get; private set; } = new SortingOptions<T>();
+        public virtual SortingOptions<T> SortingOptions { get; private set; } = new SortingOptions<T>();
 
         /// <summary>
         /// The FacetOptions
         /// </summary>
-        public FacetOptions FacetOptions { get; private set; } = new FacetOptions();
+        public virtual FacetOptions FacetOptions { get; private set; } = new FacetOptions();
     }
 }
