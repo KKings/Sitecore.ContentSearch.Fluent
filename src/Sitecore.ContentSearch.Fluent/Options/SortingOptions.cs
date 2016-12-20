@@ -34,7 +34,7 @@ namespace Sitecore.ContentSearch.Fluent.Options
         /// <summary>
         /// Combines a Sorting Expression with a SortOrder
         /// </summary>
-        internal class SortingOperation
+        public class SortingOperation
         {
             /// <summary>
             /// Gets or sets the Sort Order
@@ -56,6 +56,6 @@ namespace Sitecore.ContentSearch.Fluent.Options
         /// <summary>
         /// Gets or sets the Operations to Sort On
         /// </summary>
-        internal virtual IList<SortingOperation> Expressions { get; set; } = new List<SortingOperation>();
+        public virtual IList<SortingOperation> Operations { get; set; } = new List<SortingOperation>();
     }
 }

@@ -105,14 +105,14 @@ namespace Sitecore.ContentSearch.Fluent.Services
         /// <returns></returns>
         public virtual IQueryable<T> ApplySorting<T>(IQueryable<T> queryable, SortingOptions<T> options) where T : SearchResultItem
         {
-            if (options == null || !options.Expressions.Any())
+            if (options == null || !options.Operations.Any())
             {
                 return queryable;
             }
 
             // Resolve bug with Sitecore not evaluating orders correctly
             // http://www.daveleigh.co.uk/sitecore-content-search-api-thenby-clause-not-evaluating-correctly/
-            var expressions = options.Expressions.Reverse();
+            var expressions = options.Operations.Reverse();
 
             var operations = expressions as SortingOptions<T>.SortingOperation[] ?? expressions.ToArray();
 

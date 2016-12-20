@@ -23,6 +23,8 @@ namespace Sitecore.ContentSearch.Fluent.Builders
 {
     using System;
     using System.Linq.Expressions;
+    using System.Reflection;
+    using Extensions;
     using Options;
     using Results;
 
@@ -46,6 +48,9 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// </summary>
         /// <param name="expression">Expression to apply to the queryable</param>
         /// <param name="sortOrder">Sorting Order</param>
+        /// <exception cref="ArgumentNullException">Expression cannot be null</exception>
+        /// <exception cref="ArgumentException">Expression cannot refer to a method</exception>
+        /// <exception cref="ArgumentException">Expression cannot refer to a field</exception>
         /// <returns>Instance of the SortingOptionsBuilder</returns>
         public SortingOptionsBuilder<T> By(Expression<Func<T, object>> expression, SortOrder sortOrder = SortOrder.Ascending)
         {
@@ -54,7 +59,19 @@ namespace Sitecore.ContentSearch.Fluent.Builders
                 throw new ArgumentNullException(nameof(expression), "Sort Expression cannot be null");
             }
 
-            this.SortingOptions.Expressions.Add(new SortingOptions<T>.SortingOperation(sortOrder, expression));
+            var member = expression.Body as MemberExpression;
+            if (member == null)
+            {
+                throw new ArgumentException($"Expression '{expression}' refers to a method, not a property.");
+            }
+
+            var propInfo = member.Member as PropertyInfo;
+            if (propInfo == null)
+            {
+                throw new ArgumentException($"Expression '{expression}' refers to a field, not a property.");
+            }
+
+            this.SortingOptions.Operations.Add(new SortingOptions<T>.SortingOperation(sortOrder, expression));
 
             return this;
         }
