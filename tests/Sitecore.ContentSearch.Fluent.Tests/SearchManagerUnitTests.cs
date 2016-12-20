@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
-
+    using Builders;
     using ContentSearch;
     using Fluent;
     using Facets;
@@ -13,11 +13,15 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using Moq;
+    using Options;
+    using Providers;
+    using Repositories;
+    using Services;
 
     [TestClass]
     public class SearchManagerUnitTests
     {
-        private Mock<SearchManager> searchManager;
+        private Mock<DefaultSearchManager> searchManager;
 
 
         [TestInitialize]
@@ -34,34 +38,30 @@
             indexProvider.SetupGet(m => m.SearchContext)
                          .Returns(searchContextMock.Object);
 
-            var manager = new Mock<SearchManager>(indexProvider.Object);
+            var resultRepository = new Mock<IResultRepository>();
 
-            var searcher = new Mock<DefaultSearcher<TestSearchResultItem>>(index);
-            searcher.Setup(
-                m =>
-                    m.Filter(
-                        It.IsAny<IQueryable<TestSearchResultItem>>(),
-                        It.IsAny<Expression<Func<TestSearchResultItem, bool>>>()))
-                    .Returns<IQueryable<TestSearchResultItem>, Expression<Func<TestSearchResultItem, bool>>>(
-                        (items, expression) => items.Where(expression));
+            resultRepository.Setup(m => m.GetFacetResults(It.IsAny<IQueryable<TestSearchResultItem>>()))
+                            .Returns(new FacetResults());
+
+            resultRepository.Setup(m => m.GetResults(It.IsAny<IQueryable<TestSearchResultItem>>()))
+                            .Returns<IQueryable<TestSearchResultItem>>(
+                                items =>
+                                    new SearchResults<TestSearchResultItem>(
+                                        items.Select(i => new SearchHit<TestSearchResultItem>(0, i)), items.Count()));
+
+            resultRepository.Setup(m => m.GetQueryable<TestSearchResultItem>())
+                            .Returns(index);
+            
+            var queryService = new Mock<QueryService> { CallBase = true };
+            queryService.Setup(
+                m => m.ApplyFilter(It.IsAny<IQueryable<TestSearchResultItem>>(), It.IsAny<FilterOptions<TestSearchResultItem>>()))
+                        .Returns<IQueryable<TestSearchResultItem>, FilterOptions<TestSearchResultItem>>(
+                            (items, options) => (options?.Filter != null) ? items.Where(options.Filter): items);
 
 
-            searcher.Setup(m => m.GetFacets(It.IsAny<IQueryable<TestSearchResultItem>>(), It.IsAny<IList<IFacetOn>>()))
-                    .Returns(new FacetResults());
+            var searchProvider = new Mock<DefaultSearchProvider>(resultRepository.Object, queryService.Object) { CallBase = true };
 
-            searcher.Setup(m => m.GetResults(It.IsAny<IQueryable<TestSearchResultItem>>()))
-                    .Returns<IQueryable<TestSearchResultItem>>(
-                        (items =>
-                            new SearchResults<TestSearchResultItem>(
-                                items.Select(i => new SearchHit<TestSearchResultItem>(0, i)), items.Count())));
-
-            searcher.CallBase = true;
-            manager.CallBase = true;
-
-            manager.Setup(m => m.GetSearcher<TestSearchResultItem>())
-                   .Returns(searcher.Object);
-            manager.Setup(m => m.GetQueryable<TestSearchResultItem>())
-                   .Returns(index);
+            var manager = new Mock<DefaultSearchManager>(searchProvider.Object) { CallBase = true };
 
             this.searchManager = manager;
 

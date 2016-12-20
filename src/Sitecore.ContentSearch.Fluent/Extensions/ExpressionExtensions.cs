@@ -23,6 +23,7 @@ namespace Sitecore.ContentSearch.Fluent.Extensions
 {
     using System;
     using System.Linq.Expressions;
+    using System.Reflection;
     using Expressions;
 
     public static class ExpressionExtensions
@@ -39,6 +40,35 @@ namespace Sitecore.ContentSearch.Fluent.Extensions
             return
                 Expression.Lambda<Func<T, bool>>(
                     new ParameterReplaceVisitor(expression.Parameters[1], value).Visit(expression.Body), expression.Parameters[0]);
+        }
+
+        /// <summary>
+        /// Converts the expression into a PropertyInfo
+        /// </summary>
+        /// <param name="expression">The Expression</param>
+        /// <exception cref="ArgumentException">Expression cannot refer to a method</exception>
+        /// <exception cref="ArgumentException">Expression cannot refer to a field</exception>
+        /// <returns><see cref="PropertyInfo"/> of an expression</returns>
+        public static PropertyInfo ToPropertyInfo<T, TProperty>(this Expression<Func<T, TProperty>> expression)
+        {
+            if (expression == null)
+            {
+                return null;
+            }
+
+            var member = expression.Body as MemberExpression;
+            if (member == null)
+            {
+                throw new ArgumentException($"Expression '{expression}' refers to a method, not a property.");
+            }
+
+            var propInfo = member.Member as PropertyInfo;
+            if (propInfo == null)
+            {
+                throw new ArgumentException($"Expression '{expression}' refers to a field, not a property.");
+            }
+
+            return propInfo;
         }
     }
 }

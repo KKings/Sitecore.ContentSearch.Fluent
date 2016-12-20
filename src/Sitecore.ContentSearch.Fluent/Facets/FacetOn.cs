@@ -26,8 +26,12 @@ namespace Sitecore.ContentSearch.Fluent.Facets
     /// </summary>
     public class FacetOn : FacetBase
     {
-        public FacetOn(string key) : base(key) { }
+        public FacetOn(string key) : base(key)
+        {
+        }
 
-        public FacetOn(string key, int minimumCount) : base(key, minimumCount) { }
+        public FacetOn(string key, int minimumCount) : base(key, minimumCount)
+        {
+        }
     }
 }

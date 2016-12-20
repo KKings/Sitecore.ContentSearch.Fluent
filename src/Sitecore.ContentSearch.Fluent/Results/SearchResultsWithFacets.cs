@@ -19,7 +19,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-
 namespace Sitecore.ContentSearch.Fluent.Results
 {
     public class SearchResultsWithFacets<T> where T : SearchResultItem
@@ -32,12 +31,12 @@ namespace Sitecore.ContentSearch.Fluent.Results
         /// <summary>
         /// 
         /// </summary>
-        public virtual SearchFacets SearchFacets { get; }
+        public virtual SearchFacetResults SearchFacetResults { get; }
 
-        public SearchResultsWithFacets(SearchResults<T> searchResults, SearchFacets searchFacets)
+        public SearchResultsWithFacets(SearchResults<T> searchResults, SearchFacetResults searchFacetResults)
         {
             this.SearchResults = searchResults;
-            this.SearchFacets = searchFacets;
+            this.SearchFacetResults = searchFacetResults;
         }
     }
 }

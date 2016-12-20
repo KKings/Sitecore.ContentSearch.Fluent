@@ -73,7 +73,6 @@ namespace Sitecore.ContentSearch.Fluent.Builders
 
             filterAction(new FilterQueryBuilder<T>(options));
 
-
             if (options.Filter == null)
             {
                 return this;

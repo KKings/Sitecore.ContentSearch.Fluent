@@ -24,27 +24,29 @@ namespace Sitecore.ContentSearch.Fluent
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Builders;
     using Facets;
+    using Providers;
     using Results;
 
     /// <summary>
     /// SearchManager manages the lifecycle of the Search Context for the Search Index.
     /// Implements IDisposable to dispose of the SearchContext when the application closes
     /// </summary>
-    public class SearchManager : ISearchManager
+    public class DefaultSearchManager : ISearchManager
     {
         /// <summary>
-        /// Implementation of the Index Provider
+        /// 
         /// </summary>
-        public virtual IIndexProvider IndexProvider { get; }
+        internal virtual ISearchProvider SearchProvider { get; }
 
         /// <summary>
         /// Default constructor
         /// </summary>
-        /// <param name="indexProvider"></param>
-        public SearchManager(IIndexProvider indexProvider)
+        /// <param name="searchProvider"></param>
+        public DefaultSearchManager(ISearchProvider searchProvider)
         {
-            this.IndexProvider = indexProvider;
+            this.SearchProvider = searchProvider;
         }
 
         /// <summary>
@@ -53,28 +55,39 @@ namespace Sitecore.ContentSearch.Fluent
         /// <typeparam name="T">Type of ResultItem</typeparam>
         /// <param name="searcherBuilder">Lambda to generate the Search Results Expression</param>
         /// <returns>Result of <see cref="T"/></returns>
-        public virtual SearchResults<T> ResultsFor<T>(Action<ISearcher<T>> searcherBuilder)
+        public virtual SearchResults<T> ResultsFor<T>(Action<ISearcherBuilder<T>> searcherBuilder)
             where T : SearchResultItem
         {
-            var searcher = this.GetSearcher<T>();
+            var configuration = new SearchConfiguration<T>();
+            var searcher = this.SearchProvider.GetSearcherBuilder(configuration);
+
+            // Build Options
             searcherBuilder(searcher);
 
-            return searcher.Results();
+            // Get Results and Process
+            var results = this.SearchProvider.GetResults(configuration);
+
+            return results;
         }
 
         /// <summary>
         /// Gets the Search Facets for a given Search
         /// </summary>
         /// <param name="searcherBuilder">Configurable Search Builder</param>
-        /// <param name="facets">The Facets</param>
         /// <returns></returns>
-        public virtual SearchFacets FacetsFor<T>(Action<ISearcher<T>> searcherBuilder, IList<IFacetOn> facets)
+        public virtual SearchFacetResults FacetsFor<T>(Action<ISearcherBuilder<T>> searcherBuilder)
             where T : SearchResultItem
         {
-            var searcher = this.GetSearcher<T>();
+            var configuration = new SearchConfiguration<T>();
+            var searcher = this.SearchProvider.GetSearcherBuilder(configuration);
+
+            // Build the options
             searcherBuilder(searcher);
 
-            return searcher.Facets(facets);
+            // Get Results and Process
+            var results = this.SearchProvider.GetFacetResults(configuration);
+
+            return results;
         }
 
         /// <summary>
@@ -83,34 +96,19 @@ namespace Sitecore.ContentSearch.Fluent
         /// <param name="searcherBuilder">Configurable Search Builder</param>
         /// <param name="facets">The Facets</param>
         /// <returns></returns>
-        public virtual SearchResultsWithFacets<T> ResultsWithFacetsFor<T>(Action<ISearcher<T>> searcherBuilder, IList<IFacetOn> facets)
+        public virtual SearchResultsWithFacets<T> ResultsWithFacetsFor<T>(Action<ISearcherBuilder<T>> searcherBuilder)
             where T : SearchResultItem
         {
-            var searcher = this.GetSearcher<T>();
+            var configuration = new SearchConfiguration<T>();
+            var searcher = this.SearchProvider.GetSearcherBuilder(configuration);
+
+            // Build the options
             searcherBuilder(searcher);
 
-            return searcher.ResultsWithFacets(facets);
-        }
+            throw new NotImplementedException();
 
-        /// <summary>
-        /// Gets the IQueryable from the <see cref="IProviderSearchContext"/>
-        /// </summary>
-        /// <typeparam name="T">Type of Search Result</typeparam>
-        /// <returns>IQueryable to perform linq actions on</returns>
-        public virtual IQueryable<T> GetQueryable<T>()
-        {
-            return this.IndexProvider.SearchContext.GetQueryable<T>();
+            //return searcher.ResultsWithFacets(facets);
         }
-
-        /// <summary>
-        /// Gets the Default Searcher (builder)
-        /// </summary>
-        /// <typeparam name="T">Type of Search Result</typeparam>
-        /// <returns><see cref="DefaultSearcher{T}"/></returns>
-        public virtual ISearcher<T> GetSearcher<T>() where T : SearchResultItem
-        {
-            return new DefaultSearcher<T>(this.GetQueryable<T>());
-        } 
 
         #region IDisposable
 
@@ -124,7 +122,7 @@ namespace Sitecore.ContentSearch.Fluent
         {
             if (disposing)
             {
-                this.IndexProvider?.Dispose();
+                this.SearchProvider?.Dispose();
             }
         }
 

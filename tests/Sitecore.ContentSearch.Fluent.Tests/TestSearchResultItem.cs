@@ -4,6 +4,9 @@
 
     public class TestSearchResultItem : SearchResultItem
     {
-
+        /// <summary>
+        /// Gets or sets the TestingFacetKey
+        /// </summary>
+        public virtual string TestingFacetKey {get; set; }
     }
 }

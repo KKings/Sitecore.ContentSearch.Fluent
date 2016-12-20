@@ -38,7 +38,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         {
             this.PagingOptions = searchOptions;
         }
-        
+
         /// <summary>
         /// Set the returned results page
         /// </summary>
@@ -92,9 +92,10 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         public PagingOptionsBuilder<T> Skip(int start, bool includeStart = false)
         {
             var temp = start;
-            
+
             // Ensure we are working with a valid number
-            if (temp < 0) temp = 0; 
+            if (temp < 0)
+                temp = 0;
 
             this.PagingOptions.Start = (temp > 0) && includeStart
                 ? temp - 1

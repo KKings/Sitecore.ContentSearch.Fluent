@@ -50,15 +50,20 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Builders\FacetBuilder.cs" />
     <Compile Include="Builders\FilterBuilder.cs" />
     <Compile Include="Builders\FilterQueryBuilder.cs" />
+    <Compile Include="Builders\ISearcherBuilder.cs" />
     <Compile Include="Builders\QueryBuilder.cs" />
     <Compile Include="Builders\PagingOptionsBuilder.cs" />
     <Compile Include="Builders\SearchBuilderBase.cs" />
-    <Compile Include="Builders\SearchQueryBuilder.cs" />
+    <Compile Include="Builders\GroupQueryBuilder.cs" />
+    <Compile Include="Builders\SearcherBuilder.cs" />
     <Compile Include="Builders\SortingOptionsBuilder.cs" />
-    <Compile Include="DefaultDatabaseProvider.cs" />
-    <Compile Include="DefaultIndexProvider.cs" />
+    <Compile Include="Repositories\ContentSearchRepository.cs" />
+    <Compile Include="Providers\DefaultDatabaseProvider.cs" />
+    <Compile Include="Providers\DefaultIndexProvider.cs" />
+    <Compile Include="Providers\DefaultSearchProvider.cs" />
     <Compile Include="Expressions\ParameterReplaceVisitor.cs" />
     <Compile Include="Extensions\ExpressionExtensions.cs" />
     <Compile Include="Facets\FacetBase.cs" />
@@ -67,10 +72,12 @@
     <Compile Include="Facets\FacetOnFilter.cs" />
     <Compile Include="Facets\FacetValue.cs" />
     <Compile Include="Facets\IFacetOn.cs" />
-    <Compile Include="IDatabaseProvider.cs" />
-    <Compile Include="IIndexProvider.cs" />
-    <Compile Include="ISearcher.cs" />
+    <Compile Include="Providers\IDatabaseProvider.cs" />
+    <Compile Include="Providers\IIndexProvider.cs" />
+    <Compile Include="Repositories\IResultRepository.cs" />
     <Compile Include="ISearchManager.cs" />
+    <Compile Include="Providers\ISearchProvider.cs" />
+    <Compile Include="Options\FacetOptions.cs" />
     <Compile Include="Options\FilterOptions.cs" />
     <Compile Include="Options\QueryableOptions.cs" />
     <Compile Include="Options\QueryOptions.cs" />
@@ -78,18 +85,21 @@
     <Compile Include="Options\SortingOptions.cs" />
     <Compile Include="PageMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Results\SearchFacets.cs" />
+    <Compile Include="Results\SearchFacetResults.cs" />
     <Compile Include="Results\SearchResultItem.cs" />
     <Compile Include="Results\SearchResults.cs" />
-    <Compile Include="DefaultSearcher.cs" />
     <Compile Include="Results\SearchResultsWithFacets.cs" />
-    <Compile Include="SearchManager.cs" />
+    <Compile Include="DefaultSearchManager.cs" />
+    <Compile Include="SearchConfiguration.cs" />
+    <Compile Include="Services\IQueryService.cs" />
+    <Compile Include="Services\QueryService.cs" />
     <Compile Include="SortOrder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Sitecore.ContentSearch.Fluent.ruleset" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

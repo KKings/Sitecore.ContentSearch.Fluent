@@ -19,20 +19,34 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace Sitecore.ContentSearch.Fluent
+namespace Sitecore.ContentSearch.Fluent.Providers
 {
-    using System;
+    using Configuration;
+    using Data;
 
-    public interface IIndexProvider : IDisposable
+    public class DefaultDatabaseProvider : IDatabaseProvider
     {
         /// <summary>
-        /// Content Search Context
+        /// Default Database Name if there is no Context
         /// </summary>
-        IProviderSearchContext SearchContext { get; }
+        public virtual string DefaultDatabaseName => "web";
 
         /// <summary>
-        /// Configured Content Search Index
+        /// Context Database for the Index
         /// </summary>
-        ISearchIndex SearchIndex { get; }
+        public virtual Database Context
+        {
+            get { return Sitecore.Context.Database ?? this.DefaultFactory.GetDatabase(this.DefaultDatabaseName); }
+        }
+
+        /// <summary>
+        /// Default Configuration Factory
+        /// </summary>
+        public readonly DefaultFactory DefaultFactory;
+
+        public DefaultDatabaseProvider(DefaultFactory defaultFactory)
+        {
+            this.DefaultFactory = defaultFactory;
+        }
     }
 }

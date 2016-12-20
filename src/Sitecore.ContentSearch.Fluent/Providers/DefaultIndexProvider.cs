@@ -19,7 +19,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace Sitecore.ContentSearch.Fluent
+namespace Sitecore.ContentSearch.Fluent.Providers
 {
     using System;
     using System.Collections.Generic;
@@ -29,14 +29,14 @@ namespace Sitecore.ContentSearch.Fluent
         /// <summary>
         /// The Search Context on the Search Index for Searching the Index
         /// </summary>
-        private IProviderSearchContext _searchContext;
+        private IProviderSearchContext searchContext;
 
         /// <summary>
         /// The Search Context on the Search Index for Searching the Index
         /// </summary>
         public virtual IProviderSearchContext SearchContext
         {
-            get { return this._searchContext ?? (this._searchContext = this.SearchIndex.CreateSearchContext()); }
+            get { return this.searchContext ?? (this.searchContext = this.SearchIndex.CreateSearchContext()); }
         }
 
         /// <summary>
@@ -49,7 +49,11 @@ namespace Sitecore.ContentSearch.Fluent
         /// </summary>
         public virtual ISearchIndex SearchIndex
         {
-            get { return this._searchIndex ?? (this._searchIndex = ContentSearchManager.GetIndex(this.indexLookup[this.databaseProvider.Context.Name])); }
+            get
+            {
+                return this._searchIndex ??
+                       (this._searchIndex = ContentSearchManager.GetIndex(this.indexLookup[this.databaseProvider.Context.Name]));
+            }
         }
 
         /// <summary>

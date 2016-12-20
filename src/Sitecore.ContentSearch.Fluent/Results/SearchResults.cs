@@ -49,7 +49,10 @@ namespace Sitecore.ContentSearch.Fluent.Results
         /// <summary>
         /// Gets only the Documents within the Search Results
         /// </summary>
-        public virtual IList<T> Results { get { return this.Hits.Select(m => m.Document).ToArray(); } }
+        public virtual IList<T> Results
+        {
+            get { return this.Hits.Select(m => m.Document).ToArray(); }
+        }
 
         public SearchResults(IEnumerable<SearchHit<T>> results, int total, IList<FacetValue> facets = null)
         {

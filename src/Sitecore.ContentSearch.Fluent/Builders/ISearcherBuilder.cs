@@ -19,43 +19,21 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace Sitecore.ContentSearch.Fluent.Options
+namespace Sitecore.ContentSearch.Fluent.Builders
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq.Expressions;
     using Results;
 
-    /// <summary>
-    /// Stores sorting options
-    /// </summary>
-    public class SortingOptions<T> where T : SearchResultItem
+    public interface ISearcherBuilder<T> where T : SearchResultItem
     {
-        /// <summary>
-        /// Combines a Sorting Expression with a SortOrder
-        /// </summary>
-        internal class SortingOperation
-        {
-            /// <summary>
-            /// Gets or sets the Sort Order
-            /// </summary>
-            public virtual SortOrder SortOrder { get; }
+        ISearcherBuilder<T> Paging(Action<PagingOptionsBuilder<T>> searchBuildOptions);
 
-            /// <summary>
-            /// Get or sets the Expression
-            /// </summary>
-            public virtual Expression<Func<T, object>> Expression { get; }
+        ISearcherBuilder<T> Query(Action<QueryBuilder<T>> searchQueryBuildOptions);
 
-            public SortingOperation(SortOrder sortOrder, Expression<Func<T, object>> expression)
-            {
-                this.SortOrder = sortOrder;
-                this.Expression = expression;
-            }
-        }
+        ISearcherBuilder<T> Filter(Action<FilterBuilder<T>> filterQueryBuildOptions);
 
-        /// <summary>
-        /// Gets or sets the Operations to Sort On
-        /// </summary>
-        internal virtual IList<SortingOperation> Expressions { get; set; } = new List<SortingOperation>();
+        ISearcherBuilder<T> Sort(Action<SortingOptionsBuilder<T>> sortingBuildOptions);
+
+        ISearcherBuilder<T> Facet(Action<FacetBuilder<T>> facetBuilderOptions);
     }
 }

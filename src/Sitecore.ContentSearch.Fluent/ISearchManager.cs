@@ -23,9 +23,8 @@ namespace Sitecore.ContentSearch.Fluent
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
+    using Builders;
     using Facets;
-    using Linq;
     using Results;
 
     public interface ISearchManager : IDisposable
@@ -36,36 +35,22 @@ namespace Sitecore.ContentSearch.Fluent
         /// <typeparam name="T"></typeparam>
         /// <param name="searcherBuilder"></param>
         /// <returns></returns>
-        Results.SearchResults<T> ResultsFor<T>(Action<ISearcher<T>> searcherBuilder) where T : SearchResultItem;
+        SearchResults<T> ResultsFor<T>(Action<ISearcherBuilder<T>> searcherBuilder) where T : SearchResultItem;
 
         /// <summary>
         /// Facet Results for a SearchBuilder
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="searcherBuilder"></param>
-        /// <param name="facets"></param>
         /// <returns></returns>
-        SearchFacets FacetsFor<T>(Action<ISearcher<T>> searcherBuilder, IList<IFacetOn> facets) where T : SearchResultItem;
+        SearchFacetResults FacetsFor<T>(Action<ISearcherBuilder<T>> searcherBuilder) where T : SearchResultItem;
 
         /// <summary>
         /// Facet Results for a SearchBuilder
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="searcherBuilder"></param>
-        /// <param name="facets"></param>
         /// <returns></returns>
-        SearchResultsWithFacets<T> ResultsWithFacetsFor<T>(Action<ISearcher<T>> searcherBuilder, IList<IFacetOn> facets) where T : SearchResultItem;
-
-        /// <summary>
-        /// Get the Queryable
-        /// </summary>
-        /// <typeparam name="T" />
-        /// <returns></returns>
-        IQueryable<T> GetQueryable<T>();
-
-        /// <summary>
-        /// Get the Searcher
-        /// </summary>
-        ISearcher<T> GetSearcher<T>() where T: SearchResultItem;
+        SearchResultsWithFacets<T> ResultsWithFacetsFor<T>(Action<ISearcherBuilder<T>> searcherBuilder) where T : SearchResultItem;
     }
 }

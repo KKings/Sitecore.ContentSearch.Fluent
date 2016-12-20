@@ -31,7 +31,9 @@ namespace Sitecore.ContentSearch.Fluent.Builders
     /// </summary>
     public class FilterQueryBuilder<T> : SearchBuilderBase<T> where T : SearchResultItem
     {
-        public FilterQueryBuilder(FilterOptions<T> filterOptions) : base(filterOptions) { }
+        public FilterQueryBuilder(FilterOptions<T> filterOptions) : base(filterOptions)
+        {
+        }
 
         /// <summary>
         /// Groups filters by AND
@@ -48,7 +50,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
                 return this;
             }
 
-            this.Options.Filter = this.Options.Filter != null 
+            this.Options.Filter = this.Options.Filter != null
                 ? this.Options.Filter.And(filterOptions.Filter)
                 : PredicateBuilder.True<T>().And(filterOptions.Filter);
 
@@ -70,7 +72,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
                 return this;
             }
 
-            this.Options.Filter = this.Options.Filter != null 
+            this.Options.Filter = this.Options.Filter != null
                 ? this.Options.Filter.Or(filterOptions.Filter)
                 : PredicateBuilder.False<T>().Or(filterOptions.Filter);
 

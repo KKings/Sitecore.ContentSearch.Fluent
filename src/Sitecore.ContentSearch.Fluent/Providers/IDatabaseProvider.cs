@@ -19,43 +19,15 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace Sitecore.ContentSearch.Fluent.Options
+namespace Sitecore.ContentSearch.Fluent.Providers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq.Expressions;
-    using Results;
+    using Data;
 
-    /// <summary>
-    /// Stores sorting options
-    /// </summary>
-    public class SortingOptions<T> where T : SearchResultItem
+    public interface IDatabaseProvider
     {
         /// <summary>
-        /// Combines a Sorting Expression with a SortOrder
+        /// Context Database
         /// </summary>
-        internal class SortingOperation
-        {
-            /// <summary>
-            /// Gets or sets the Sort Order
-            /// </summary>
-            public virtual SortOrder SortOrder { get; }
-
-            /// <summary>
-            /// Get or sets the Expression
-            /// </summary>
-            public virtual Expression<Func<T, object>> Expression { get; }
-
-            public SortingOperation(SortOrder sortOrder, Expression<Func<T, object>> expression)
-            {
-                this.SortOrder = sortOrder;
-                this.Expression = expression;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the Operations to Sort On
-        /// </summary>
-        internal virtual IList<SortingOperation> Expressions { get; set; } = new List<SortingOperation>();
+        Database Context { get; }
     }
 }

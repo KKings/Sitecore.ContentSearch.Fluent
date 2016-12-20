@@ -31,6 +31,6 @@ namespace Sitecore.ContentSearch.Fluent.Options
         /// Gets or sets the Filter expressions
         /// <para>Always set the filter expression when added an expression</para>
         /// </summary>
-        internal virtual Expression<Func<T, bool>> Filter { get; set; }
+        public virtual Expression<Func<T, bool>> Filter { get; internal set; }
     }
 }

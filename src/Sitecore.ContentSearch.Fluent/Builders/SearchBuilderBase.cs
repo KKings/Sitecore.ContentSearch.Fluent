@@ -42,7 +42,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         {
             if (options == null)
             {
-                throw new ArgumentNullException(nameof(options));    
+                throw new ArgumentNullException(nameof(options));
             }
 
             this.Options = options;
@@ -70,11 +70,11 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// </summary>
         /// <param name="filterAction">Action Expressions</param>
         /// <returns><see cref="SearchBuilderBase{T}"/></returns>
-        public SearchBuilderBase<T> Not(Action<SearchQueryBuilder<T>> filterAction)
+        public SearchBuilderBase<T> Not(Action<GroupQueryBuilder<T>> filterAction)
         {
             var searchOptions = new QueryOptions<T>();
 
-            filterAction(new SearchQueryBuilder<T>(searchOptions));
+            filterAction(new GroupQueryBuilder<T>(searchOptions));
 
             this.Options.Filter = this.Options.Filter != null
                 ? this.Options.Filter.And(searchOptions.Filter.Not())
@@ -95,11 +95,11 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         {
             if (filter != null)
             {
-                this.Options.Filter = this.Options.Filter != null 
+                this.Options.Filter = this.Options.Filter != null
                     ? this.Options.Filter.And(filter)
                     : PredicateBuilder.True<T>().And(filter);
             }
-            
+
             return this;
         }
 
@@ -115,8 +115,8 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         {
             if (filter != null)
             {
-                this.Options.Filter = this.Options.Filter != null 
-                    ? this.Options.Filter.Or(filter) 
+                this.Options.Filter = this.Options.Filter != null
+                    ? this.Options.Filter.Or(filter)
                     : PredicateBuilder.False<T>().Or(filter);
             }
 
@@ -202,7 +202,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// <param name="filter">Filter Expression</param>
         /// <returns><see cref="SearchBuilderBase{T}"/></returns>
         public SearchBuilderBase<T> ManyAny<TR>(IEnumerable<IEnumerable<TR>> groups, Expression<Func<T, TR, bool>> filter)
-        { 
+        {
             var enumerable = groups as IEnumerable<TR>[] ?? groups.ToArray();
 
             if (enumerable.Any() && filter != null)
@@ -213,7 +213,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
                 {
                     var inner = PredicateBuilder.False<T>();
 
-                    inner 
+                    inner
                         = group
                             .Select(filter.Rewrite)
                             .Aggregate(inner, (current, expression) => current.Or(expression));

@@ -27,23 +27,27 @@ namespace Sitecore.ContentSearch.Fluent.Builders
     using Results;
 
     /// <summary>
-    /// SearchQueryBuilder Summary
+    /// GroupQueryBuilder Summary
     /// </summary>
-    public class SearchQueryBuilder<T> : SearchBuilderBase<T> where T : SearchResultItem
+    public class GroupQueryBuilder<T> : SearchBuilderBase<T> where T : SearchResultItem
     {
-        public SearchQueryBuilder() : this(new QueryOptions<T>()) { }
+        public GroupQueryBuilder() : this(new QueryOptions<T>())
+        {
+        }
 
-        public SearchQueryBuilder(QueryOptions<T> queryOptions) : base(queryOptions) { }
+        public GroupQueryBuilder(QueryOptions<T> queryOptions) : base(queryOptions)
+        {
+        }
 
         /// <summary>
         /// Groups filters by AND
         /// </summary>
-        /// <returns>Instance of the SearchQueryOptionsBuilder</returns>
+        /// <returns>Instance of <see cref="GroupQueryBuilder{T}"/></returns>
         public override SearchBuilderBase<T> And(Action<SearchBuilderBase<T>> filterAction)
         {
             var searchOptions = new QueryOptions<T>();
 
-            filterAction(new SearchQueryBuilder<T>(searchOptions));
+            filterAction(new GroupQueryBuilder<T>(searchOptions));
 
             this.Options.Filter = this.Options.Filter != null
                 ? this.Options.Filter.And(searchOptions.Filter)
@@ -53,14 +57,14 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         }
 
         /// <summary>
-        /// Groups filters by AND
+        /// Groups filters by Or
         /// </summary>
-        /// <returns>Instance of the SearchQueryOptionsBuilder</returns>
+        /// <returns>Instance of <see cref="GroupQueryBuilder{T}"/></returns>
         public override SearchBuilderBase<T> Or(Action<SearchBuilderBase<T>> filterAction)
         {
             var searchOptions = new QueryOptions<T>();
 
-            filterAction(new SearchQueryBuilder<T>(searchOptions));
+            filterAction(new GroupQueryBuilder<T>(searchOptions));
 
             this.Options.Filter = this.Options.Filter != null
                 ? this.Options.Filter.Or(searchOptions.Filter)
@@ -68,6 +72,5 @@ namespace Sitecore.ContentSearch.Fluent.Builders
 
             return this;
         }
-
     }
 }

@@ -19,15 +19,23 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace Sitecore.ContentSearch.Fluent
+namespace Sitecore.ContentSearch.Fluent.Providers
 {
-    using Data;
+    using System;
+    using Builders;
+    using Linq;
+    using Results;
 
-    public interface IDatabaseProvider
+    public interface ISearchProvider : IDisposable
     {
-        /// <summary>
-        /// Context Database
-        /// </summary>
-        Database Context { get; }
+        Results.SearchResults<T> GetResults<T>(SearchConfiguration<T> configuration) where T : SearchResultItem;
+
+        SearchFacetResults GetFacetResults<T>(SearchConfiguration<T> configuration) where T : SearchResultItem;
+
+        ISearcherBuilder<T> GetSearcherBuilder<T>(SearchConfiguration<T> configuration) where T : SearchResultItem;
+
+        Results.SearchResults<T> ProcessResults<T>(Linq.SearchResults<T> results) where T : SearchResultItem;
+
+        SearchFacetResults ProcessFacetResults(FacetResults results);
     }
 }

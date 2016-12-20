@@ -21,26 +21,34 @@
 // SOFTWARE.
 namespace Sitecore.ContentSearch.Fluent
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using Builders;
-    using Facets;
-    using Linq;
+    using Options;
     using Results;
 
-    public interface ISearcher<T> where T : SearchResultItem
+    public class SearchConfiguration<T> where T : SearchResultItem
     {
-        Results.SearchResults<T> Results();
-        SearchResultsWithFacets<T> ResultsWithFacets(IList<IFacetOn> facets);
-        SearchFacets Facets(IList<IFacetOn> facets);
-        DefaultSearcher<T> Paging(Action<PagingOptionsBuilder<T>> searchBuildOptions);
-        DefaultSearcher<T> Query(Action<QueryBuilder<T>> searchQueryBuildOptions);
-        DefaultSearcher<T> Filter(Action<FilterBuilder<T>> filterQueryBuildOptions);
-        DefaultSearcher<T> Sort(Action<SortingOptionsBuilder<T>> sortingBuildOptions);
-        IQueryable<T> Filter(IQueryable<T> queryable, Expression<Func<T, bool>> predicate);
-        Linq.SearchResults<T> GetResults(IQueryable<T> queryable);
-        FacetResults GetFacets(IQueryable<T> queryable, IList<IFacetOn> facets);
+        /// <summary>
+        /// The Paging Options for skipping/taking
+        /// </summary>
+        public PagingOptions PagingOptions { get; private set; } = new PagingOptions();
+
+        /// <summary>
+        /// The Query Filters
+        /// </summary>
+        public QueryOptions<T> QueryOptions { get; private set; } = new QueryOptions<T>();
+
+        /// <summary>
+        /// The Filter Filters =). This is separated out as FilterOptions must be applied to a different method
+        /// </summary>
+        public FilterOptions<T> FilterOptions { get; private set; } = new FilterOptions<T>();
+
+        /// <summary>
+        /// The SortingOptions
+        /// </summary>
+        public SortingOptions<T> SortingOptions { get; private set; } = new SortingOptions<T>();
+
+        /// <summary>
+        /// The FacetOptions
+        /// </summary>
+        public FacetOptions FacetOptions { get; private set; } = new FacetOptions();
     }
 }

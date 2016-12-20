@@ -41,7 +41,9 @@ namespace Sitecore.ContentSearch.Fluent.Facets
         /// </summary>
         public virtual int MinimumCount { get; }
 
-        protected FacetBase(string key) : this(key, Int32.MinValue) { }
+        protected FacetBase(string key) : this(key, Int32.MinValue)
+        {
+        }
 
         protected FacetBase(string key, int minimumCount)
         {

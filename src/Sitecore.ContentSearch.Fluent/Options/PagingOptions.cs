@@ -52,10 +52,10 @@ namespace Sitecore.ContentSearch.Fluent.Options
                 if (this.PageMode == PageMode.Pager)
                 {
                     return this.Start <= 1
-                            ? 0
-                            : (this.Start - 1) * this.Display;
+                        ? 0
+                        : (this.Start - 1) * this.Display;
                 }
-                    
+
                 return this.Start;
             }
         }

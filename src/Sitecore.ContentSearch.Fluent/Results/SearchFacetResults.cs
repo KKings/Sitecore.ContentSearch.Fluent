@@ -19,43 +19,24 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace Sitecore.ContentSearch.Fluent.Options
+namespace Sitecore.ContentSearch.Fluent.Results
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq.Expressions;
-    using Results;
+    using Facets;
 
     /// <summary>
-    /// Stores sorting options
+    /// SearchFacets Summary
     /// </summary>
-    public class SortingOptions<T> where T : SearchResultItem
+    public class SearchFacetResults
     {
         /// <summary>
-        /// Combines a Sorting Expression with a SortOrder
+        /// Gets or sets the Total Results
         /// </summary>
-        internal class SortingOperation
-        {
-            /// <summary>
-            /// Gets or sets the Sort Order
-            /// </summary>
-            public virtual SortOrder SortOrder { get; }
-
-            /// <summary>
-            /// Get or sets the Expression
-            /// </summary>
-            public virtual Expression<Func<T, object>> Expression { get; }
-
-            public SortingOperation(SortOrder sortOrder, Expression<Func<T, object>> expression)
-            {
-                this.SortOrder = sortOrder;
-                this.Expression = expression;
-            }
-        }
+        public virtual int Total { get; set; }
 
         /// <summary>
-        /// Gets or sets the Operations to Sort On
+        /// Gets or sets the Facets
         /// </summary>
-        internal virtual IList<SortingOperation> Expressions { get; set; } = new List<SortingOperation>();
+        public virtual IList<FacetCategory> Facets { get; set; }
     }
 }

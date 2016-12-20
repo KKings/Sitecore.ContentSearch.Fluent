@@ -45,7 +45,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// Filters out the Search Results
         /// </summary>
         /// <returns>Instance of the SearchQueryOptionsBuilder</returns>
-        public QueryBuilder<T> And(Action<SearchQueryBuilder<T>> filterAction)
+        public QueryBuilder<T> And(Action<GroupQueryBuilder<T>> filterAction)
         {
             if (filterAction == null)
             {
@@ -54,7 +54,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
 
             var searchOptions = new QueryOptions<T>();
 
-            filterAction(new SearchQueryBuilder<T>(searchOptions));
+            filterAction(new GroupQueryBuilder<T>(searchOptions));
 
             if (searchOptions.Filter == null)
             {
@@ -72,7 +72,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// Filters out the Search Results
         /// </summary>
         /// <returns>Instance of the SearchQueryOptionsBuilder</returns>
-        public QueryBuilder<T> Or(Action<SearchQueryBuilder<T>> filterAction)
+        public QueryBuilder<T> Or(Action<GroupQueryBuilder<T>> filterAction)
         {
             if (filterAction == null)
             {
@@ -81,7 +81,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
 
             var searchOptions = new QueryOptions<T>();
 
-            filterAction(new SearchQueryBuilder<T>(searchOptions));
+            filterAction(new GroupQueryBuilder<T>(searchOptions));
 
             if (searchOptions.Filter == null)
             {
