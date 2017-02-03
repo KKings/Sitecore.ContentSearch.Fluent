@@ -10,7 +10,6 @@ A lightweight, fluent API that reduces redundancy when using Sitecore's ContentS
 - Filtering
     - Supports nested 'And' and 'Or' operations
 - Pagination
-- Template Restrictions
 
 
 ### Who is this library is for?
@@ -165,7 +164,7 @@ Conditional Clauses:
 * **IfOrManyAny** - If the condition is true, adds the condition using the *OrManyAny* method staring with an Or expression
 
 ### Sitecore Version
-Tested on Sitecore 8.2+ with Lucene.
+Tested on Sitecore 8.2+
 
 ### License
 MIT License
