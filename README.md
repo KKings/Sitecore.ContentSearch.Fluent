@@ -13,7 +13,7 @@ A lightweight, fluent API that reduces redundancy when using Sitecore's ContentS
 - Template Restrictions
 
 
-### Who this library is for?
+### Who is this library is for?
 
 This library is designed for other developers, the implementers, to quickly build complex search functionality.
 
