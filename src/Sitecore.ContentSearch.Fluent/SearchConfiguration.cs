@@ -50,5 +50,10 @@ namespace Sitecore.ContentSearch.Fluent
         /// The FacetOptions
         /// </summary>
         public virtual FacetOptions FacetOptions { get; private set; } = new FacetOptions();
+
+        /// <summary>
+        /// The SelectOptions
+        /// </summary>
+        public virtual SelectOptions<T> SelectOptions { get; private set; } = new SelectOptions<T>();
     }
 }

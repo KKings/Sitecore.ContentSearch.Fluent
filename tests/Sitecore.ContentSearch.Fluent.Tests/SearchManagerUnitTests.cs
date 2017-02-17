@@ -6,6 +6,7 @@
     using System.Linq.Expressions;
     using Builders;
     using ContentSearch;
+    using Data;
     using Fluent;
     using Facets;
     using Linq;
@@ -444,6 +445,31 @@
                             .IfOrManyAny(false, groups, (result, id) => result.Semantics.Contains(id)))));
 
                 Assert.AreEqual(6, results.Total);
+            }
+        }
+
+
+
+        [TestCategory("Select")]
+        [TestMethod]
+        public void Select_LimitedToFieldsSelected()
+        {
+            using (var manager = this.searchManager.Object)
+            {
+                var results = manager.ResultsFor<TestSearchResultItem>(search => search
+                    .Paging(page => page.Take(1))
+                    .Select(result => new TestSearchResultItem()
+                    {
+                        Content = result.Content
+                    }));
+
+                Assert.AreEqual(1, results.Total);
+                var first = results.Results.First();
+
+                Assert.AreEqual(DateTime.MinValue, first.CreatedDate);
+                Assert.IsNull(first.ItemId);
+
+                Assert.IsTrue(!String.IsNullOrEmpty(first.Content));
             }
         }
     }

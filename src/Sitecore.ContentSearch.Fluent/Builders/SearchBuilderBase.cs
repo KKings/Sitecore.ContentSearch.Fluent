@@ -70,7 +70,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// </summary>
         /// <param name="filterAction">Action Expressions</param>
         /// <returns><see cref="SearchBuilderBase{T}"/></returns>
-        public SearchBuilderBase<T> Not(Action<GroupQueryBuilder<T>> filterAction)
+        public virtual SearchBuilderBase<T> Not(Action<GroupQueryBuilder<T>> filterAction)
         {
             var searchOptions = new QueryOptions<T>();
 
@@ -91,7 +91,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// </summary>
         /// <param name="filter">Filter Expression</param>
         /// <returns><see cref="SearchBuilderBase{T}"/></returns>
-        public SearchBuilderBase<T> Where(Expression<Func<T, bool>> filter)
+        public virtual SearchBuilderBase<T> Where(Expression<Func<T, bool>> filter)
         {
             if (filter != null)
             {
@@ -111,7 +111,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// </summary>
         /// <param name="filter">Filter Expression</param>
         /// <returns><see cref="SearchBuilderBase{T}"/></returns>
-        public SearchBuilderBase<T> OrWhere(Expression<Func<T, bool>> filter)
+        public virtual SearchBuilderBase<T> OrWhere(Expression<Func<T, bool>> filter)
         {
             if (filter != null)
             {
@@ -135,7 +135,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// <param name="terms">Terms that will be passed to the filter expression</param>
         /// <param name="filter">Filter Expression</param>
         /// <returns><see cref="SearchBuilderBase{T}"/></returns>
-        public SearchBuilderBase<T> All<TR>(IEnumerable<TR> terms, Expression<Func<T, TR, bool>> filter)
+        public virtual SearchBuilderBase<T> All<TR>(IEnumerable<TR> terms, Expression<Func<T, TR, bool>> filter)
         {
             var enumerable = terms as TR[] ?? terms.ToArray();
 
@@ -168,7 +168,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// <param name="terms">Terms that will be passed to the filter expression</param>
         /// <param name="filter">Filter Expression</param>
         /// <returns><see cref="SearchBuilderBase{T}"/></returns>
-        public SearchBuilderBase<T> OrAll<TR>(IEnumerable<TR> terms, Expression<Func<T, TR, bool>> filter)
+        public virtual SearchBuilderBase<T> OrAll<TR>(IEnumerable<TR> terms, Expression<Func<T, TR, bool>> filter)
         {
             var enumerable = terms as TR[] ?? terms.ToArray();
 
@@ -201,7 +201,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// <param name="groups">A grouping of terms</param>
         /// <param name="filter">Filter Expression</param>
         /// <returns><see cref="SearchBuilderBase{T}"/></returns>
-        public SearchBuilderBase<T> ManyAny<TR>(IEnumerable<IEnumerable<TR>> groups, Expression<Func<T, TR, bool>> filter)
+        public virtual SearchBuilderBase<T> ManyAny<TR>(IEnumerable<IEnumerable<TR>> groups, Expression<Func<T, TR, bool>> filter)
         {
             var enumerable = groups as IEnumerable<TR>[] ?? groups.ToArray();
 
@@ -242,7 +242,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// <param name="groups">A grouping of terms</param>
         /// <param name="filter">Filter Expression</param>
         /// <returns><see cref="SearchBuilderBase{T}"/></returns>
-        public SearchBuilderBase<T> OrManyAny<TR>(IEnumerable<IEnumerable<TR>> groups, Expression<Func<T, TR, bool>> filter)
+        public virtual SearchBuilderBase<T> OrManyAny<TR>(IEnumerable<IEnumerable<TR>> groups, Expression<Func<T, TR, bool>> filter)
         {
             var enumerable = groups as IEnumerable<TR>[] ?? groups.ToArray();
 
@@ -283,7 +283,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// <param name="terms">Terms that will be passed to the filter expression</param>
         /// <param name="filter">Filter Expression</param>
         /// <returns><see cref="SearchBuilderBase{T}"/></returns>
-        public SearchBuilderBase<T> Any<TR>(IEnumerable<TR> terms, Expression<Func<T, TR, bool>> filter)
+        public virtual SearchBuilderBase<T> Any<TR>(IEnumerable<TR> terms, Expression<Func<T, TR, bool>> filter)
         {
             var enumerable = terms as TR[] ?? terms.ToArray();
 
@@ -316,7 +316,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// <param name="terms">Terms that will be passed to the filter expression</param>
         /// <param name="filter">Filter Expression</param>
         /// <returns><see cref="SearchBuilderBase{T}"/></returns>
-        public SearchBuilderBase<T> OrAny<TR>(IEnumerable<TR> terms, Expression<Func<T, TR, bool>> filter)
+        public virtual SearchBuilderBase<T> OrAny<TR>(IEnumerable<TR> terms, Expression<Func<T, TR, bool>> filter)
         {
             var enumerable = terms as TR[] ?? terms.ToArray();
 
@@ -346,7 +346,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// <param name="terms">Terms that will be passed to the filter expression</param>
         /// <param name="filter">Filter Expression</param>
         /// <returns><see cref="SearchBuilderBase{T}"/></returns>
-        public SearchBuilderBase<T> IfAny<TR>(bool condition, IEnumerable<TR> terms, Expression<Func<T, TR, bool>> filter)
+        public virtual SearchBuilderBase<T> IfAny<TR>(bool condition, IEnumerable<TR> terms, Expression<Func<T, TR, bool>> filter)
         {
             return condition ? this.Any(terms, filter) : this;
         }
@@ -360,7 +360,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// <param name="terms">Terms that will be passed to the filter expression</param>
         /// <param name="filter">Filter Expression</param>
         /// <returns><see cref="SearchBuilderBase{T}"/></returns>
-        public SearchBuilderBase<T> IfOrAny<TR>(bool condition, IEnumerable<TR> terms, Expression<Func<T, TR, bool>> filter)
+        public virtual SearchBuilderBase<T> IfOrAny<TR>(bool condition, IEnumerable<TR> terms, Expression<Func<T, TR, bool>> filter)
         {
             return condition ? this.OrAny(terms, filter) : this;
         }
@@ -374,7 +374,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// <param name="terms">Terms that will be passed to the filter expression</param>
         /// <param name="filter">Filter Expression</param>
         /// <returns><see cref="SearchBuilderBase{T}"/></returns>
-        public SearchBuilderBase<T> IfAll<TR>(bool condition, IEnumerable<TR> terms, Expression<Func<T, TR, bool>> filter)
+        public virtual SearchBuilderBase<T> IfAll<TR>(bool condition, IEnumerable<TR> terms, Expression<Func<T, TR, bool>> filter)
         {
             return condition ? this.All(terms, filter) : this;
         }
@@ -388,7 +388,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// <param name="terms">Terms that will be passed to the filter expression</param>
         /// <param name="filter">Filter Expression</param>
         /// <returns><see cref="SearchBuilderBase{T}"/></returns>
-        public SearchBuilderBase<T> IfOrAll<TR>(bool condition, IEnumerable<TR> terms, Expression<Func<T, TR, bool>> filter)
+        public virtual SearchBuilderBase<T> IfOrAll<TR>(bool condition, IEnumerable<TR> terms, Expression<Func<T, TR, bool>> filter)
         {
             return condition ? this.OrAll(terms, filter) : this;
         }
@@ -400,7 +400,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// <param name="condition">If <c>True</c> will add to the expression tree at runtime.</param>
         /// <param name="filter">Filter Expression</param>
         /// <returns><see cref="SearchBuilderBase{T}"/></returns>
-        public SearchBuilderBase<T> IfWhere(bool condition, Expression<Func<T, bool>> filter)
+        public virtual SearchBuilderBase<T> IfWhere(bool condition, Expression<Func<T, bool>> filter)
         {
             return condition ? this.Where(filter) : this;
         }
@@ -425,7 +425,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// <param name="groups">A grouping of terms</param>
         /// <param name="filter">Filter Expression</param>
         /// <returns><see cref="SearchBuilderBase{T}"/></returns>
-        public SearchBuilderBase<T> IfManyAny<TR>(bool condition, IEnumerable<IEnumerable<TR>> groups,
+        public virtual SearchBuilderBase<T> IfManyAny<TR>(bool condition, IEnumerable<IEnumerable<TR>> groups,
             Expression<Func<T, TR, bool>> filter)
         {
             return condition ? this.ManyAny(groups, filter) : this;
@@ -439,7 +439,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// <param name="groups">A grouping of terms</param>
         /// <param name="filter">Filter Expression</param>
         /// <returns><see cref="SearchBuilderBase{T}"/></returns>
-        public SearchBuilderBase<T> IfOrManyAny<TR>(bool condition, IEnumerable<IEnumerable<TR>> groups,
+        public virtual SearchBuilderBase<T> IfOrManyAny<TR>(bool condition, IEnumerable<IEnumerable<TR>> groups,
             Expression<Func<T, TR, bool>> filter)
         {
             return condition ? this.OrManyAny(groups, filter) : this;

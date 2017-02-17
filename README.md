@@ -10,7 +10,8 @@ A lightweight, fluent API that reduces redundancy when using Sitecore's ContentS
 - Filtering
     - Supports nested 'And' and 'Or' operations
 - Pagination
-
+- Projection (Select)
+  - Ability to select only the fields needed
 
 ### Who is this library is for?
 

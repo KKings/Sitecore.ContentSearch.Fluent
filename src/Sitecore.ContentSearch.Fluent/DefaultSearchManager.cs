@@ -33,14 +33,14 @@ namespace Sitecore.ContentSearch.Fluent
     public class DefaultSearchManager : ISearchManager
     {
         /// <summary>
-        /// 
+        /// Gets the Search Provider Implementation
         /// </summary>
         internal virtual ISearchProvider SearchProvider { get; }
 
         /// <summary>
         /// Default constructor
         /// </summary>
-        /// <param name="searchProvider"></param>
+        /// <param name="searchProvider">The Search Provider</param>
         public DefaultSearchManager(ISearchProvider searchProvider)
         {
             this.SearchProvider = searchProvider;
@@ -91,7 +91,6 @@ namespace Sitecore.ContentSearch.Fluent
         /// Gets the Search Results and Facets for a given Search
         /// </summary>
         /// <param name="searcherBuilder">Configurable Search Builder</param>
-        /// <param name="facets">The Facets</param>
         /// <returns></returns>
         public virtual SearchResultsWithFacets<T> ResultsWithFacetsFor<T>(Action<ISearcherBuilder<T>> searcherBuilder)
             where T : SearchResultItem

@@ -129,5 +129,21 @@ namespace Sitecore.ContentSearch.Fluent.Services
                                          ? current.ThenBy(expression.Expression)
                                          : current.ThenByDescending(expression.Expression));
         }
+
+        /// <summary>
+        /// Applys the Projection to the Queryable
+        /// </summary>
+        /// <param name="queryable">The Queryable</param>
+        /// <param name="options">The SelectOptions</param>
+        /// <returns>The queryable</returns>
+        public IQueryable<T> ApplyProjection<T>(IQueryable<T> queryable, SelectOptions<T> options) where T : SearchResultItem
+        {
+            if (options?.Expression != null)
+            {
+                queryable = queryable.Select(options.Expression);
+            }
+
+            return queryable;
+        }
     }
 }

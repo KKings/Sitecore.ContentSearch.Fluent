@@ -65,5 +65,14 @@ namespace Sitecore.ContentSearch.Fluent.Services
         /// <param name="options"></param>
         /// <returns></returns>
         IQueryable<T> ApplySorting<T>(IQueryable<T> queryable, SortingOptions<T> options) where T : SearchResultItem;
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="queryable"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        IQueryable<T> ApplyProjection<T>(IQueryable<T> queryable, SelectOptions<T> options) where T : SearchResultItem;
     }
 }

@@ -22,6 +22,8 @@
 namespace Sitecore.ContentSearch.Fluent.Builders
 {
     using System;
+    using System.Linq.Expressions;
+    using Options;
     using Results;
 
     public class SearcherBuilder<T> : ISearcherBuilder<T> where T : SearchResultItem
@@ -92,6 +94,21 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         public virtual ISearcherBuilder<T> Facet(Action<FacetBuilder<T>> facetBuildOptions)
         {
             facetBuildOptions(new FacetBuilder<T>(this.configuration.FacetOptions));
+            return this;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public virtual ISearcherBuilder<T> Select(Expression<Func<T, T>> expression)
+        {
+            if (expression != null)
+            {
+                this.configuration.SelectOptions.Expression = expression;
+            }
+            
             return this;
         }
     }

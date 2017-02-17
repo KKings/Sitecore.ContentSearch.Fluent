@@ -64,6 +64,7 @@
     <Compile Include="Builders\GroupQueryBuilder.cs" />
     <Compile Include="Builders\SearcherBuilder.cs" />
     <Compile Include="Builders\SortingOptionsBuilder.cs" />
+    <Compile Include="Options\SelectOptions.cs" />
     <Compile Include="RegisterDependencies.cs" />
     <Compile Include="Repositories\ContentSearchRepository.cs" />
     <Compile Include="Providers\DefaultDatabaseProvider.cs" />

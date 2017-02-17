@@ -19,24 +19,17 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace Sitecore.ContentSearch.Fluent.Builders
+namespace Sitecore.ContentSearch.Fluent.Options
 {
     using System;
     using System.Linq.Expressions;
     using Results;
 
-    public interface ISearcherBuilder<T> where T : SearchResultItem
+    public class SelectOptions<T> where T : SearchResultItem
     {
-        ISearcherBuilder<T> Paging(Action<PagingOptionsBuilder<T>> searchBuildOptions);
-
-        ISearcherBuilder<T> Query(Action<QueryBuilder<T>> searchQueryBuildOptions);
-
-        ISearcherBuilder<T> Filter(Action<FilterBuilder<T>> filterQueryBuildOptions);
-
-        ISearcherBuilder<T> Sort(Action<SortingOptionsBuilder<T>> sortingBuildOptions);
-
-        ISearcherBuilder<T> Facet(Action<FacetBuilder<T>> facetBuilderOptions);
-
-        ISearcherBuilder<T> Select(Expression<Func<T, T>> expression);
+        /// <summary>
+        /// Get or sets the Expression
+        /// </summary>
+        public virtual Expression<Func<T, T>> Expression { get; set; }
     }
 }

@@ -53,6 +53,7 @@ namespace Sitecore.ContentSearch.Fluent.Providers
             queryable = this.queryService.ApplyFilter(queryable, configuration.FilterOptions);
             queryable = this.queryService.ApplyPagination(queryable, configuration.PagingOptions);
             queryable = this.queryService.ApplySorting(queryable, configuration.SortingOptions);
+            queryable = this.queryService.ApplyProjection(queryable, configuration.SelectOptions);
 
             var rawResults = this.resultRepository.GetResults(queryable);
 
