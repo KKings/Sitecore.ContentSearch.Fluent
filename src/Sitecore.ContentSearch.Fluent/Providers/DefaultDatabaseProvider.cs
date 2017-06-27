@@ -19,27 +19,34 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace Sitecore.ContentSearch.Fluent.Facets
+namespace Sitecore.ContentSearch.Fluent.Providers
 {
-    /// <summary>
-    /// Represents an individual facet
-    /// </summary>
-    public class FacetValue
+    using Configuration;
+    using Data;
+
+    public class DefaultDatabaseProvider : IDatabaseProvider
     {
         /// <summary>
-        /// Gets or sets the Facet Name 
+        /// Default Database Name if there is no Context
         /// </summary>
-        public virtual string Name { get; }
+        public virtual string DefaultDatabaseName => "web";
 
         /// <summary>
-        /// Gets or sets the Count or aggregate value
+        /// Context Database for the Index
         /// </summary>
-        public virtual int Count { get; }
-
-        public FacetValue(string name, int count)
+        public virtual Database Context
         {
-            this.Name = name;
-            this.Count = count;
+            get { return Sitecore.Context.Database ?? this.DefaultFactory.GetDatabase(this.DefaultDatabaseName); }
+        }
+
+        /// <summary>
+        /// Default Configuration Factory
+        /// </summary>
+        public readonly DefaultFactory DefaultFactory;
+
+        public DefaultDatabaseProvider(DefaultFactory defaultFactory)
+        {
+            this.DefaultFactory = defaultFactory;
         }
     }
 }

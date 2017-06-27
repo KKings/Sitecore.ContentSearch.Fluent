@@ -19,27 +19,15 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace Sitecore.ContentSearch.Fluent.Facets
+namespace Sitecore.ContentSearch.Fluent.Providers
 {
-    /// <summary>
-    /// Represents an individual facet
-    /// </summary>
-    public class FacetValue
+    using Data;
+
+    public interface IDatabaseProvider
     {
         /// <summary>
-        /// Gets or sets the Facet Name 
+        /// Context Database
         /// </summary>
-        public virtual string Name { get; }
-
-        /// <summary>
-        /// Gets or sets the Count or aggregate value
-        /// </summary>
-        public virtual int Count { get; }
-
-        public FacetValue(string name, int count)
-        {
-            this.Name = name;
-            this.Count = count;
-        }
+        Database Context { get; }
     }
 }

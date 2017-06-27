@@ -19,44 +19,41 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace Sitecore.ContentSearch.Fluent.Builders
+namespace Sitecore.ContentSearch.Fluent.Extensions
 {
     using System;
     using System.Linq.Expressions;
     using System.Reflection;
-    using Extensions;
-    using Options;
-    using Results;
+    using Expressions;
 
-    /// <summary>
-    /// Builder for creating the Sorting Options
-    /// </summary>
-    public class SortingOptionsBuilder<T> where T : SearchResultItem
+    public static class ExpressionExtensions
     {
         /// <summary>
-        /// The SortingOptions
+        /// Rewrites a given expression using the <see cref="ParameterReplaceVisitor"/> Expression Visitor
+        /// by replacing the second argument of the initial expression with a constant value
         /// </summary>
-        protected readonly SortingOptions<T> SortingOptions;
-
-        public SortingOptionsBuilder(SortingOptions<T> sortingOptions)
+        /// <param name="expression">Original Expression</param>
+        /// <param name="value">Value to replace the 2nd parameter with</param>
+        /// <returns>Rewritten Expression</returns>
+        public static Expression<Func<T, bool>> Rewrite<T, TR>(this Expression<Func<T, TR, bool>> expression, TR value)
         {
-            this.SortingOptions = sortingOptions;
+            return
+                Expression.Lambda<Func<T, bool>>(
+                    new ParameterReplaceVisitor(expression.Parameters[1], value).Visit(expression.Body), expression.Parameters[0]);
         }
 
         /// <summary>
-        /// Adds a sorting expression to the Query Options
+        /// Converts the expression into a PropertyInfo
         /// </summary>
-        /// <param name="expression">Expression to apply to the queryable</param>
-        /// <param name="sortOrder">Sorting Order</param>
-        /// <exception cref="ArgumentNullException">Expression cannot be null</exception>
+        /// <param name="expression">The Expression</param>
         /// <exception cref="ArgumentException">Expression cannot refer to a method</exception>
         /// <exception cref="ArgumentException">Expression cannot refer to a field</exception>
-        /// <returns>Instance of the SortingOptionsBuilder</returns>
-        public SortingOptionsBuilder<T> By(Expression<Func<T, object>> expression, SortOrder sortOrder = SortOrder.Ascending)
+        /// <returns><see cref="PropertyInfo"/> of an expression</returns>
+        public static PropertyInfo ToPropertyInfo<T, TProperty>(this Expression<Func<T, TProperty>> expression)
         {
             if (expression == null)
             {
-                throw new ArgumentNullException(nameof(expression), "Sort Expression cannot be null");
+                return null;
             }
 
             var member = expression.Body as MemberExpression;
@@ -71,9 +68,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
                 throw new ArgumentException($"Expression '{expression}' refers to a field, not a property.");
             }
 
-            this.SortingOptions.Operations.Add(new SortingOptions<T>.SortingOperation(sortOrder, expression));
-
-            return this;
+            return propInfo;
         }
     }
 }

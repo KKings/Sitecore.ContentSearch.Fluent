@@ -19,27 +19,45 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace Sitecore.ContentSearch.Fluent.Facets
+namespace Sitecore.ContentSearch.Fluent.Options
 {
     /// <summary>
-    /// Represents an individual facet
+    /// SearcherOptions Summary
     /// </summary>
-    public class FacetValue
+    public class PagingOptions
     {
         /// <summary>
-        /// Gets or sets the Facet Name 
+        /// Gets or sets the PageMode
         /// </summary>
-        public virtual string Name { get; }
+        public virtual PageMode PageMode { get; set; } = PageMode.Pager;
 
         /// <summary>
-        /// Gets or sets the Count or aggregate value
+        /// Gets or sets the Start
         /// </summary>
-        public virtual int Count { get; }
+        public virtual int Start { get; set; } = 0;
 
-        public FacetValue(string name, int count)
+        /// <summary>
+        /// Gets or sets the returned results
+        /// </summary>
+        public virtual int Display { get; set; } = 10;
+
+        /// <summary>
+        /// Gets the calculated StartingPosition
+        /// </summary>
+        public virtual int StartingPosition
         {
-            this.Name = name;
-            this.Count = count;
+            get
+            {
+                // If the PageMode is the Pager, we need to calculate the starting position
+                if (this.PageMode == PageMode.Pager)
+                {
+                    return this.Start <= 1
+                        ? 0
+                        : (this.Start - 1) * this.Display;
+                }
+
+                return this.Start;
+            }
         }
     }
 }

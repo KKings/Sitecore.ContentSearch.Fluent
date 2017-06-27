@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Sitecore.ContentSearch.Fluent</RootNamespace>
     <AssemblyName>Sitecore.ContentSearch.Fluent</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>Sitecore.ContentSearch.Fluent.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,57 +30,82 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>Sitecore.ContentSearch.Fluent.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Sitecore.ContentSearch">
-      <HintPath>..\References\Sitecore.ContentSearch.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SC.Microsoft.Extensions.DependencyInjection.Abstractions.8.2.0.160729\lib\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Sitecore.ContentSearch.Linq, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\References\Sitecore.ContentSearch.Linq.dll</HintPath>
+    <Reference Include="Sitecore.ContentSearch, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Sitecore.ContentSearch.NoReferences.8.2.160729\lib\NET452\Sitecore.ContentSearch.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Sitecore.Kernel">
-      <HintPath>..\References\Sitecore.Kernel.dll</HintPath>
+    <Reference Include="Sitecore.ContentSearch.Linq, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Sitecore.ContentSearch.Linq.NoReferences.8.2.160729\lib\NET452\Sitecore.ContentSearch.Linq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Sitecore.Kernel, Version=10.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Sitecore.Kernel.NoReferences.8.2.160729\lib\NET452\Sitecore.Kernel.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Builders\FilterOptionsBuilder.cs" />
-    <Compile Include="Builders\FilterOptionsQueryBuilder.cs" />
-    <Compile Include="Builders\QueryOptionsBuilder.cs" />
-    <Compile Include="Builders\SearcherOptionsBuilder.cs" />
-    <Compile Include="Builders\SearchQueryOptionsBuilder.cs" />
+    <Compile Include="Builders\FacetBuilder.cs" />
+    <Compile Include="Builders\FilterBuilder.cs" />
+    <Compile Include="Builders\FilterQueryBuilder.cs" />
+    <Compile Include="Builders\ISearcherBuilder.cs" />
+    <Compile Include="Builders\QueryBuilder.cs" />
+    <Compile Include="Builders\PagingOptionsBuilder.cs" />
+    <Compile Include="Builders\SearchBuilderBase.cs" />
+    <Compile Include="Builders\GroupQueryBuilder.cs" />
+    <Compile Include="Builders\SearcherBuilder.cs" />
     <Compile Include="Builders\SortingOptionsBuilder.cs" />
+    <Compile Include="Options\SelectOptions.cs" />
+    <Compile Include="RegisterDependencies.cs" />
+    <Compile Include="Repositories\ContentSearchRepository.cs" />
+    <Compile Include="Providers\DefaultDatabaseProvider.cs" />
+    <Compile Include="Providers\DefaultIndexProvider.cs" />
+    <Compile Include="Providers\DefaultSearchProvider.cs" />
+    <Compile Include="Expressions\ParameterReplaceVisitor.cs" />
+    <Compile Include="Extensions\ExpressionExtensions.cs" />
     <Compile Include="Facets\FacetBase.cs" />
     <Compile Include="Facets\FacetCategory.cs" />
     <Compile Include="Facets\FacetOn.cs" />
     <Compile Include="Facets\FacetOnFilter.cs" />
     <Compile Include="Facets\FacetValue.cs" />
     <Compile Include="Facets\IFacetOn.cs" />
-    <Compile Include="ISearcher.cs" />
+    <Compile Include="Providers\IDatabaseProvider.cs" />
+    <Compile Include="Providers\IIndexProvider.cs" />
+    <Compile Include="Repositories\IResultRepository.cs" />
     <Compile Include="ISearchManager.cs" />
+    <Compile Include="Providers\ISearchProvider.cs" />
+    <Compile Include="Options\FacetOptions.cs" />
     <Compile Include="Options\FilterOptions.cs" />
+    <Compile Include="Options\QueryableOptions.cs" />
     <Compile Include="Options\QueryOptions.cs" />
-    <Compile Include="Options\SearcherOptions.cs" />
-    <Compile Include="Options\SearchQueryOptions.cs" />
+    <Compile Include="Options\PagingOptions.cs" />
     <Compile Include="Options\SortingOptions.cs" />
     <Compile Include="PageMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Results\ISearchResultItem.cs" />
-    <Compile Include="Results\SearchFacets.cs" />
+    <Compile Include="Results\SearchFacetResults.cs" />
     <Compile Include="Results\SearchResultItem.cs" />
     <Compile Include="Results\SearchResults.cs" />
-    <Compile Include="Searcher.cs" />
-    <Compile Include="SearchManager.cs" />
+    <Compile Include="Results\SearchResultsWithFacets.cs" />
+    <Compile Include="DefaultSearchManager.cs" />
+    <Compile Include="SearchConfiguration.cs" />
+    <Compile Include="Services\IQueryService.cs" />
+    <Compile Include="Services\QueryService.cs" />
     <Compile Include="SortOrder.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Sitecore.ContentSearch.Fluent.ruleset" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

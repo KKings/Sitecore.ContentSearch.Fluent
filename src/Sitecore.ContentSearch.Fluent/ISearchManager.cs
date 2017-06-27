@@ -1,24 +1,30 @@
-﻿// <copyright file="ISearchManager.cs" company="Kyle Kingsbury">
-//  Copyright 2015 Kyle Kingsbury
-//
-//  Licensed under the Apache License, Version 2.0 (the "License");
-//  you may not use this file except in compliance with the License.
-
-//  You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
-//
-//  Unless required by applicable law or agreed to in writing, software
-//  distributed under the License is distributed on an 'AS IS' BASIS,
-//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//  See the License for the specific language governing permissions and
-//  limitations under the License.
-// </copyright>
+﻿// MIT License
+// 
+// Copyright (c) 2016 Kyle Kingsbury
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 namespace Sitecore.ContentSearch.Fluent
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
+    using Builders;
     using Facets;
-    using Linq;
     using Results;
 
     public interface ISearchManager : IDisposable
@@ -29,35 +35,22 @@ namespace Sitecore.ContentSearch.Fluent
         /// <typeparam name="T"></typeparam>
         /// <param name="searcherBuilder"></param>
         /// <returns></returns>
-        Results.SearchResults<T> ResultsFor<T>(Action<ISearcher<T>> searcherBuilder) where T : SearchResultItem;
+        SearchResults<T> ResultsFor<T>(Action<ISearcherBuilder<T>> searcherBuilder) where T : SearchResultItem;
 
         /// <summary>
         /// Facet Results for a SearchBuilder
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="searcherBuilder"></param>
-        /// <param name="facets"></param>
         /// <returns></returns>
-        SearchFacets FacetsFor<T>(Action<ISearcher<T>> searcherBuilder, IList<IFacetOn> facets) where T : SearchResultItem;
+        SearchFacetResults FacetsFor<T>(Action<ISearcherBuilder<T>> searcherBuilder) where T : SearchResultItem;
 
         /// <summary>
-        /// Map Search Results to a different model
-        /// </summary>
-        /// <typeparam name="TModel"></typeparam>
-        /// <param name="results"></param>
-        /// <returns></returns>
-        IList<TModel> Map<TModel>(IEnumerable<SearchHit<TModel>> results);
-
-        /// <summary>
-        /// Get the Queryable
+        /// Facet Results for a SearchBuilder
         /// </summary>
         /// <typeparam name="T"></typeparam>
+        /// <param name="searcherBuilder"></param>
         /// <returns></returns>
-        IQueryable<T> GetQueryable<T>();
-
-        /// <summary>
-        /// Get the Searcher
-        /// </summary>
-        ISearcher<T> GetSearcher<T>() where T: SearchResultItem;
+        SearchResultsWithFacets<T> ResultsWithFacetsFor<T>(Action<ISearcherBuilder<T>> searcherBuilder) where T : SearchResultItem;
     }
 }

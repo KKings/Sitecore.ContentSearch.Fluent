@@ -19,27 +19,18 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace Sitecore.ContentSearch.Fluent.Facets
+namespace Sitecore.ContentSearch.Fluent.Options
 {
-    /// <summary>
-    /// Represents an individual facet
-    /// </summary>
-    public class FacetValue
+    using System;
+    using System.Linq.Expressions;
+    using Results;
+
+    public abstract class QueryableOptions<T> where T : SearchResultItem
     {
         /// <summary>
-        /// Gets or sets the Facet Name 
+        /// Gets or sets the Filter expressions
+        /// <para>Always set the filter expression when added an expression</para>
         /// </summary>
-        public virtual string Name { get; }
-
-        /// <summary>
-        /// Gets or sets the Count or aggregate value
-        /// </summary>
-        public virtual int Count { get; }
-
-        public FacetValue(string name, int count)
-        {
-            this.Name = name;
-            this.Count = count;
-        }
+        public virtual Expression<Func<T, bool>> Filter { get; internal set; }
     }
 }

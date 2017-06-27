@@ -19,27 +19,24 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace Sitecore.ContentSearch.Fluent.Facets
+namespace Sitecore.ContentSearch.Fluent.Builders
 {
-    /// <summary>
-    /// Represents an individual facet
-    /// </summary>
-    public class FacetValue
+    using System;
+    using System.Linq.Expressions;
+    using Results;
+
+    public interface ISearcherBuilder<T> where T : SearchResultItem
     {
-        /// <summary>
-        /// Gets or sets the Facet Name 
-        /// </summary>
-        public virtual string Name { get; }
+        ISearcherBuilder<T> Paging(Action<PagingOptionsBuilder<T>> searchBuildOptions);
 
-        /// <summary>
-        /// Gets or sets the Count or aggregate value
-        /// </summary>
-        public virtual int Count { get; }
+        ISearcherBuilder<T> Query(Action<QueryBuilder<T>> searchQueryBuildOptions);
 
-        public FacetValue(string name, int count)
-        {
-            this.Name = name;
-            this.Count = count;
-        }
+        ISearcherBuilder<T> Filter(Action<FilterBuilder<T>> filterQueryBuildOptions);
+
+        ISearcherBuilder<T> Sort(Action<SortingOptionsBuilder<T>> sortingBuildOptions);
+
+        ISearcherBuilder<T> Facet(Action<FacetBuilder<T>> facetBuilderOptions);
+
+        ISearcherBuilder<T> Select(Expression<Func<T, T>> expression);
     }
 }

@@ -19,27 +19,41 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace Sitecore.ContentSearch.Fluent.Facets
+namespace Sitecore.ContentSearch.Fluent
 {
-    /// <summary>
-    /// Represents an individual facet
-    /// </summary>
-    public class FacetValue
+    using Options;
+    using Results;
+
+    public class SearchConfiguration<T> where T : SearchResultItem
     {
         /// <summary>
-        /// Gets or sets the Facet Name 
+        /// The Paging Options for skipping/taking
         /// </summary>
-        public virtual string Name { get; }
+        public virtual PagingOptions PagingOptions { get; private set; } = new PagingOptions();
 
         /// <summary>
-        /// Gets or sets the Count or aggregate value
+        /// The Query Filters
         /// </summary>
-        public virtual int Count { get; }
+        public virtual QueryOptions<T> QueryOptions { get; private set; } = new QueryOptions<T>();
 
-        public FacetValue(string name, int count)
-        {
-            this.Name = name;
-            this.Count = count;
-        }
+        /// <summary>
+        /// The Filter Filters =). This is separated out as FilterOptions must be applied to a different method
+        /// </summary>
+        public virtual FilterOptions<T> FilterOptions { get; private set; } = new FilterOptions<T>();
+
+        /// <summary>
+        /// The SortingOptions
+        /// </summary>
+        public virtual SortingOptions<T> SortingOptions { get; private set; } = new SortingOptions<T>();
+
+        /// <summary>
+        /// The FacetOptions
+        /// </summary>
+        public virtual FacetOptions FacetOptions { get; private set; } = new FacetOptions();
+
+        /// <summary>
+        /// The SelectOptions
+        /// </summary>
+        public virtual SelectOptions<T> SelectOptions { get; private set; } = new SelectOptions<T>();
     }
 }
