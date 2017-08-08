@@ -22,6 +22,7 @@
 namespace Sitecore.ContentSearch.Fluent
 {
     using System;
+    using System.Collections.Generic;
     using Builders;
     using Providers;
     using Results;
@@ -105,7 +106,7 @@ namespace Sitecore.ContentSearch.Fluent
 
             //return searcher.ResultsWithFacets(facets);
         }
-
+        
         #region IDisposable
 
         public void Dispose()

@@ -22,7 +22,6 @@
 namespace Sitecore.ContentSearch.Fluent
 {
     using System;
-    using System.Collections.Generic;
     using Builders;
     using Facets;
     using Results;

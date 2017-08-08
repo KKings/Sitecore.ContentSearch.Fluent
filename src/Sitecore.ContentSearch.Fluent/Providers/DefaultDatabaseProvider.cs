@@ -21,8 +21,8 @@
 // SOFTWARE.
 namespace Sitecore.ContentSearch.Fluent.Providers
 {
-    using Configuration;
     using Data;
+    using Sitecore.Abstractions;
 
     public class DefaultDatabaseProvider : IDatabaseProvider
     {
@@ -36,17 +36,17 @@ namespace Sitecore.ContentSearch.Fluent.Providers
         /// </summary>
         public virtual Database Context
         {
-            get { return Sitecore.Context.Database ?? this.DefaultFactory.GetDatabase(this.DefaultDatabaseName); }
+            get { return Sitecore.Context.Database ?? this.Factory.GetDatabase(this.DefaultDatabaseName); }
         }
 
         /// <summary>
         /// Default Configuration Factory
         /// </summary>
-        public readonly DefaultFactory DefaultFactory;
+        public readonly BaseFactory Factory;
 
-        public DefaultDatabaseProvider(DefaultFactory defaultFactory)
+        public DefaultDatabaseProvider(BaseFactory defaultFactory)
         {
-            this.DefaultFactory = defaultFactory;
+            this.Factory = defaultFactory;
         }
     }
 }

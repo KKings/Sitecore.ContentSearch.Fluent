@@ -37,6 +37,9 @@ namespace Sitecore.ContentSearch.Fluent.Providers
         /// </summary>
         private readonly IResultRepository resultRepository;
 
+        /// <summary>
+        /// Implementation of the Query Service
+        /// </summary>
         private readonly IQueryService queryService;
 
         public DefaultSearchProvider(IResultRepository resultRepository, IQueryService queryService)
