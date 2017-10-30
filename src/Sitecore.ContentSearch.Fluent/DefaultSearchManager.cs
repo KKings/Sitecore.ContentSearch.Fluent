@@ -63,9 +63,7 @@ namespace Sitecore.ContentSearch.Fluent
             searcherBuilder(searcher);
 
             // Get Results and Process
-            var results = this.SearchProvider.GetResults(configuration);
-
-            return results;
+            return this.ResultsFor(configuration);
         }
 
         /// <summary>
@@ -83,9 +81,7 @@ namespace Sitecore.ContentSearch.Fluent
             searcherBuilder(searcher);
 
             // Get Results and Process
-            var results = this.SearchProvider.GetFacetResults(configuration);
-
-            return results;
+            return this.FacetsFor(configuration);
         }
 
         /// <summary>
@@ -106,7 +102,50 @@ namespace Sitecore.ContentSearch.Fluent
 
             //return searcher.ResultsWithFacets(facets);
         }
-        
+
+        /// <summary>
+        /// Gets the results for a given configuration
+        /// </summary>
+        /// <param name="configuration">The configuration</param>
+        /// <returns></returns>
+        public virtual SearchResults<T> ResultsFor<T>(SearchConfiguration<T> configuration)
+            where T : SearchResultItem
+        {
+            // Get Results and Process
+            // Todo: Validate
+            return this.SearchProvider.GetResults(configuration);
+        }
+
+        /// <summary>
+        /// Gets the results for a given configuration
+        /// </summary>
+        /// <param name="configuration">The configuration</param>
+        /// <returns></returns>
+        public virtual SearchFacetResults FacetsFor<T>(SearchConfiguration<T> configuration)
+            where T : SearchResultItem
+        {
+            // Get Results and Process
+            // Todo: Validate
+            return this.SearchProvider.GetFacetResults(configuration);
+        }
+
+        /// <summary>
+        /// Gets the built configuration to pass around
+        /// </summary>
+        /// <param name="searcherBuilder"></param>
+        /// <returns></returns>
+        public virtual SearchConfiguration<T> Build<T>(Action<ISearcherBuilder<T>> searcherBuilder)
+            where T : SearchResultItem
+        {
+            var configuration = new SearchConfiguration<T>();
+            var searcher = this.SearchProvider.GetSearcherBuilder(configuration);
+
+            // Build the options
+            searcherBuilder(searcher);
+
+            return configuration;
+        }
+
         #region IDisposable
 
         public void Dispose()

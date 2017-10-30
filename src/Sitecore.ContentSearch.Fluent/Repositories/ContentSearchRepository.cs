@@ -29,7 +29,7 @@ namespace Sitecore.ContentSearch.Fluent.Repositories
 
     public class ContentSearchRepository : IResultRepository
     {
-        private readonly IIndexProvider indexProvider;
+        protected readonly IIndexProvider indexProvider;
 
         public ContentSearchRepository(IIndexProvider indexProvider)
         {

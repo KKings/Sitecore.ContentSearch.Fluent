@@ -43,6 +43,34 @@ namespace Sitecore.ContentSearch.Fluent.Extensions
         }
 
         /// <summary>
+        /// Rewrites a given expression using the <see cref="ParameterReplaceVisitor"/> Expression Visitor
+        /// by replacing the second argument of the initial expression with a constant value
+        /// </summary>
+        /// <param name="expression">Original Expression</param>
+        /// <param name="value">Value to replace the 2nd parameter with</param>
+        /// <returns>Rewritten Expression</returns>
+        public static Expression<Func<T, TR, bool>> Rewrite<T, TS, TR>(this Expression<Func<T, TS, TR, bool>> expression, TS value)
+        {
+            return
+                Expression.Lambda<Func<T, TR, bool>>(
+                    new ParameterReplaceVisitor(expression.Parameters[1], value).Visit(expression.Body), expression.Parameters[0], expression.Parameters[2]);
+        }
+
+        /// <summary>
+        /// Rewrites a given expression using the <see cref="ParameterReplaceVisitor"/> Expression Visitor
+        /// by replacing the second argument of the initial expression with a constant value
+        /// </summary>
+        /// <param name="expression">Original Expression</param>
+        /// <param name="value">Value to replace the 2nd parameter with</param>
+        /// <returns>Rewritten Expression</returns>
+        public static Expression<Func<T, object>> Rewrite<T, TR>(this Expression<Func<T, TR, object>> expression, TR value)
+        {
+            return
+                Expression.Lambda<Func<T, object>>(
+                    new ParameterReplaceVisitor(expression.Parameters[1], value).Visit(expression.Body), expression.Parameters[0]);
+        }
+
+        /// <summary>
         /// Converts the expression into a PropertyInfo
         /// </summary>
         /// <param name="expression">The Expression</param>

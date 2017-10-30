@@ -22,6 +22,8 @@
 namespace Sitecore.ContentSearch.Fluent.Builders
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
     using Extensions;
@@ -34,7 +36,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// <summary>
         /// Gets or sets the FacetOptions
         /// </summary>
-        public FacetOptions FacetOptions { get; }
+        protected readonly FacetOptions FacetOptions;
 
         public FacetBuilder(FacetOptions facetOptions)
         {
@@ -42,11 +44,52 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         }
 
         /// <summary>
-        /// Adds the Facet in the order it was 
+        /// Adds multiple facets in the order they were added
+        /// </summary>
+        /// <param name="minimumCount">The minimum count</param>
+        /// <param name="properties">The properties</param>
+        /// <returns><see cref="FacetBuilder{T}"/></returns>
+        public virtual FacetBuilder<T> On(int minimumCount, params string[] properties)
+        {
+            if (properties == null || !properties.Any())
+            {
+                throw new ArgumentNullException(nameof(properties));
+            }
+
+            foreach (var prop in properties)
+            {
+                this.On(prop);
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Adds the Facet in the order it was added
+        /// </summary>
+        /// <param name="property">The property key to facet on</param>
+        /// <param name="minimumCount">The minimum count</param>
+        /// <returns><see cref="FacetBuilder{T}"/></returns>
+        public virtual FacetBuilder<T> On(string property, int minimumCount)
+        {
+            if (String.IsNullOrEmpty(property))
+            {
+                return this;
+            }
+
+            var facet = new FacetOn(property, minimumCount);
+
+            this.On(facet);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Adds the Facet in the order it was added
         /// </summary>
         /// <param name="property">The property key to facet on</param>
         /// <returns><see cref="FacetBuilder{T}"/></returns>
-        public FacetBuilder<T> On(string property)
+        public virtual FacetBuilder<T> On(string property)
         {
             if (String.IsNullOrEmpty(property))
             {
@@ -63,10 +106,31 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// <summary>
         /// Adds the Facet in the order it was received
         /// </summary>
+        /// <param name="facetOns">The Facets</param>
+        /// <exception cref="ArgumentNullException">Argument cannot be null</exception>
+        /// <returns><see cref="FacetBuilder{T}"/></returns>
+        public virtual FacetBuilder<T> On(IList<FacetBase> facetOns)
+        {
+            if (facetOns == null)
+            {
+                throw new ArgumentNullException(nameof(facetOns));
+            }
+
+            foreach (var facet in facetOns)
+            {
+                this.On(facet);
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Adds the Facet in the order it was received
+        /// </summary>
         /// <param name="facetOn">The Facet</param>
         /// <exception cref="ArgumentNullException">Argument cannot be null</exception>
         /// <returns><see cref="FacetBuilder{T}"/></returns>
-        public FacetBuilder<T> On(FacetBase facetOn)
+        public virtual FacetBuilder<T> On(FacetBase facetOn)
         {
             if (facetOn == null)
             {
@@ -88,7 +152,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// <exception cref="ArgumentException">Expression cannot refer to a method</exception>
         /// <exception cref="ArgumentException">Expression cannot refer to a field</exception>
         /// <returns><see cref="FacetBuilder{T}"/></returns>
-        public FacetBuilder<T> On<TProperty>(Expression<Func<T, TProperty>> expression)
+        public virtual FacetBuilder<T> On<TProperty>(Expression<Func<T, TProperty>> expression)
         {
             if (expression == null)
             {
@@ -124,7 +188,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// <exception cref="ArgumentException">Expression cannot refer to a method</exception>
         /// <exception cref="ArgumentException">Expression cannot refer to a field</exception>
         /// <returns><see cref="FacetBuilder{T}"/></returns>
-        public FacetBuilder<T> On<TProperty>(params Expression<Func<T, TProperty>>[] expressions)
+        public virtual FacetBuilder<T> On<TProperty>(params Expression<Func<T, TProperty>>[] expressions)
         {
             if (expressions == null)
             {

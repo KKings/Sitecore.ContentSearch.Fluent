@@ -28,7 +28,7 @@ namespace Sitecore.ContentSearch.Fluent.Results
     /// <summary>
     /// SearchResultItem Summary
     /// </summary>
-    public abstract class SearchResultItem : SearchTypes.SearchResultItem
+    public class SearchResultItem : SearchTypes.SearchResultItem
     {
         [IndexField("_group")]
         [TypeConverter(typeof(IndexFieldIDValueConverter))]

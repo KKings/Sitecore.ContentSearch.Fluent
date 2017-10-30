@@ -112,9 +112,9 @@ namespace Sitecore.ContentSearch.Fluent.Services
 
             // Resolve bug with Sitecore not evaluating orders correctly
             // http://www.daveleigh.co.uk/sitecore-content-search-api-thenby-clause-not-evaluating-correctly/
-            var expressions = options.Operations.Reverse();
+            //var expressions = options.Operations.Reverse();
 
-            var operations = expressions as SortingOptions<T>.SortingOperation[] ?? expressions.ToArray();
+            var operations = options.Operations as SortingOptions<T>.SortingOperation[] ?? options.Operations.ToArray();
 
             var orderByExpression = operations.First();
 

@@ -29,7 +29,7 @@ namespace Sitecore.ContentSearch.Fluent.Providers
         /// <summary>
         /// The Search Context on the Search Index for Searching the Index
         /// </summary>
-        private IProviderSearchContext searchContext;
+        protected IProviderSearchContext searchContext;
 
         /// <summary>
         /// The Search Context on the Search Index for Searching the Index

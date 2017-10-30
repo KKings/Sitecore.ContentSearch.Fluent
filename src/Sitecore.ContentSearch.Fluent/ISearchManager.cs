@@ -51,5 +51,26 @@ namespace Sitecore.ContentSearch.Fluent
         /// <param name="searcherBuilder"></param>
         /// <returns></returns>
         SearchResultsWithFacets<T> ResultsWithFacetsFor<T>(Action<ISearcherBuilder<T>> searcherBuilder) where T : SearchResultItem;
+
+        /// <summary>
+        /// Gets the configuration object
+        /// </summary>
+        /// <param name="searcherBuilder"></param>
+        /// <returns></returns>
+        SearchConfiguration<T> Build<T>(Action<ISearcherBuilder<T>> searcherBuilder) where T : SearchResultItem;
+
+        /// <summary>
+        /// Gets the facets
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <returns></returns>
+        SearchFacetResults FacetsFor<T>(SearchConfiguration<T> configuration) where T : SearchResultItem;
+
+        /// <summary>
+        /// Gets the configuration
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <returns></returns>
+        SearchResults<T> ResultsFor<T>(SearchConfiguration<T> configuration) where T : SearchResultItem;
     }
 }

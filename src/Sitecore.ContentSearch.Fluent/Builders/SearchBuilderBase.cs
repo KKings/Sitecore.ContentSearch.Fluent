@@ -36,7 +36,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// Contains the up-to-date filter at a given context before it is applied
         /// higher in the chain
         /// </summary>
-        internal virtual QueryableOptions<T> Options { get; }
+        public virtual QueryableOptions<T> Options { get; }
 
         protected SearchBuilderBase(QueryableOptions<T> options)
         {
@@ -216,6 +216,50 @@ namespace Sitecore.ContentSearch.Fluent.Builders
                     inner
                         = group
                             .Select(filter.Rewrite)
+                            .Aggregate(inner, (current, expression) => current.Or(expression));
+
+                    // Magic here
+                    predicate = predicate.And(inner);
+                }
+
+                this.Options.Filter = this.Options.Filter != null
+                    ? this.Options.Filter.And(predicate)
+                    : PredicateBuilder.True<T>().And(predicate);
+            }
+            
+            return this;
+        }
+
+        /// <summary>
+        /// Builds an expression tree by applying a filter expression to each item within a group, then combining each group's expression tree together
+        /// <para>Adds to the current expression tree as an 'And' [Current Expression Tree] And [Group 1 Expression And Group 2 Expression] </para>
+        /// <para>Each group's expression tree will be combined by using an 'Or', so any term within the group can be matched</para>
+        /// <para>Example: To filter articles by tags, <code>ManyAny([[Tag1, Tag2, Tag3], [Tag1, Tag2]], (result, tag) => result.Tags.Contains(tag))</code>,
+        /// where result is your <see cref="SearchResultItem"/> that contains a property of 'Tags'
+        /// </para>
+        /// </summary>
+        /// <typeparam name="TR">The type of Term</typeparam>
+        /// <param name="groups">A grouping of terms</param>
+        /// <param name="filter">Filter Expression</param>
+        /// <returns><see cref="SearchBuilderBase{T}"/></returns>
+        public virtual SearchBuilderBase<T> ManyAny<TR>(IEnumerable<KeyValuePair<string, IList<TR>>> groups, Expression<Func<T, string, TR, bool>> filter)
+        {
+            var enumerable = groups as KeyValuePair<string, IList<TR>>[] ?? groups.ToArray();
+
+            if (enumerable.Any() && filter != null)
+            {
+                var predicate = PredicateBuilder.True<T>();
+
+                foreach (var group in enumerable)
+                {
+                    var rewrite = filter.Rewrite(group.Key);
+
+                    var inner = PredicateBuilder.False<T>();
+
+                    inner
+                        = group
+                            .Value
+                            .Select(value => rewrite.Rewrite(value))
                             .Aggregate(inner, (current, expression) => current.Or(expression));
 
                     // Magic here
@@ -418,7 +462,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         }
 
         /// <summary>
-        /// If the <see cref="condition"/> evalutes to <c>True</c> at runtime, will add the <see cref="ManyAny{TR}"/> expression
+        /// If the <see cref="condition"/> evalutes to <c>True</c> at runtime, will add the ManyAny expression
         /// to the current expression tree
         /// </summary>
         /// <param name="condition">If <c>True</c> will add to the expression tree at runtime.</param>
@@ -427,6 +471,20 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// <returns><see cref="SearchBuilderBase{T}"/></returns>
         public virtual SearchBuilderBase<T> IfManyAny<TR>(bool condition, IEnumerable<IEnumerable<TR>> groups,
             Expression<Func<T, TR, bool>> filter)
+        {
+            return condition ? this.ManyAny(groups, filter) : this;
+        }
+
+        /// <summary>
+        /// If the <see cref="condition"/> evalutes to <c>True</c> at runtime, will add the ManyAny expression
+        /// to the current expression tree
+        /// </summary>
+        /// <param name="condition">If <c>True</c> will add to the expression tree at runtime.</param>
+        /// <param name="groups">A grouping of terms</param>
+        /// <param name="filter">Filter Expression</param>
+        /// <returns><see cref="SearchBuilderBase{T}"/></returns>
+        public virtual SearchBuilderBase<T> IfManyAny<TR>(bool condition, IEnumerable<KeyValuePair<string, IList<TR>>> groups,
+            Expression<Func<T, string, TR, bool>> filter)
         {
             return condition ? this.ManyAny(groups, filter) : this;
         }

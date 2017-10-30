@@ -22,6 +22,8 @@
 namespace Sitecore.ContentSearch.Fluent.Builders
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
     using Extensions;
@@ -44,6 +46,24 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         }
 
         /// <summary>
+        /// Adds each key as a sort directly
+        /// </summary>
+        /// <param name="sorting">The sortings</param>
+        /// <param name="sortOrderExpression">The expression to determine which the order</param>
+        /// <returns>Instance of the SortingOptionsBuilder</returns>
+        public virtual SortingOptionsBuilder<T> ByAll(IEnumerable<KeyValuePair<string, string>> sorting,  Func<string, SortOrder> sortOrderExpression)
+        {
+            var keyValuePairs = sorting as KeyValuePair<string, string>[] ?? sorting.ToArray();
+
+            foreach (var pair in keyValuePairs)
+            {
+                this.SortingOptions.Operations.Add(new SortingOptions<T>.SortingOperation(sortOrderExpression(pair.Value), (result => result[pair.Key])));
+            }
+
+            return this;
+        }
+
+        /// <summary>
         /// Adds a sorting expression to the Query Options
         /// </summary>
         /// <param name="expression">Expression to apply to the queryable</param>
@@ -52,7 +72,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         /// <exception cref="ArgumentException">Expression cannot refer to a method</exception>
         /// <exception cref="ArgumentException">Expression cannot refer to a field</exception>
         /// <returns>Instance of the SortingOptionsBuilder</returns>
-        public SortingOptionsBuilder<T> By(Expression<Func<T, object>> expression, SortOrder sortOrder = SortOrder.Ascending)
+        public virtual SortingOptionsBuilder<T> By(Expression<Func<T, object>> expression, SortOrder sortOrder = SortOrder.Ascending)
         {
             if (expression == null)
             {
@@ -70,10 +90,34 @@ namespace Sitecore.ContentSearch.Fluent.Builders
             {
                 throw new ArgumentException($"Expression '{expression}' refers to a field, not a property.");
             }
-
+            
             this.SortingOptions.Operations.Add(new SortingOptions<T>.SortingOperation(sortOrder, expression));
 
             return this;
+        }
+
+        /// <summary>
+        /// If the <see cref="condition"/> evalutes to <c>True</c> at runtime, will add the <see cref="By"/> sorting to the current expression tree
+        /// </summary>
+        /// <param name="condition">The condition</param>
+        /// <param name="expression">The sorting expression</param>
+        /// <param name="sortOrder">The sort order. Defaults to <see cref="SortOrder.Ascending"/></param>
+        /// <returns><see cref="SortingOptionsBuilder{T}"/></returns>
+        public virtual SortingOptionsBuilder<T> IfBy(bool condition, Expression<Func<T, object>> expression, SortOrder sortOrder = SortOrder.Ascending)
+        {
+            return condition ? this.By(expression, sortOrder) : this;
+        }
+
+        /// <summary>
+        /// If the <see cref="condition"/> evalutes to <c>True</c> at runtime, for each key will add the resulting sorting to the current expression tree using <see cref="ByAll"/>
+        /// </summary>
+        /// <param name="condition">The condition</param>
+        /// <param name="sorting">The sorting keys</param>
+        /// <param name="sortOrderExpression">The sort order. Defaults to <see cref="SortOrder.Ascending"/></param>
+        /// <returns><see cref="SortingOptionsBuilder{T}"/></returns>
+        public virtual SortingOptionsBuilder<T> IfByAll(bool condition, IEnumerable<KeyValuePair<string, string>> sorting, Func<string, SortOrder> sortOrderExpression)
+        {
+            return condition ? this.ByAll(sorting, sortOrderExpression) : this;
         }
     }
 }
