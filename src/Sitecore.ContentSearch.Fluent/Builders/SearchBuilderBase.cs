@@ -76,6 +76,11 @@ namespace Sitecore.ContentSearch.Fluent.Builders
 
             filterAction(new GroupQueryBuilder<T>(searchOptions));
 
+            if (searchOptions.Filter == null)
+            {
+                return this;
+            }
+            
             this.Options.Filter = this.Options.Filter != null
                 ? this.Options.Filter.And(searchOptions.Filter.Not())
                 : PredicateBuilder.True<T>().And(searchOptions.Filter.Not());
