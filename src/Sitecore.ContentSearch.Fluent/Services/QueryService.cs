@@ -89,7 +89,7 @@ namespace Sitecore.ContentSearch.Fluent.Services
                 queryable = queryable.Skip(options.StartingPosition);
             }
 
-            if (options.Display > 0)
+            if (options.Display > 0 || options.AllowZero)
             {
                 queryable = queryable.Take(options.Display);
             }

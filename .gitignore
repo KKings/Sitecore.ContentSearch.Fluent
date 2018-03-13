@@ -190,3 +190,4 @@ FakesAssemblies/
 /nuget
 *.nupkg
 *.nuspec
+/src/Sitecore.ContentSearch.Fluent/nuget.exe

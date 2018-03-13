@@ -32,6 +32,12 @@ namespace Sitecore.ContentSearch.Fluent.Options
         public virtual PageMode PageMode { get; set; } = PageMode.Pager;
 
         /// <summary>
+        /// Gets or sets if you can query for no results
+        /// <para>Best to use when </para>
+        /// </summary>
+        public virtual bool AllowZero { get; set; } = true;
+
+        /// <summary>
         /// Gets or sets the Start
         /// </summary>
         public virtual int Start { get; set; } = 0;

@@ -95,12 +95,25 @@ namespace Sitecore.ContentSearch.Fluent.Builders
 
             // Ensure we are working with a valid number
             if (temp < 0)
+            {
                 temp = 0;
+            }
 
             this.PagingOptions.Start = (temp > 0) && includeStart
                 ? temp - 1
                 : temp;
 
+            return this;
+        }
+
+        /// <summary>
+        /// Sets if you can allow a zero value for pagination
+        /// </summary>
+        /// <param name="allowZero">True if the results can be returned without docs</param>
+        /// <returns>Instance of the SearcherOptionsBuilder</returns>
+        public PagingOptionsBuilder<T> AllowZero(bool allowZero)
+        {
+            this.PagingOptions.AllowZero = allowZero;
             return this;
         }
 
