@@ -1,6 +1,7 @@
 ﻿namespace Sitecore.ContentSearch.Fluent.Tests
 {
     using Data;
+    using Sitecore.Data;
 
     public static class Constants
     {

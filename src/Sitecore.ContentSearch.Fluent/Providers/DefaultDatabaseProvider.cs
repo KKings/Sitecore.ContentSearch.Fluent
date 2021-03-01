@@ -23,6 +23,7 @@ namespace Sitecore.ContentSearch.Fluent.Providers
 {
     using Data;
     using Sitecore.Abstractions;
+    using Sitecore.Data;
 
     public class DefaultDatabaseProvider : IDatabaseProvider
     {

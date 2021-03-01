@@ -23,7 +23,7 @@ namespace Sitecore.ContentSearch.Fluent.Results
 {
     using System.ComponentModel;
     using Converters;
-    using Data;
+    using Sitecore.Data;
 
     /// <summary>
     /// SearchResultItem Summary

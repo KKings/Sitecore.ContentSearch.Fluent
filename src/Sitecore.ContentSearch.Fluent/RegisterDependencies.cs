@@ -22,25 +22,38 @@
 namespace Sitecore.ContentSearch.Fluent
 {
     using System.Collections.Generic;
+    using Factories;
     using Microsoft.Extensions.DependencyInjection;
     using Providers;
     using Repositories;
+    using Results;
     using Services;
-    using DependencyInjection;
+    using Sitecore.DependencyInjection;
 
     public class RegisterDependencies : IServicesConfigurator
     {
         public void Configure(IServiceCollection serviceCollection)
         {
+            var defaultIndexes = new Dictionary<string, string>
+            {
+                { "core", "sitecore_core_index" },
+                { "master", "sitecore_master_index" },
+                { "web", "sitecore_web_index" }
+            };
+
             serviceCollection.AddSingleton<IQueryService, QueryService>();
             serviceCollection.AddScoped<IResultRepository, ContentSearchRepository>();
             serviceCollection.AddScoped<IDatabaseProvider, DefaultDatabaseProvider>();
             serviceCollection.AddTransient<IIndexProvider, DefaultIndexProvider>(
                 provider =>
-                    new DefaultIndexProvider(provider.GetService<IDatabaseProvider>(),
-                        new Dictionary<string, string> { { "master", "sitecore_master_index" }, { "web", "sitecore_web_index" } }));
+                    new DefaultIndexProvider(provider.GetService<IDatabaseProvider>(), defaultIndexes));
             serviceCollection.AddScoped<ISearchProvider, DefaultSearchProvider>();
             serviceCollection.AddTransient<ISearchManager, DefaultSearchManager>();
+            serviceCollection.AddSingleton<IManagerFactory, DefaultManagerFactory>();
+
+            serviceCollection.AddTransient(
+                provider => 
+                    provider.GetService<IManagerFactory>().Create<SearchResultItem>(defaultIndexes));
         }
     }
 }
