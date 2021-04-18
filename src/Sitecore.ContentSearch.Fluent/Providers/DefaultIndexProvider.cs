@@ -34,27 +34,18 @@ namespace Sitecore.ContentSearch.Fluent.Providers
         /// <summary>
         /// The Search Context on the Search Index for Searching the Index
         /// </summary>
-        public virtual IProviderSearchContext SearchContext
-        {
-            get { return this.searchContext ?? (this.searchContext = this.SearchIndex.CreateSearchContext()); }
-        }
+        public virtual IProviderSearchContext SearchContext => this.searchContext ?? (this.searchContext = this.SearchIndex.CreateSearchContext());
 
         /// <summary>
         /// The Search Index for the Search Manager
         /// </summary>
-        private ISearchIndex _searchIndex;
+        private ISearchIndex searchIndex;
 
         /// <summary>
         /// The Search Index for the Search Manager
         /// </summary>
-        public virtual ISearchIndex SearchIndex
-        {
-            get
-            {
-                return this._searchIndex ??
-                       (this._searchIndex = ContentSearchManager.GetIndex(this.indexLookup[this.databaseProvider.Context.Name]));
-            }
-        }
+        public virtual ISearchIndex SearchIndex =>
+            this.searchIndex ?? (this.searchIndex = ContentSearchManager.GetIndex(this.indexLookup[this.databaseProvider.Context.Name]));
 
         /// <summary>
         /// Lookup to match Database Names to Index Names

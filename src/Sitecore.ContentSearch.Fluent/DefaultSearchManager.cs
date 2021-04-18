@@ -164,4 +164,100 @@ namespace Sitecore.ContentSearch.Fluent
 
         #endregion
     }
+
+    public class DefaultSearchManager<T> : ISearchManager<T> where T : SearchResultItem
+    {
+        /// <summary>
+        /// Gets the Search Provider Implementation
+        /// </summary>
+        internal virtual ISearchManager SearchManager { get; }
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="searchManager">The Search Provider</param>
+        public DefaultSearchManager(ISearchManager searchManager)
+        {
+            this.SearchManager = searchManager;
+        }
+
+        /// <summary>
+        /// Executes a query against the search index
+        /// </summary>
+        /// <typeparam name="T">Type of ResultItem</typeparam>
+        /// <param name="searcherBuilder">Lambda to generate the Search Results Expression</param>
+        /// <returns>Result of <see cref="T"/></returns>
+        public virtual SearchResults<T> ResultsFor(Action<ISearcherBuilder<T>> searcherBuilder)
+        {
+            return this.SearchManager.ResultsFor(searcherBuilder);
+        }
+
+        /// <summary>
+        /// Gets the Search Facets for a given Search
+        /// </summary>
+        /// <param name="searcherBuilder">Configurable Search Builder</param>
+        /// <returns></returns>
+        public virtual SearchFacetResults FacetsFor(Action<ISearcherBuilder<T>> searcherBuilder)
+        {
+            return this.SearchManager.FacetsFor(searcherBuilder);
+        }
+
+        /// <summary>
+        /// Gets the Search Results and Facets for a given Search
+        /// </summary>
+        /// <param name="searcherBuilder">Configurable Search Builder</param>
+        /// <returns></returns>
+        public virtual SearchResultsWithFacets<T> ResultsWithFacetsFor(Action<ISearcherBuilder<T>> searcherBuilder)
+        {
+            return this.SearchManager.ResultsWithFacetsFor(searcherBuilder);
+        }
+
+        /// <summary>
+        /// Gets the results for a given configuration
+        /// </summary>
+        /// <param name="configuration">The configuration</param>
+        /// <returns></returns>
+        public virtual SearchResults<T> ResultsFor(SearchConfiguration<T> configuration)
+        {
+            return this.SearchManager.ResultsFor(configuration);
+        }
+
+        /// <summary>
+        /// Gets the results for a given configuration
+        /// </summary>
+        /// <param name="configuration">The configuration</param>
+        /// <returns></returns>
+        public virtual SearchFacetResults FacetsFor(SearchConfiguration<T> configuration)
+        {
+            return this.SearchManager.FacetsFor(configuration);
+        }
+
+        /// <summary>
+        /// Gets the built configuration to pass around
+        /// </summary>
+        /// <param name="searcherBuilder"></param>
+        /// <returns></returns>
+        public virtual SearchConfiguration<T> Build(Action<ISearcherBuilder<T>> searcherBuilder)
+        {
+            return this.SearchManager.Build(searcherBuilder);
+        }
+
+        #region IDisposable
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        public virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.SearchManager?.Dispose();
+            }
+        }
+
+        #endregion
+    }
 }

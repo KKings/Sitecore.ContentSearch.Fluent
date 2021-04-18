@@ -21,7 +21,7 @@
 // SOFTWARE.
 namespace Sitecore.ContentSearch.Fluent.Providers
 {
-    using Data;
+    using Sitecore.Data;
 
     public interface IDatabaseProvider
     {
