@@ -79,7 +79,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
                 throw new ArgumentNullException(nameof(expression), "Sort Expression cannot be null");
             }
 
-            var member = expression.Body as MemberExpression;
+            /*var member = expression.Body as MemberExpression;
             if (member == null)
             {
                 throw new ArgumentException($"Expression '{expression}' refers to a method, not a property.");
@@ -89,7 +89,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
             if (propInfo == null)
             {
                 throw new ArgumentException($"Expression '{expression}' refers to a field, not a property.");
-            }
+            }*/
             
             this.SortingOptions.Operations.Add(new SortingOptions<T>.SortingOperation(sortOrder, expression));
 
