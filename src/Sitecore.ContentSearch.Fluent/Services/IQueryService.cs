@@ -74,5 +74,13 @@ namespace Sitecore.ContentSearch.Fluent.Services
         /// <param name="options"></param>
         /// <returns></returns>
         IQueryable<T> ApplyProjection<T>(IQueryable<T> queryable, SelectOptions<T> options) where T : SearchResultItem;
+
+        /// <summary>
+        /// Applies the within radius to the queryable
+        /// </summary>
+        /// <param name="queryable">The queryable</param>
+        /// <param name="options">The configured options</param>
+        /// <returns>The queryable with the radius options applied</returns>
+        IQueryable<T> ApplyWithinRadius<T>(IQueryable<T> queryable, RadiusOptions<T> options) where T : SearchResultItem;
     }
 }

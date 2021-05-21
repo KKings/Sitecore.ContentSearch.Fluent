@@ -68,6 +68,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Builders\WithinRadiusBuilder.cs" />
     <Compile Include="Builders\FacetBuilder.cs" />
     <Compile Include="Builders\FilterBuilder.cs" />
     <Compile Include="Builders\FilterQueryBuilder.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Factories\IManagerFactory.cs" />
     <Compile Include="Factories\DefaultManagerFactory.cs" />
     <Compile Include="ISearchManager.T.cs" />
+    <Compile Include="Options\RadiusOptions.cs" />
     <Compile Include="Options\SelectOptions.cs" />
     <Compile Include="RegisterDependencies.cs" />
     <Compile Include="Repositories\ContentSearchRepository.cs" />

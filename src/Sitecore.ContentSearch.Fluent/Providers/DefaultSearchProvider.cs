@@ -28,6 +28,7 @@ namespace Sitecore.ContentSearch.Fluent.Providers
     using Repositories;
     using Results;
     using Services;
+    using Sitecore.Abstractions;
     using FacetValue = Facets.FacetValue;
 
     public class DefaultSearchProvider : ISearchProvider
@@ -42,10 +43,16 @@ namespace Sitecore.ContentSearch.Fluent.Providers
         /// </summary>
         private readonly IQueryService queryService;
 
-        public DefaultSearchProvider(IResultRepository resultRepository, IQueryService queryService)
+        /// <summary>
+        /// Implementation of the Logger
+        /// </summary>
+        private readonly BaseLog logger;
+
+        public DefaultSearchProvider(IResultRepository resultRepository, IQueryService queryService, BaseLog logger)
         {
             this.resultRepository = resultRepository;
             this.queryService = queryService;
+            this.logger = logger;
         }
 
         public virtual Results.SearchResults<T> GetResults<T>(SearchConfiguration<T> configuration) where T : SearchResultItem
@@ -57,8 +64,21 @@ namespace Sitecore.ContentSearch.Fluent.Providers
             queryable = this.queryService.ApplyPagination(queryable, configuration.PagingOptions);
             queryable = this.queryService.ApplySorting(queryable, configuration.SortingOptions);
             queryable = this.queryService.ApplyProjection(queryable, configuration.SelectOptions);
+            queryable = this.queryService.ApplyWithinRadius(queryable, configuration.RadiusOptions);
 
             var rawResults = this.resultRepository.GetResults(queryable);
+
+            if (rawResults != null)
+            {
+                return this.ProcessResults(rawResults);
+            }
+
+            this.logger.Error(
+                "An unknown error occurred. This is likely a communication error with your search provider, " +
+                "please check the logs and ensure the solution is able to connect to the indexes properly.", 
+                this);
+
+            rawResults = new Linq.SearchResults<T>(Enumerable.Empty<SearchHit<T>>(), 0);
 
             return this.ProcessResults(rawResults);
         }
@@ -78,9 +98,11 @@ namespace Sitecore.ContentSearch.Fluent.Providers
 
         public virtual Results.SearchResults<T> ProcessResults<T>(Linq.SearchResults<T> results) where T : SearchResultItem
         {
+            var tempResults = results ?? new Linq.SearchResults<T>(Enumerable.Empty<SearchHit<T>>(), 0);
+
             return new Results.SearchResults<T>(
-                results.Hits,
-                results.TotalSearchResults);
+                tempResults.Hits,
+                tempResults.TotalSearchResults);
         }
 
         public virtual ISearcherBuilder<T> GetSearcherBuilder<T>(SearchConfiguration<T> configuration) where T : SearchResultItem

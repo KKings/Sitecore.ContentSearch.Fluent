@@ -92,6 +92,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PagingOptionsBuilderUnitTests.cs" />
     <Compile Include="FacetBuilderUnitTests.cs" />
+    <Compile Include="WithinRadiusBuilderUnitTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Sitecore.ContentSearch.Fluent\Sitecore.ContentSearch.Fluent.csproj">

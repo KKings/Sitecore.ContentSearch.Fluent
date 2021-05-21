@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("Fluent API for Sitecore Content Search API")]
 [assembly: AssemblyCompany("Kyle Kingsbury")]
 [assembly: AssemblyProduct("Sitecore.ContentSearch.Fluent")]
-[assembly: AssemblyCopyright("Copyright © Kyle Kingsbury 2017")]
+[assembly: AssemblyCopyright("Copyright © Kyle Kingsbury 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -37,5 +37,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.4.8")]
-[assembly: AssemblyFileVersion("1.0.4.8")]
+[assembly: AssemblyVersion("1.0.8.3")]
+[assembly: AssemblyFileVersion("1.0.8.3")]

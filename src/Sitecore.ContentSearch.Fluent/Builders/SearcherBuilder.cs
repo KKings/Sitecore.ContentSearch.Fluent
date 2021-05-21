@@ -111,5 +111,17 @@ namespace Sitecore.ContentSearch.Fluent.Builders
             
             return this;
         }
+
+        /// <summary>
+        /// Sets the within Radius Options
+        /// </summary>
+        /// <param name="withinRadiusOptions">Creates a new Instance of the WithinRadiusBuilder to build the query
+        /// <para>Passes the RadiusOption as a parameter</para></param>      
+        /// <returns><see cref="ISearcherBuilder{T}"/></returns>
+        public virtual ISearcherBuilder<T> Radius(Action<WithinRadiusBuilder<T>> withinRadiusOptions)
+        {
+            withinRadiusOptions(new WithinRadiusBuilder<T>(this.configuration.RadiusOptions));
+            return this;
+        }
     }
 }

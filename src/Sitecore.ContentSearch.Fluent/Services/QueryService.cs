@@ -21,7 +21,9 @@
 // SOFTWARE.
 namespace Sitecore.ContentSearch.Fluent.Services
 {
+    using System;
     using System.Linq;
+    using Data;
     using Linq;
     using Options;
     using Results;
@@ -131,7 +133,7 @@ namespace Sitecore.ContentSearch.Fluent.Services
         }
 
         /// <summary>
-        /// Applys the Projection to the Queryable
+        /// Applies the Projection to the Queryable
         /// </summary>
         /// <param name="queryable">The Queryable</param>
         /// <param name="options">The SelectOptions</param>
@@ -141,6 +143,36 @@ namespace Sitecore.ContentSearch.Fluent.Services
             if (options?.Expression != null)
             {
                 queryable = queryable.Select(options.Expression);
+            }
+
+            return queryable;
+        }
+
+        /// <summary>
+        /// Applies the WithinRadius to the Queryable
+        /// </summary>
+        /// <param name="queryable">The Queryable</param>
+        /// <param name="options">The SelectOptions</param>
+        /// <returns>The queryable</returns>
+        public IQueryable<T> ApplyWithinRadius<T>(IQueryable<T> queryable, RadiusOptions<T> options) where T : SearchResultItem
+        {
+            if (options?.Expression != null
+                && !Double.IsNaN(options.Distance) 
+                && !Double.IsNaN(options.Latitude) 
+                && !Double.IsNaN(options.Longitude))
+            {
+                var coordinate = new Coordinate(options.Latitude, options.Longitude);
+
+                queryable = queryable.WithinRadius(options.Expression, coordinate, options.Distance, options.UseBox);
+
+                if (options.OrderByDistance.HasValue && options.OrderByDistance.Value)
+                {
+                    queryable = queryable.OrderByDistance(options.Expression, coordinate);
+                }
+                else if (options.OrderByDistanceDescending.HasValue && options.OrderByDistanceDescending.Value)
+                {
+                    queryable = queryable.OrderByDistanceDescending(options.Expression, coordinate);
+                }
             }
 
             return queryable;

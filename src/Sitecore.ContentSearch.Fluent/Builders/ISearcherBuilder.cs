@@ -38,5 +38,7 @@ namespace Sitecore.ContentSearch.Fluent.Builders
         ISearcherBuilder<T> Facet(Action<FacetBuilder<T>> facetBuilderOptions);
 
         ISearcherBuilder<T> Select(Expression<Func<T, T>> expression);
+
+        ISearcherBuilder<T> Radius(Action<WithinRadiusBuilder<T>> withinRadiusOptions);
     }
 }

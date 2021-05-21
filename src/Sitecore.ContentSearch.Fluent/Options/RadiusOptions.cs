@@ -19,46 +19,48 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace Sitecore.ContentSearch.Fluent
+namespace Sitecore.ContentSearch.Fluent.Options
 {
-    using Options;
+    using System;
+    using System.Linq.Expressions;
+    using Data;
     using Results;
 
-    public class SearchConfiguration<T> where T : SearchResultItem
+    public class RadiusOptions<T> where T : SearchResultItem
     {
         /// <summary>
-        /// The Paging Options for skipping/taking
+        /// Get or sets the Expression
         /// </summary>
-        public virtual PagingOptions PagingOptions { get; } = new PagingOptions();
+        public virtual Expression<Func<T, Coordinate>> Expression { get; set; }
 
         /// <summary>
-        /// The Query Filters
+        /// Gets or sets the Latitude
         /// </summary>
-        public virtual QueryOptions<T> QueryOptions { get; } = new QueryOptions<T>();
+        public double Latitude { get; set; } = Double.NaN;
 
         /// <summary>
-        /// The Filter Filters =). This is separated out as FilterOptions must be applied to a different method
+        /// Gets or sets the Longitude
         /// </summary>
-        public virtual FilterOptions<T> FilterOptions { get; } = new FilterOptions<T>();
+        public double Longitude { get; set; } = Double.NaN;
 
         /// <summary>
-        /// The SortingOptions
+        /// Gets or sets the Distance
         /// </summary>
-        public virtual SortingOptions<T> SortingOptions { get; } = new SortingOptions<T>();
+        public double Distance { get; set; } = Double.NaN;
 
         /// <summary>
-        /// The FacetOptions
+        /// Gets or sets if Solr should order by distance
         /// </summary>
-        public virtual FacetOptions FacetOptions { get; } = new FacetOptions();
+        public bool? OrderByDistance { get; set; }
 
         /// <summary>
-        /// The SelectOptions
+        /// Gets or sets if Solr should order by distance descending
         /// </summary>
-        public virtual SelectOptions<T> SelectOptions { get; } = new SelectOptions<T>();
+        public bool? OrderByDistanceDescending { get; set; }
 
         /// <summary>
-        /// The RadiusOptions
+        /// Gets or sets if Solr should calculate the distance by using Bbox
         /// </summary>
-        public virtual RadiusOptions<T> RadiusOptions { get; } = new RadiusOptions<T>();
+        public bool UseBox { get; set; } = false;
     }
 }
