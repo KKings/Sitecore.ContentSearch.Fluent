@@ -49,6 +49,11 @@ namespace Sitecore.ContentSearch.Fluent.Builders
 
             filterAction(new GroupQueryBuilder<T>(searchOptions));
 
+            if (searchOptions.Filter == null)
+            {
+                return this;
+            }
+
             this.Options.Filter = this.Options.Filter != null
                 ? this.Options.Filter.And(searchOptions.Filter)
                 : PredicateBuilder.True<T>().And(searchOptions.Filter);
@@ -65,6 +70,11 @@ namespace Sitecore.ContentSearch.Fluent.Builders
             var searchOptions = new QueryOptions<T>();
 
             filterAction(new GroupQueryBuilder<T>(searchOptions));
+
+            if (searchOptions.Filter == null)
+            {
+                return this;
+            }
 
             this.Options.Filter = this.Options.Filter != null
                 ? this.Options.Filter.Or(searchOptions.Filter)

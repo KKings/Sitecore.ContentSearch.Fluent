@@ -133,6 +133,12 @@
       <Version>10.0.1</Version>
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
+    <PackageReference Include="Sitecore.ContentSearch.SolrNetExtension">
+      <Version>10.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Sitecore.ContentSearch.SolrProvider">
+      <Version>10.0.1</Version>
+    </PackageReference>
     <PackageReference Include="Sitecore.Kernel">
       <Version>10.0.1</Version>
       <ExcludeAssets>runtime</ExcludeAssets>

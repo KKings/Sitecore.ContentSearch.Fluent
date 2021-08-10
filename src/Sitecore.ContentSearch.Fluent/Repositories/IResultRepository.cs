@@ -25,6 +25,8 @@ namespace Sitecore.ContentSearch.Fluent.Repositories
     using System.Linq;
     using Linq;
     using Results;
+    using SolrNet;
+    using SolrNet.Commands.Parameters;
 
     public interface IResultRepository : IDisposable
     {
@@ -33,5 +35,7 @@ namespace Sitecore.ContentSearch.Fluent.Repositories
         Linq.SearchResults<T> GetResults<T>(IQueryable<T> queryable) where T : SearchResultItem;
 
         FacetResults GetFacetResults<T>(IQueryable<T> queryable) where T : SearchResultItem;
+
+        SolrQueryResults<T> GetQueryOptionsResults<T>(string query, QueryOptions queryOptions) where T : SearchResultItem;
     }
 }

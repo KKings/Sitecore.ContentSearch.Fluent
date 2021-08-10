@@ -3,7 +3,11 @@
     using System;
     using System.Linq;
     using Builders;
+    using Lucene.Net.Search;
     using Results;
+    using SolrNet;
+    using SolrNet.Commands.Parameters;
+    using SolrProvider;
 
     public interface ISearchManager<T> : IDisposable where T : SearchResultItem
     {
@@ -56,5 +60,13 @@
         /// Gets the IQueryable before it is executed
         /// </summary>
         IQueryable<T> GetQueryable(Action<ISearcherBuilder<T>> searcherBuilder);
+
+        /// <summary>
+        /// Gets Results for a static query with Solr's Query Options
+        /// </summary>
+        /// <param name="query">The query</param>
+        /// <param name="queryOptions">The query options</param>
+        /// <returns>Returns Solr results</returns>
+        SolrQueryResults<T> ResultsFor(string query, QueryOptions queryOptions);
     }
 }

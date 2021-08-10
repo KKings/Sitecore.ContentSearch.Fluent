@@ -27,6 +27,9 @@ namespace Sitecore.ContentSearch.Fluent
     using Builders;
     using Providers;
     using Results;
+    using SolrNet;
+    using SolrNet.Commands.Parameters;
+    using SolrProvider;
 
     /// <summary>
     /// SearchManager manages the lifecycle of the Search Context for the Search Index.
@@ -129,6 +132,18 @@ namespace Sitecore.ContentSearch.Fluent
             searcherBuilder(searcher);
 
             return this.SearchProvider.GetQueryable(configuration);
+        }
+
+        /// <summary>
+        /// Gets the results using Solr directly
+        /// Allows for many default Solr extensions to be used
+        /// </summary>
+        /// <param name="query">The query</param>
+        /// <param name="queryOptions">The Query Options</param>
+        /// <returns>The results</returns>
+        public virtual SolrQueryResults<T> ResultsFor<T>(string query, QueryOptions queryOptions) where T : SearchResultItem
+        {
+            return this.SearchProvider.GetResults<T>(query, queryOptions);
         }
 
         /// <summary>
@@ -243,6 +258,11 @@ namespace Sitecore.ContentSearch.Fluent
         public virtual SearchResults<T> ResultsFor(SearchConfiguration<T> configuration)
         {
             return this.SearchManager.ResultsFor(configuration);
+        }
+
+        public SolrQueryResults<T> ResultsFor(string query, QueryOptions queryOptions)
+        {
+            return this.SearchManager.ResultsFor<T>(query, queryOptions);
         }
 
         /// <summary>

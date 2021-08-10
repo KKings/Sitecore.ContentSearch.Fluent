@@ -26,6 +26,9 @@ namespace Sitecore.ContentSearch.Fluent
     using Builders;
     using Facets;
     using Results;
+    using SolrNet;
+    using SolrNet.Commands.Parameters;
+    using SolrProvider;
 
     public interface ISearchManager : IDisposable
     {
@@ -80,5 +83,13 @@ namespace Sitecore.ContentSearch.Fluent
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         IQueryable<T> GetQueryable<T>(Action<ISearcherBuilder<T>> searcherBuilder) where T : SearchResultItem;
+
+        /// <summary>
+        /// Gets Results for a static query with Solr's Query Options
+        /// </summary>
+        /// <param name="query">The query</param>
+        /// <param name="queryOptions">The query options</param>
+        /// <returns>Returns Solr results</returns>
+        SolrQueryResults<T> ResultsFor<T>(string query, QueryOptions queryOptions) where T : SearchResultItem;
     }
 }

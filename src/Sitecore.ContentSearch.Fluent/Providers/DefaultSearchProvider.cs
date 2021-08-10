@@ -29,6 +29,9 @@ namespace Sitecore.ContentSearch.Fluent.Providers
     using Results;
     using Services;
     using Sitecore.Abstractions;
+    using SolrNet;
+    using SolrNet.Commands.Parameters;
+    using SolrProvider;
     using FacetValue = Facets.FacetValue;
 
     public class DefaultSearchProvider : ISearchProvider
@@ -138,6 +141,11 @@ namespace Sitecore.ContentSearch.Fluent.Providers
                              .ToArray())
                     ).ToArray()
             };
+        }
+
+        public virtual SolrQueryResults<T> GetResults<T>(string query, QueryOptions queryOptions) where T : SearchResultItem
+        {
+            return this.resultRepository.GetQueryOptionsResults<T>(query, queryOptions);
         }
 
         #region IDisposable

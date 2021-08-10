@@ -26,6 +26,9 @@ namespace Sitecore.ContentSearch.Fluent.Repositories
     using Linq;
     using Providers;
     using Results;
+    using SolrNet;
+    using SolrNet.Commands.Parameters;
+    using SolrProvider.SolrNetIntegration;
 
     public class ContentSearchRepository : IResultRepository
     {
@@ -35,7 +38,7 @@ namespace Sitecore.ContentSearch.Fluent.Repositories
         {
             this.indexProvider = indexProvider;
         }
-
+        
         public virtual IQueryable<T> GetQueryable<T>() => this.indexProvider.SearchContext.GetQueryable<T>();
 
         /// <summary>
@@ -68,6 +71,23 @@ namespace Sitecore.ContentSearch.Fluent.Repositories
             }
 
             return queryable.GetFacets();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <param name="queryOptions"></param>
+        /// <returns></returns>
+        public virtual SolrQueryResults<T> GetQueryOptionsResults<T>(string query, QueryOptions queryOptions) where T : SearchResultItem
+        {
+            if (String.IsNullOrEmpty(query) || queryOptions == null)
+            {
+                return new SolrQueryResults<T>();
+            }
+
+            return this.indexProvider.SearchContext.Query<T>(query, queryOptions);
         }
 
         #region IDisposable

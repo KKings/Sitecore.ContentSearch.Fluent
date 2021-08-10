@@ -26,6 +26,9 @@ namespace Sitecore.ContentSearch.Fluent.Providers
     using Builders;
     using Linq;
     using Results;
+    using SolrNet;
+    using SolrNet.Commands.Parameters;
+    using SolrProvider;
 
     public interface ISearchProvider : IDisposable
     {
@@ -40,5 +43,7 @@ namespace Sitecore.ContentSearch.Fluent.Providers
         Results.SearchResults<T> ProcessResults<T>(Linq.SearchResults<T> results) where T : SearchResultItem;
 
         SearchFacetResults ProcessFacetResults(FacetResults results);
+
+        SolrQueryResults<T> GetResults<T>(string query, QueryOptions queryOptions) where T : SearchResultItem;
     }
 }
