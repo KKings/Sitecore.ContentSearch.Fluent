@@ -22,6 +22,7 @@
 namespace Sitecore.ContentSearch.Fluent
 {
     using System;
+    using System.Linq;
     using Builders;
     using Facets;
     using Results;
@@ -72,5 +73,12 @@ namespace Sitecore.ContentSearch.Fluent
         /// <param name="configuration"></param>
         /// <returns></returns>
         SearchResults<T> ResultsFor<T>(SearchConfiguration<T> configuration) where T : SearchResultItem;
+
+        /// <summary>
+        /// Gets the Queryable before it is executed
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        IQueryable<T> GetQueryable<T>(Action<ISearcherBuilder<T>> searcherBuilder) where T : SearchResultItem;
     }
 }

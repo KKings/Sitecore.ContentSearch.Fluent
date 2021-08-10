@@ -22,12 +22,15 @@
 namespace Sitecore.ContentSearch.Fluent.Providers
 {
     using System;
+    using System.Linq;
     using Builders;
     using Linq;
     using Results;
 
     public interface ISearchProvider : IDisposable
     {
+        IQueryable<T> GetQueryable<T>(SearchConfiguration<T> configuration) where T : SearchResultItem;
+
         Results.SearchResults<T> GetResults<T>(SearchConfiguration<T> configuration) where T : SearchResultItem;
 
         SearchFacetResults GetFacetResults<T>(SearchConfiguration<T> configuration) where T : SearchResultItem;

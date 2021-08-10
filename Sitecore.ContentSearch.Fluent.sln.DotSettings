@@ -509,9 +509,10 @@ II.2.12 &lt;HandlesEvent /&gt;&#xD;
 	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EPsi_002ECSharp_002ECodeStyle_002ESettingsUpgrade_002EMigrateThisQualifierSettings/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EPsi_002EJavaScript_002ECodeStyle_002ESettingsUpgrade_002EJsCodeFormatterSettingsUpgrader/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EPsi_002EJavaScript_002ECodeStyle_002ESettingsUpgrade_002EJsWrapperSettingsUpgrader/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EUnitTestFramework_002EMigrations_002EEnableDisabledProvidersMigration/@EntryIndexedValue">True</s:Boolean>
 	<s:String x:Key="/Default/Environment/UnitTesting/CustomStartDirectory/@EntryValue">D:\Tmp\TestResults</s:String>
-	<s:Boolean x:Key="/Default/Environment/UnitTesting/DisabledProviders/=MSTest/@EntryIndexedValue">False</s:Boolean>
-	<s:Boolean x:Key="/Default/Environment/UnitTesting/DisabledProviders/=nUnit/@EntryIndexedValue">True</s:Boolean>
+	
+	
 	<s:String x:Key="/Default/Environment/UnitTesting/MsTestProvider/RunConfigurationFilename/@EntryValue">LocalTestRun.testrunconfig</s:String>
 	<s:Boolean x:Key="/Default/Environment/UnitTesting/MsTestProvider/RunTestsEvenIfCodeCoverageEnabled/@EntryValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/UnitTesting/MsTestProvider/UseTestRunConfigFromMetadataFile/@EntryValue">False</s:Boolean>

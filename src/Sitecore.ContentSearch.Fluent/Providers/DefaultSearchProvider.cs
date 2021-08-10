@@ -55,6 +55,20 @@ namespace Sitecore.ContentSearch.Fluent.Providers
             this.logger = logger;
         }
 
+        public virtual IQueryable<T> GetQueryable<T>(SearchConfiguration<T> configuration) where T : SearchResultItem
+        {
+            var queryable = this.resultRepository.GetQueryable<T>();
+
+            queryable = this.queryService.ApplyQuery(queryable, configuration.QueryOptions);
+            queryable = this.queryService.ApplyFilter(queryable, configuration.FilterOptions);
+            queryable = this.queryService.ApplyPagination(queryable, configuration.PagingOptions);
+            queryable = this.queryService.ApplySorting(queryable, configuration.SortingOptions);
+            queryable = this.queryService.ApplyProjection(queryable, configuration.SelectOptions);
+            queryable = this.queryService.ApplyWithinRadius(queryable, configuration.RadiusOptions);
+
+            return queryable;
+        }
+
         public virtual Results.SearchResults<T> GetResults<T>(SearchConfiguration<T> configuration) where T : SearchResultItem
         {
             var queryable = this.resultRepository.GetQueryable<T>();
@@ -90,6 +104,7 @@ namespace Sitecore.ContentSearch.Fluent.Providers
             queryable = this.queryService.ApplyQuery(queryable, configuration.QueryOptions);
             queryable = this.queryService.ApplyFilter(queryable, configuration.FilterOptions);
             queryable = this.queryService.ApplyFacets(queryable, configuration.FacetOptions);
+            queryable = this.queryService.ApplyWithinRadius(queryable, configuration.RadiusOptions);
 
             var rawResults = this.resultRepository.GetFacetResults(queryable);
 

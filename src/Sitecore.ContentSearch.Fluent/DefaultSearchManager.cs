@@ -23,6 +23,7 @@ namespace Sitecore.ContentSearch.Fluent
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Builders;
     using Providers;
     using Results;
@@ -117,6 +118,20 @@ namespace Sitecore.ContentSearch.Fluent
         }
 
         /// <summary>
+        /// Gets the IQueryable before it is executed
+        /// </summary>
+        public virtual IQueryable<T> GetQueryable<T>(Action<ISearcherBuilder<T>> searcherBuilder) where T : SearchResultItem
+        {
+            var configuration = new SearchConfiguration<T>();
+            var searcher = this.SearchProvider.GetSearcherBuilder(configuration);
+
+            // Build Options
+            searcherBuilder(searcher);
+
+            return this.SearchProvider.GetQueryable(configuration);
+        }
+
+        /// <summary>
         /// Gets the results for a given configuration
         /// </summary>
         /// <param name="configuration">The configuration</param>
@@ -179,6 +194,14 @@ namespace Sitecore.ContentSearch.Fluent
         public DefaultSearchManager(ISearchManager searchManager)
         {
             this.SearchManager = searchManager;
+        }
+        
+        /// <summary>
+        /// Gets the IQueryable before it is executed
+        /// </summary>
+        public virtual IQueryable<T> GetQueryable(Action<ISearcherBuilder<T>> searcherBuilder)
+        {
+            return this.SearchManager.GetQueryable(searcherBuilder);
         }
 
         /// <summary>
