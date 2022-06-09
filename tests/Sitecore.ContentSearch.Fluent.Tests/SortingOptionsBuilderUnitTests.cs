@@ -16,9 +16,8 @@ namespace Sitecore.ContentSearch.Fluent.Tests
     public class SortingOptionsBuilderUnitTests
     {
         [TestCategory("sorting")]
-        [ExpectedException(typeof(ArgumentException))]
         [TestMethod]
-        public void SortingBuilder_ForExpressionUsingNull_ThrowsException()
+        public void SortingBuilder_ForExpressionUsingNull_DoesNotThrowException()
         {
             // Arrange
             var options = new SortingOptions<TestSearchResultItem>();

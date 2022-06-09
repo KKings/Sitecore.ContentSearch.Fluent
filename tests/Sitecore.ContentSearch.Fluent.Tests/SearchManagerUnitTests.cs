@@ -18,6 +18,7 @@
     using Providers;
     using Repositories;
     using Services;
+    using Sitecore.Abstractions;
 
     [TestClass]
     public class SearchManagerUnitTests
@@ -59,9 +60,11 @@
                         .Returns<IQueryable<TestSearchResultItem>, FilterOptions<TestSearchResultItem>>(
                             (items, options) => (options?.Filter != null) ? items.Where(options.Filter): items);
 
+            var baseLoggerMock = new Mock<BaseLog>();
 
-            var searchProvider = new Mock<DefaultSearchProvider>(resultRepository.Object, queryService.Object) { CallBase = true };
 
+            var searchProvider = new Mock<DefaultSearchProvider>(resultRepository.Object, queryService.Object, baseLoggerMock.Object) { CallBase = true };
+ 
             var manager = new Mock<DefaultSearchManager>(searchProvider.Object) { CallBase = true };
 
             this.searchManager = manager;
@@ -281,6 +284,7 @@
             {
                 var results = manager.ResultsFor<TestSearchResultItem>(search => search
                     .Paging(o => o
+                        .AllowZero(false)
                         .Take(0)));
 
                 Assert.AreEqual(6, results.Total);
@@ -295,6 +299,7 @@
             {
                 var results = manager.ResultsFor<TestSearchResultItem>(search => search
                     .Paging(o => o
+                        .AllowZero(false)
                         .Take(-10)));
 
                 Assert.AreEqual(6, results.Total);

@@ -125,13 +125,10 @@
     <None Include="Sitecore.ContentSearch.Fluent.ruleset" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NETStandard.Library">
-      <Version>1.6.1</Version>
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </PackageReference>
     <PackageReference Include="Sitecore.ContentSearch">
-      <Version>10.0.1</Version>
+      <Version>10.2.0</Version>
       <ExcludeAssets>runtime</ExcludeAssets>
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Sitecore.ContentSearch.SolrNetExtension">
       <Version>10.0.1</Version>
@@ -140,8 +137,9 @@
       <Version>10.0.1</Version>
     </PackageReference>
     <PackageReference Include="Sitecore.Kernel">
-      <Version>10.0.1</Version>
+      <Version>10.2.0</Version>
       <ExcludeAssets>runtime</ExcludeAssets>
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="System.ComponentModel">
       <Version>4.3.0</Version>
